@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from '@lib/components/Button.svelte'
+  import ColorPicker from '@lib/components/ColorPicker/ColorPicker.svelte'
   import Toggleable from '@src/lib/components/Toggleable.svelte'
   import TextField from '@src/lib/components/TextField.svelte'
   import Select from '@src/lib/components/Select.svelte'
@@ -25,6 +26,10 @@
   let openDialog1 = $state<OpenDialog | undefined>(undefined)
   let openDialog2 = $state<OpenDialog | undefined>(undefined)
   let option = $state(1)
+  let demoHex = $state('#3366cc')
+  let demoOklch = $state({ l: 0.7, c: 0.18, h: 22, alpha: 1 })
+  let demoAlpha = $state('#3366cc99')
+  let demoContrast = $state('#1e1d25')
 
   let contextClickHandlers: ((e: Event) => void)[] = $state([])
 
@@ -313,6 +318,39 @@
                 { value: 2, label: 'Option 2' },
                 { value: 3, label: 'Option 3' },
               ]}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="category tint--card">
+        <h2>Color Picker</h2>
+        <div class="rows">
+          <div class="row">
+            <ColorPicker
+              id="cp-demo-hex"
+              label="Brand color"
+              bind:value={demoHex}
+            />
+            <ColorPicker
+              id="cp-demo-oklch"
+              label="Accent (OKLCH)"
+              format="oklch"
+              bind:value={demoOklch}
+            />
+          </div>
+          <div class="row">
+            <ColorPicker
+              id="cp-demo-alpha"
+              label="Translucent"
+              alpha
+              bind:value={demoAlpha}
+            />
+            <ColorPicker
+              id="cp-demo-contrast"
+              label="Body text"
+              bind:value={demoContrast}
+              contrast={{ against: '#ffffff', role: 'foreground' }}
             />
           </div>
         </div>

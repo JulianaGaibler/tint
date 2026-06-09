@@ -23,6 +23,11 @@ class ReorderableHandler {
     getDraggedElement() {
         return this.draggedElement;
     }
+    hideIndicator() {
+        if (this.indicator) {
+            this.indicator.hidden = true;
+        }
+    }
     constructor(element, options) {
         this.draggedElement = null;
         this.dropTargetInfo = null;
@@ -97,8 +102,12 @@ class ReorderableHandler {
         this.onDragOver = (event) => {
             if (activeDragHandler !== null &&
                 activeDragHandler !== this &&
-                !isInSameGroup(activeDragHandler, this))
+                !isInSameGroup(activeDragHandler, this)) {
                 return;
+            }
+            if (activeDragHandler !== null && activeDragHandler !== this) {
+                activeDragHandler.hideIndicator();
+            }
             this.dropTargetInfo = this.getDropTargetInfo(event);
             // Ensure indicator exists
             this.potentiallyCreateIndicator();
@@ -135,17 +144,13 @@ class ReorderableHandler {
             }
         };
         this.onDragLeave = (event) => {
-            const target = event.target;
-            // Allow dragleave on both items and the container itself
-            if (!target.matches(this.options.itemSelector) &&
-                target !== this.element) {
+            const relatedTarget = event.relatedTarget;
+            // If cursor moved to another element inside our container, do nothing
+            if (relatedTarget && this.element.contains(relatedTarget)) {
                 return;
             }
-            let relatedTarget = event.relatedTarget;
-            while (relatedTarget && relatedTarget !== this.element) {
-                relatedTarget = relatedTarget.parentElement;
-            }
-            if (relatedTarget !== this.element && this.indicator) {
+            // Cursor left our container entirely. Hide the indicator.
+            if (this.indicator) {
                 this.indicator.hidden = true;
             }
         };

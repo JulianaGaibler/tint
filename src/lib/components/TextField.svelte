@@ -3,11 +3,23 @@
   import IconWarning from '@lib/icons/20-warning.svg?raw'
   import { onMount } from 'svelte'
 
-  interface Props extends Omit<HTMLInputAttributes, 'value' | 'type'> {
+  interface Props extends Omit<
+    HTMLInputAttributes,
+    'value' | 'type' | 'step' | 'min' | 'max'
+  > {
     // Value of the text field (can use bind:value) @type {string}
     value: string
     // The label of the text field @type {string}
     label: string
+    // When set, Arrow Up/Down adjusts the value by `step`. Shift = 10x,
+    // Alt/Option = 0.1x. The result is clamped to [min, max] if provided
+    // and formatted with precision derived from the effective step.
+    // Fires `oncommit` on each step. @type {number | undefined}
+    step?: number
+    // Numeric lower bound for arrow-key stepping. @type {number | undefined}
+    min?: number
+    // Numeric upper bound for arrow-key stepping. @type {number | undefined}
+    max?: number
     // The variant of the text field @type {'input' | 'textarea' | undefined}
     variant?: 'input' | 'textarea'
     // The number of rows of the text field @type {number|undefined}
@@ -63,6 +75,9 @@
     name = undefined,
     autocomplete = undefined,
     type = undefined,
+    step = undefined,
+    min = undefined,
+    max = undefined,
     'aria-describedby': ariaDescribedby = undefined,
     class: className = '',
     ...elementProps
@@ -122,6 +137,41 @@
     onblur?.(e)
   }
 
+  // Round at high precision (10 places) and trim trailing fractional
+  // zeros. Keeps the user's existing decimal part on Up/Down (2.3 + 1 =
+  // 3.3, not rounded to 3) while still cleaning up FP residue like
+  // 3.4000000000000004 → 3.4. Integers stay integers via the no-dot
+  // early exit.
+  function formatStepResult(n: number): string {
+    const fixed = n.toFixed(10)
+    if (!fixed.includes('.')) return fixed
+    return fixed.replace(/0+$/, '').replace(/\.$/, '')
+  }
+
+  function handleArrowStep(e: KeyboardEvent): boolean {
+    if (step === undefined) return false
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return false
+
+    const multiplier = e.shiftKey ? 10 : e.altKey ? 0.1 : 1
+    const effectiveStep = step * multiplier
+    const direction = e.key === 'ArrowUp' ? 1 : -1
+
+    const fallback = min !== undefined ? min : 0
+    const current = parseFloat(value)
+    const base = Number.isFinite(current) ? current : fallback
+    let next = base + effectiveStep * direction
+
+    const lo = min !== undefined ? min : -Infinity
+    const hi = max !== undefined ? max : Infinity
+    next = Math.max(lo, Math.min(hi, next))
+
+    e.preventDefault()
+    const formatted = formatStepResult(next)
+    value = formatted
+    oncommit?.(formatted)
+    return true
+  }
+
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Escape' && preEditValue !== undefined) {
       e.preventDefault()
@@ -144,6 +194,7 @@
         element?.blur()
       }
     }
+    if (handleArrowStep(e)) return
   }
 
   $effect(() => {

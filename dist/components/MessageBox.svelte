@@ -5,10 +5,14 @@
   interface Props {
     // Icon of the message box @type {string | undefined}
     icon?: string | undefined
+    // Visual tone. 'warning' colors the border + icon with the accent color. @type {'neutral' | 'warning'}
+    tone?: 'neutral' | 'warning'
     // HTML element of the container @type {HTMLDivElement | undefined}
     element?: HTMLDivElement | undefined
     // Content of the message box @type {Snippet | undefined}
     children?: import('svelte').Snippet
+    // Optional snippet rendered on the right side for action buttons. @type {Snippet | undefined}
+    actions?: import('svelte').Snippet
     // Event handler for when closing the message box @type {(e: MouseEvent) => void | undefined}
     onclose?: (e: MouseEvent) => void
     // A space separated list of CSS classes.
@@ -17,18 +21,27 @@
 
   let {
     icon = undefined,
+    tone = 'neutral',
     element = $bindable(undefined),
     onclose = undefined,
     children,
+    actions,
     class: className = '',
   }: Props = $props()
 </script>
 
-<div class="box {className}" bind:this={element}>
+<div
+  class="box {className}"
+  class:warning={tone === 'warning'}
+  bind:this={element}
+>
   {#if icon}
     <div class="icon" aria-hidden="true">{@html icon}</div>
   {/if}
   <div class="content">{@render children?.()}</div>
+  {#if actions}
+    <div class="actions">{@render actions()}</div>
+  {/if}
   {#if onclose}
     <Button small icon aria-label="close" variant="ghost" onclick={onclose}>
       {@html IconClose}
@@ -38,10 +51,16 @@
 
 <style>.box {
   display: flex;
-  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
   border: 2px solid var(--tint-text-secondary);
   border-radius: 8px;
   padding: 8px;
+}
+
+.box.warning {
+  border-color: var(--tint-text-accent);
 }
 
 .icon {
@@ -52,13 +71,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  flex: 0 0 auto;
+}
+
+.box.warning .icon {
+  color: var(--tint-text-accent);
 }
 
 .content {
-  flex: 1;
+  flex: 1 1 60%;
+  min-width: 60%;
   margin-block: 5px;
   color: var(--tint-text-primary);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  margin-inline-start: auto;
 }
 
 @media (forced-colors: active) {
@@ -70,5 +102,11 @@
   }
   .box .content {
     color: ButtonText;
+  }
+  .box.warning {
+    border-color: CanvasText;
+  }
+  .box.warning .icon {
+    color: CanvasText;
   }
 }</style>

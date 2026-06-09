@@ -1,6 +1,6 @@
 {
   "name": "tint",
-  "version": "0.3.10",
+  "version": "0.4.0",
   "scripts": {
     "dev": "vite dev",
     "preview": "vite preview",
@@ -38,6 +38,10 @@
     "./fonts": {
       "types": "./dist/fonts/index.d.ts",
       "default": "./dist/fonts/index.js"
+    },
+    "./color": {
+      "types": "./dist/color/index.d.ts",
+      "default": "./dist/color/index.js"
     },
     "./styles/*": "./dist/styles/*",
     "./icons/*": "./dist/icons/*",

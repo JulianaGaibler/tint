@@ -56,6 +56,11 @@ function createDragEvent(
     },
   })
   Object.defineProperty(event, 'clientY', { value: overrides.clientY ?? 0 })
+  if ('relatedTarget' in overrides) {
+    Object.defineProperty(event, 'relatedTarget', {
+      value: overrides.relatedTarget,
+    })
+  }
   return event
 }
 
@@ -432,6 +437,127 @@ describe('cross-container drag-and-drop (dropGroup)', () => {
 
     listA.destroy()
     listB.destroy()
+  })
+
+  it('hides source indicator when target dragover fires', () => {
+    const listA = createList(3, { dropGroup: 'test-group' })
+    const listB = createList(3, { dropGroup: 'test-group' })
+
+    // Start drag on list A
+    const itemA = listA.element.querySelectorAll('li')[0]
+    const dragStartEvent = createDragEvent('dragstart', itemA)
+    itemA.dispatchEvent(dragStartEvent)
+
+    // Dragover on list A to show A's indicator
+    const dragOverA = createDragEvent('dragover', itemA, { clientY: 0 })
+    itemA.dispatchEvent(dragOverA)
+
+    const indicatorA = listA.element.querySelector(
+      '.tint--reorderable-indicator',
+    ) as HTMLElement
+    expect(indicatorA.hidden).toBe(false)
+
+    // Dragover on list B should hide A's indicator
+    const itemB = listB.element.querySelectorAll('li')[1]
+    const dragOverB = createDragEvent('dragover', itemB, { clientY: 0 })
+    itemB.dispatchEvent(dragOverB)
+
+    expect(indicatorA.hidden).toBe(true)
+
+    listA.destroy()
+    listB.destroy()
+  })
+
+  it('hides source indicator on dragleave when relatedTarget is outside container', () => {
+    const listA = createList(3, { dropGroup: 'test-group' })
+
+    // Start drag on list A
+    const itemA = listA.element.querySelectorAll('li')[0]
+    const dragStartEvent = createDragEvent('dragstart', itemA)
+    itemA.dispatchEvent(dragStartEvent)
+
+    // Dragover on list A to show indicator
+    const dragOverA = createDragEvent('dragover', itemA, { clientY: 0 })
+    itemA.dispatchEvent(dragOverA)
+
+    const indicatorA = listA.element.querySelector(
+      '.tint--reorderable-indicator',
+    ) as HTMLElement
+    expect(indicatorA.hidden).toBe(false)
+
+    // Create an element outside the container (simulates a group label)
+    const outsideElement = document.createElement('div')
+    outsideElement.className = 'group-label'
+    document.body.appendChild(outsideElement)
+
+    // Dragleave with relatedTarget outside the container
+    const dragLeaveEvent = createDragEvent('dragleave', itemA, {
+      relatedTarget: outsideElement,
+    } as Partial<DragEvent>)
+    listA.element.dispatchEvent(dragLeaveEvent)
+
+    expect(indicatorA.hidden).toBe(true)
+
+    outsideElement.remove()
+    listA.destroy()
+  })
+
+  it('keeps indicator visible on dragleave when relatedTarget is inside container', () => {
+    const listA = createList(3, { dropGroup: 'test-group' })
+
+    // Start drag on list A
+    const itemA0 = listA.element.querySelectorAll('li')[0]
+    const itemA1 = listA.element.querySelectorAll('li')[1]
+    const dragStartEvent = createDragEvent('dragstart', itemA0)
+    itemA0.dispatchEvent(dragStartEvent)
+
+    // Dragover on list A to show indicator
+    const dragOverA = createDragEvent('dragover', itemA0, { clientY: 0 })
+    itemA0.dispatchEvent(dragOverA)
+
+    const indicatorA = listA.element.querySelector(
+      '.tint--reorderable-indicator',
+    ) as HTMLElement
+    expect(indicatorA.hidden).toBe(false)
+
+    // Dragleave with relatedTarget still inside the container
+    const dragLeaveEvent = createDragEvent('dragleave', itemA0, {
+      relatedTarget: itemA1,
+    } as Partial<DragEvent>)
+    listA.element.dispatchEvent(dragLeaveEvent)
+
+    // Indicator should remain visible
+    expect(indicatorA.hidden).toBe(false)
+
+    listA.destroy()
+  })
+
+  it('hides indicator on dragleave when relatedTarget is null (cursor left window)', () => {
+    const listA = createList(3, { dropGroup: 'test-group' })
+
+    // Start drag on list A
+    const itemA = listA.element.querySelectorAll('li')[0]
+    const dragStartEvent = createDragEvent('dragstart', itemA)
+    itemA.dispatchEvent(dragStartEvent)
+
+    // Dragover on list A to show indicator
+    const dragOverA = createDragEvent('dragover', itemA, { clientY: 0 })
+    itemA.dispatchEvent(dragOverA)
+
+    const indicatorA = listA.element.querySelector(
+      '.tint--reorderable-indicator',
+    ) as HTMLElement
+    expect(indicatorA.hidden).toBe(false)
+
+    // Dragleave with null relatedTarget (cursor left browser window)
+    const dragLeaveEvent = createDragEvent('dragleave', itemA, {
+      relatedTarget: null,
+    } as Partial<DragEvent>)
+    listA.element.dispatchEvent(dragLeaveEvent)
+
+    expect(indicatorA.hidden).toBe(true)
+
+    listA.destroy()
   })
 
   it('hides target indicator after cross-container drop', () => {

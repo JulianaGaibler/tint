@@ -1,7 +1,10 @@
 import type { HTMLInputAttributes } from 'svelte/elements';
-interface Props extends Omit<HTMLInputAttributes, 'value' | 'type'> {
+interface Props extends Omit<HTMLInputAttributes, 'value' | 'type' | 'step' | 'min' | 'max'> {
     value: string;
     label: string;
+    step?: number;
+    min?: number;
+    max?: number;
     variant?: 'input' | 'textarea';
     rows?: number;
     maxHeight?: number;
