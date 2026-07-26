@@ -289,10 +289,11 @@
   .reorderable-list
     list-style: none
     padding: 0
-    margin: 20px 0
+    margin-block: 20px
+    margin-inline: 0
 
   .list-item:not(:last-of-type)
-    border-bottom: 1px solid var(--tint-card-border)
+    border-block-end: 1px solid var(--tint-card-border)
 
   .list-item
     display: flex
@@ -300,13 +301,15 @@
 
   .item-content
     flex: 1
-    padding: 12px 16px
+    padding-block: 12px
+    padding-inline: 16px
     background: transparent
     border: none
     text-align: start
 
   .drag-handle
-    padding: 12px 8px
+    padding-block: 12px
+    padding-inline: 8px
     padding-inline-end: 0
     color: var(--tint-text-secondary)
     font-weight: bold
@@ -316,11 +319,13 @@
   .controls
     display: flex
     gap: 12px
-    margin: 20px 0
+    margin-block: 20px
+    margin-inline: 0
 
   .cross-container-layout
     display: grid
     grid-template-columns: 1fr 1fr
     gap: 20px
-    margin: 20px 0
+    margin-block: 20px
+    margin-inline: 0
 </style>

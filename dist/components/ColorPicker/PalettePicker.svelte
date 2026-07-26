@@ -211,8 +211,8 @@
 
 .search-icon {
   position: absolute;
-  left: var(--tint-size-8);
-  top: 50%;
+  inset-inline-start: var(--tint-size-8);
+  inset-block-start: 50%;
   transform: translateY(-50%);
   pointer-events: none;
   line-height: 0;
@@ -232,7 +232,8 @@
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 0 var(--tint-size-8) 0 var(--tint-size-32);
+  padding-block: 0;
+  padding-inline: var(--tint-size-32) var(--tint-size-8);
   appearance: none;
 }
 .search:focus-visible {
@@ -256,16 +257,18 @@
   overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
-  padding: 0 0 var(--tint-size-4) 0;
+  padding-block: 0 var(--tint-size-4);
+  padding-inline: 0;
   margin: 0;
   border-block-start: 1px solid var(--tint-card-border);
 }
 
 .category {
   color: var(--tint-text-secondary);
-  padding: var(--tint-size-8) var(--tint-size-8) var(--tint-size-4) var(--tint-size-8);
+  padding-block: var(--tint-size-8) var(--tint-size-4);
+  padding-inline: var(--tint-size-8);
   position: sticky;
-  top: 0;
+  inset-block-start: 0;
   z-index: 1;
   background: var(--tint-bg);
 }
@@ -274,7 +277,8 @@
   display: flex;
   align-items: center;
   gap: var(--tint-size-8);
-  padding: var(--tint-size-4) var(--tint-size-8);
+  padding-block: var(--tint-size-4);
+  padding-inline: var(--tint-size-8);
   cursor: pointer;
   user-select: none;
   min-height: var(--tint-size-32);
@@ -325,7 +329,8 @@
 }
 
 .empty {
-  padding: var(--tint-size-16) var(--tint-size-8);
+  padding-block: var(--tint-size-16);
+  padding-inline: var(--tint-size-8);
   color: var(--tint-text-secondary);
   text-align: center;
 }

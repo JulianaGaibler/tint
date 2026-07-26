@@ -315,7 +315,7 @@ h3
   padding: 1rem
   background-color: var(--tint-background-accent, #f5f5f5)
   border-radius: 0.5rem
-  border-left: 4px solid var(--tint-action-primary, #007acc)
+  border-inline-start: 4px solid var(--tint-action-primary, #007acc)
 
   strong
     color: var(--tint-text-primary, #333)

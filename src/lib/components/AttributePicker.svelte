@@ -403,7 +403,8 @@
   background-color: var(--tint-input-bg)
   border: 2px solid transparent
   border-radius: var(--tint-radius-input)
-  padding: calc(var(--tint-size-12) + 7px + 4px) var(--tint-size-12) calc(var(--tint-size-12) - 7px) var(--tint-size-12)
+  padding-block: calc(var(--tint-size-12) + 7px + 4px) calc(var(--tint-size-12) - 7px)
+  padding-inline: var(--tint-size-12)
   > *
     line-height: normal
   > .input
@@ -424,9 +425,9 @@
   > label
     color: var(--tint-text-secondary)
     position: absolute
-    left: var(--tint-size-12)
-    right: initial
-    top: calc(var(--tint-size-4) + 1px)
+    inset-inline-start: var(--tint-size-12)
+    inset-inline-end: initial
+    inset-block-start: calc(var(--tint-size-4) + 1px)
     transform-origin: left top
     transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1),color 150ms
     pointer-events: none
@@ -477,14 +478,15 @@
 .helper-message
   line-height: normal
   color: var(--tint-text-secondary)
-  padding: 0 var(--tint-size-12)
+  padding-block: 0
+  padding-inline: var(--tint-size-12)
   padding-block-start: var(--tint-size-4)
 
 .warning-icon
   pointer-events: none
   position: absolute
-  right: 0
-  top: 0
+  inset-inline-end: 0
+  inset-block-start: 0
   line-height: 0
   margin: calc(var(--tint-size-12) + var(--tint-size-2))
   color: var(--tint-text-accent)

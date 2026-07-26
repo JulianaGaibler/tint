@@ -127,28 +127,28 @@
   box-sizing: border-box;
 }
 .toaster[data-position=bottom-right] {
-  bottom: var(--offset);
-  right: var(--offset);
+  inset-block-end: var(--offset);
+  inset-inline-end: var(--offset);
 }
 .toaster[data-position=bottom-left] {
-  bottom: var(--offset);
-  left: var(--offset);
+  inset-block-end: var(--offset);
+  inset-inline-start: var(--offset);
 }
 .toaster[data-position=bottom-center] {
-  bottom: var(--offset);
-  left: 50%;
+  inset-block-end: var(--offset);
+  inset-inline-start: 50%;
   transform: translateX(-50%);
 }
 .toaster[data-position=top-right] {
-  top: var(--offset);
-  right: var(--offset);
+  inset-block-start: var(--offset);
+  inset-inline-end: var(--offset);
 }
 .toaster[data-position=top-left] {
-  top: var(--offset);
-  left: var(--offset);
+  inset-block-start: var(--offset);
+  inset-inline-start: var(--offset);
 }
 .toaster[data-position=top-center] {
-  top: var(--offset);
-  left: 50%;
+  inset-block-start: var(--offset);
+  inset-inline-start: 50%;
   transform: translateX(-50%);
 }</style>

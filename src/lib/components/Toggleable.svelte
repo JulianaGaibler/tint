@@ -196,7 +196,7 @@ button[role="switch"]
     height: var(--tint-size-12)
     border-radius: 50%
     position: relative
-    left: calc((var(--tint-size-24) - var(--tint-size-12)) / 2 - 1px)
+    inset-inline-start: calc((var(--tint-size-24) - var(--tint-size-12)) / 2 - 1px)
     transition: left 250ms cubic-bezier(0.42, 1.67, 0.21, 0.90)
     @media (prefers-reduced-motion: reduce)
       transition: none
@@ -204,7 +204,7 @@ button[role="switch"]
     background-color: var(--tint-action-primary)
     color: var(--tint-action-primary-text)
     &::before
-      left: calc(var(--tint-size-40) - var(--tint-size-12) - (var(--tint-size-24) - var(--tint-size-12)) / 2 - 1px)
+      inset-inline-start: calc(var(--tint-size-40) - var(--tint-size-12) - (var(--tint-size-24) - var(--tint-size-12)) / 2 - 1px)
 
 /* Common styles for ::before pseudo-elements of toggleable inputs */
 input[type="checkbox"]::before,

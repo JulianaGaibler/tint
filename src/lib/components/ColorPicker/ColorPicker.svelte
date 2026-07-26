@@ -245,7 +245,8 @@
     width: 100%
     height: 100%
     margin: 0
-    padding: calc(var(--tint-size-12) + 7px) var(--tint-size-12) calc(var(--tint-size-12) - 7px) var(--tint-size-12)
+    padding-block: calc(var(--tint-size-12) + 7px) calc(var(--tint-size-12) - 7px)
+    padding-inline: var(--tint-size-12)
     padding-inline-end: calc(var(--tint-size-32) + var(--tint-size-16))
     text-align: start
     cursor: pointer
@@ -257,9 +258,9 @@
   > label
     color: var(--tint-text-secondary)
     position: absolute
-    left: var(--tint-size-12)
-    right: initial
-    top: 50%
+    inset-inline-start: var(--tint-size-12)
+    inset-inline-end: initial
+    inset-block-start: 50%
     transform: translateY(-55%) scale(1.166)
     transform-origin: left top
     transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms
@@ -296,22 +297,23 @@
 .helper-message
   line-height: normal
   color: var(--tint-text-secondary)
-  padding: 0 var(--tint-size-12)
+  padding-block: 0
+  padding-inline: var(--tint-size-12)
   padding-block-start: var(--tint-size-4)
 
 .warning-icon
   pointer-events: none
   position: absolute
   line-height: 0
-  right: 0
-  top: 0
+  inset-inline-end: 0
+  inset-block-start: 0
   margin: calc(var(--tint-size-12) + var(--tint-size-2))
   color: var(--tint-text-accent)
 
 .swatch-wrap
   position: absolute
-  right: var(--tint-size-12)
-  top: 50%
+  inset-inline-end: var(--tint-size-12)
+  inset-block-start: 50%
   transform: translateY(-50%)
   width: var(--tint-size-24)
   height: var(--tint-size-24)

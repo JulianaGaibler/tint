@@ -340,8 +340,8 @@
 <style lang="sass">
   .toast
     position: absolute
-    left: 0
-    right: 0
+    inset-inline-start: 0
+    inset-inline-end: 0
     box-sizing: border-box
     display: flex
     align-items: center
@@ -364,15 +364,15 @@
     &[data-expanded="true"]::after
       content: ''
       position: absolute
-      left: 0
+      inset-inline-start: 0
       width: 100%
       height: calc(var(--gap) + 1px)
 
     &[data-expanded="true"][data-is-top="false"]::after
-      bottom: 100%
+      inset-block-end: 100%
 
     &[data-expanded="true"][data-is-top="true"]::after
-      top: 100%
+      inset-block-start: 100%
 
     // Disable transitions during swipe for instant feedback
     &[data-swiping="true"]
@@ -470,7 +470,7 @@
 
   .description
     opacity: 0.8
-    margin-top: var(--tint-size-2)
+    margin-block-start: var(--tint-size-2)
 
   .actions
     display: flex

@@ -378,7 +378,8 @@ canvas
   pointer-events: none
 
 .legend
-  margin: var(--tint-size-4) 0 0 0
+  margin-block: var(--tint-size-4) 0
+  margin-inline: 0
   padding: 0
   list-style: none
   display: flex
@@ -398,13 +399,13 @@ canvas
   height: 0
   // Single color for all swatches. The line pattern is what tells them
   // apart. Uses the popover's text color so it's legible on either theme.
-  border-top: 2px solid var(--tint-text)
+  border-block-start: 2px solid var(--tint-text)
   vertical-align: middle
 
 .legend .swatch-boundary
   // solid (default)
 .legend .swatch-iso
-  border-top-style: dashed
+  border-block-start-style: dashed
 .legend .swatch-contrast
-  border-top-style: dotted
+  border-block-start-style: dotted
 </style>

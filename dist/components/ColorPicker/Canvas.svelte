@@ -385,7 +385,8 @@ canvas {
 }
 
 .legend {
-  margin: var(--tint-size-4) 0 0 0;
+  margin-block: var(--tint-size-4) 0;
+  margin-inline: 0;
   padding: 0;
   list-style: none;
   display: flex;
@@ -405,14 +406,14 @@ canvas {
   display: inline-block;
   width: 16px;
   height: 0;
-  border-top: 2px solid var(--tint-text);
+  border-block-start: 2px solid var(--tint-text);
   vertical-align: middle;
 }
 
 .legend .swatch-iso {
-  border-top-style: dashed;
+  border-block-start-style: dashed;
 }
 
 .legend .swatch-contrast {
-  border-top-style: dotted;
+  border-block-start-style: dotted;
 }</style>

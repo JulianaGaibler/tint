@@ -115,10 +115,12 @@
   .offset-row
     display: flex
     gap: var(--tint-size-16)
-    margin: 20px 0
+    margin-block: 20px
+    margin-inline: 0
 
   .demo-button
-    padding: var(--tint-size-8) var(--tint-size-16)
+    padding-block: var(--tint-size-8)
+    padding-inline: var(--tint-size-16)
     background: transparent
     border: 2px solid var(--tint-action-secondary)
     border-radius: var(--tint-size-8)
@@ -145,23 +147,23 @@
     cursor: pointer
 
   .top-left
-    top: 12px
-    left: 12px
+    inset-block-start: 12px
+    inset-inline-start: 12px
 
   .top-right
-    top: 12px
-    right: 12px
+    inset-block-start: 12px
+    inset-inline-end: 12px
 
   .bottom-left
-    bottom: 12px
-    left: 12px
+    inset-block-end: 12px
+    inset-inline-start: 12px
 
   .bottom-right
-    bottom: 12px
-    right: 12px
+    inset-block-end: 12px
+    inset-inline-end: 12px
 
   .center
-    top: 50%
-    left: 50%
+    inset-block-start: 50%
+    inset-inline-start: 50%
     transform: translate(-50%, -50%)
 </style>

@@ -637,7 +637,7 @@ main
   padding: 16px
   margin-block-end: 16px
   > h2
-    border-bottom: 1px solid var(--tint-card-border)
+    border-block-end: 1px solid var(--tint-card-border)
     padding-block-end: 12px
     margin-block-end: 24px
 

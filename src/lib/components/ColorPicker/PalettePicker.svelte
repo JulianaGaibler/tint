@@ -214,8 +214,8 @@
 
 .search-icon
   position: absolute
-  left: var(--tint-size-8)
-  top: 50%
+  inset-inline-start: var(--tint-size-8)
+  inset-block-start: 50%
   transform: translateY(-50%)
   pointer-events: none
   line-height: 0
@@ -233,7 +233,8 @@
   width: 100%
   height: 100%
   margin: 0
-  padding: 0 var(--tint-size-8) 0 var(--tint-size-32)
+  padding-block: 0
+  padding-inline: var(--tint-size-32) var(--tint-size-8)
   appearance: none
   @include tint.effect-focus
   &::placeholder
@@ -252,19 +253,21 @@
   // would bleed through. Horizontal padding is also 0 so the sticky-header
   // background fills the full listbox width (no row content peeks past
   // its left/right edges).
-  padding: 0 0 var(--tint-size-4) 0
+  padding-block: 0 var(--tint-size-4)
+  padding-inline: 0
   margin: 0
   // Separator between the search pill and the list, full popover width.
   border-block-start: 1px solid var(--tint-card-border)
 
 .category
   color: var(--tint-text-secondary)
-  padding: var(--tint-size-8) var(--tint-size-8) var(--tint-size-4) var(--tint-size-8)
+  padding-block: var(--tint-size-8) var(--tint-size-4)
+  padding-inline: var(--tint-size-8)
   // Sticky inside the scrolling .listbox so the group label stays visible
   // while users scroll through long shade ramps. Background matches the
   // popover surface so rows underneath don't bleed through.
   position: sticky
-  top: 0
+  inset-block-start: 0
   z-index: 1
   background: var(--tint-bg)
 
@@ -272,7 +275,8 @@
   display: flex
   align-items: center
   gap: var(--tint-size-8)
-  padding: var(--tint-size-4) var(--tint-size-8)
+  padding-block: var(--tint-size-4)
+  padding-inline: var(--tint-size-8)
   cursor: pointer
   user-select: none
   // Keep the row in the layout flow but visually consistent at the same
@@ -317,7 +321,8 @@
   flex: 1
 
 .empty
-  padding: var(--tint-size-16) var(--tint-size-8)
+  padding-block: var(--tint-size-16)
+  padding-inline: var(--tint-size-8)
   color: var(--tint-text-secondary)
   text-align: center
 

@@ -395,8 +395,8 @@
 <style lang="sass">
 .fullscreen_overlay
   position: fixed
-  top: 0
-  left: 0
+  inset-block-start: 0
+  inset-inline-start: 0
   width: 100%
   height: 100%
   overflow: hidden
@@ -453,7 +453,7 @@
 .context_menu :global(hr)
   margin: var(--tint-size-4)
   border: 0
-  border-top: 1px solid var(--tint-card-border)
+  border-block-start: 1px solid var(--tint-card-border)
 
 .context_menu li
   text-indent: 0
@@ -466,8 +466,8 @@
 .overflow_top,
 .overflow_bottom
   position: absolute
-  left: 0
-  right: 0
+  inset-inline-start: 0
+  inset-inline-end: 0
   pointer-events: none
   border-width: 1px
   border-color: rgba(0, 0, 0, 0.05)
@@ -482,14 +482,14 @@
   justify-content: center
 
 .overflow_top
-  top: 0
-  border-bottom-style: solid
+  inset-block-start: 0
+  border-block-end-style: solid
   padding-block-start: var(--tint-size-4)
   align-items: flex-start
 
 .overflow_bottom
-  bottom: 0
-  border-top-style: solid
+  inset-block-end: 0
+  border-block-start-style: solid
   padding-block-end: var(--tint-size-4)
   align-items: flex-end
 

@@ -74,7 +74,7 @@
 >
   {#snippet template(args: any)}
     <ColorPicker {...args} bind:value={hex} />
-    <p style="margin-top:1em;">Bound value: <code>{hex}</code></p>
+    <p style="margin-block-start:1em;">Bound value: <code>{hex}</code></p>
   {/snippet}
 </Story>
 
@@ -91,7 +91,7 @@
 >
   {#snippet template(args: any)}
     <ColorPicker {...args} bind:value={oklchVal} />
-    <p style="margin-top:1em;">
+    <p style="margin-block-start:1em;">
       Bound value: <code>{JSON.stringify(oklchVal)}</code>
     </p>
   {/snippet}
@@ -109,7 +109,7 @@
 >
   {#snippet template(args: any)}
     <ColorPicker {...args} bind:value={rgbVal} />
-    <p style="margin-top:1em;">
+    <p style="margin-block-start:1em;">
       Bound value: <code>{JSON.stringify(rgbVal)}</code>
     </p>
   {/snippet}
@@ -127,7 +127,7 @@
 >
   {#snippet template(args: any)}
     <ColorPicker {...args} bind:value={hslVal} />
-    <p style="margin-top:1em;">
+    <p style="margin-block-start:1em;">
       Bound value: <code>{JSON.stringify(hslVal)}</code>
     </p>
   {/snippet}
@@ -145,7 +145,7 @@
 >
   {#snippet template(args: any)}
     <ColorPicker {...args} bind:value={p3Val} />
-    <p style="margin-top:1em;">
+    <p style="margin-block-start:1em;">
       Bound value: <code>{JSON.stringify(p3Val)}</code>
     </p>
   {/snippet}
@@ -163,7 +163,7 @@
 >
   {#snippet template(args: any)}
     <ColorPicker {...args} bind:value={hexAlpha} />
-    <p style="margin-top:1em;">Bound value: <code>{hexAlpha}</code></p>
+    <p style="margin-block-start:1em;">Bound value: <code>{hexAlpha}</code></p>
   {/snippet}
 </Story>
 
@@ -180,7 +180,9 @@
 >
   {#snippet template(args: any)}
     <ColorPicker {...args} bind:value={contrastFg} />
-    <p style="margin-top:1em;">Bound value: <code>{contrastFg}</code></p>
+    <p style="margin-block-start:1em;">
+      Bound value: <code>{contrastFg}</code>
+    </p>
   {/snippet}
 </Story>
 
@@ -204,7 +206,9 @@
 >
   {#snippet template(args: any)}
     <ColorPicker {...args} bind:value={contrastFgAlpha} />
-    <p style="margin-top:1em;">Bound value: <code>{contrastFgAlpha}</code></p>
+    <p style="margin-block-start:1em;">
+      Bound value: <code>{contrastFgAlpha}</code>
+    </p>
   {/snippet}
 </Story>
 
@@ -222,7 +226,9 @@
 >
   {#snippet template(args: any)}
     <ColorPicker {...args} bind:value={outOfGamut} />
-    <p style="margin-top:1em;">Bound value: <code>{outOfGamut}</code></p>
+    <p style="margin-block-start:1em;">
+      Bound value: <code>{outOfGamut}</code>
+    </p>
   {/snippet}
 </Story>
 
@@ -282,7 +288,9 @@
 >
   {#snippet template(args: any)}
     <ColorPicker {...args} bind:value={paletteHex} />
-    <p style="margin-top:1em;">Bound value: <code>{paletteHex}</code></p>
+    <p style="margin-block-start:1em;">
+      Bound value: <code>{paletteHex}</code>
+    </p>
   {/snippet}
 </Story>
 
@@ -329,6 +337,8 @@
 >
   {#snippet template(args: any)}
     <ColorPicker {...args} bind:value={paletteHexNoMatch} />
-    <p style="margin-top:1em;">Bound value: <code>{paletteHexNoMatch}</code></p>
+    <p style="margin-block-start:1em;">
+      Bound value: <code>{paletteHexNoMatch}</code>
+    </p>
   {/snippet}
 </Story>

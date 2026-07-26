@@ -398,16 +398,17 @@
     width: 100%
     height: 100%
     margin: 0
-    padding: calc(var(--tint-size-12) + 7px) var(--tint-size-12) calc(var(--tint-size-12) - 7px) var(--tint-size-12)
+    padding-block: calc(var(--tint-size-12) + 7px) calc(var(--tint-size-12) - 7px)
+    padding-inline: var(--tint-size-12)
     @include tint.effect-focus
   > textarea
     resize: none
   > label
     color: var(--tint-text-secondary)
     position: absolute
-    left: var(--tint-size-12)
-    right: initial
-    top: calc(var(--tint-size-48) * 0.5 - 1lh * 0.60)
+    inset-inline-start: var(--tint-size-12)
+    inset-inline-end: initial
+    inset-block-start: calc(var(--tint-size-48) * 0.5 - 1lh * 0.60)
     transform: scale(1.166)
     // transform: translateY(-55%) scale(1.166)
     transform-origin: left top
@@ -434,13 +435,13 @@
 .hasSpinner.error .input
   padding-inline-end: calc(var(--tint-size-40) + var(--tint-size-32))
 .hasSpinner .warning-icon
-  right: var(--tint-size-40)
+  inset-inline-end: var(--tint-size-40)
 
 .spinner
   position: absolute
-  top: 2px
+  inset-block-start: 2px
   inset-inline-end: 2px
-  bottom: 2px
+  inset-block-end: 2px
   display: flex
   flex-direction: column
   border-inline-start: 1px solid var(--tint-card-border)
@@ -484,14 +485,15 @@
 .helper-message
   line-height: normal
   color: var(--tint-text-secondary)
-  padding: 0 var(--tint-size-12)
+  padding-block: 0
+  padding-inline: var(--tint-size-12)
   padding-block-start: var(--tint-size-4)
 
 .warning-icon
   pointer-events: none
   position: absolute
-  right: 0
-  top: 0
+  inset-inline-end: 0
+  inset-block-start: 0
   line-height: 0
   margin: calc(var(--tint-size-12) + var(--tint-size-2))
   color: var(--tint-text-accent)

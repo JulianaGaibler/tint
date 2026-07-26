@@ -72,7 +72,7 @@
   line-height: normal
   > :global(button.tint--button)
     position: absolute
-    right: 0
+    inset-inline-end: 0
     margin: var(--tint-size-8)
     visibility: hidden
   > .input
@@ -86,7 +86,8 @@
     width: 100%
     height: 100%
     margin: 0
-    padding: var(--tint-size-12) var(--tint-size-24)
+    padding-block: var(--tint-size-12)
+    padding-inline: var(--tint-size-24)
     padding-inline-start: var(--tint-size-4)
     padding-inline-end: calc(var(--tint-size-8) * 2 + var(--tint-size-32))
     transition: padding-inline-start 0.2s ease-in-out, background-color 0.2s ease-in-out

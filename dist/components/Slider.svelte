@@ -148,10 +148,10 @@
 
 .slider-track {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  inset-block-start: 0;
+  inset-block-end: 0;
   height: var(--track-height);
   background: var(--tint-input-bg);
   border-radius: var(--track-radius);
@@ -169,7 +169,7 @@
 
 .slider-thumb {
   position: absolute;
-  top: 50%;
+  inset-block-start: 50%;
   transform: translate(-50%, -50%);
   width: var(--thumb-size);
   height: var(--thumb-size);
@@ -180,7 +180,7 @@
   pointer-events: none;
   z-index: 1;
   transition: left 50ms ease-out, transform 250ms cubic-bezier(0.42, 1.67, 0.21, 0.9);
-  left: calc(var(--edge-padding) + var(--thumb-size) / 2 + var(--fill-percentage) * (100% - var(--edge-padding) - var(--thumb-size) - var(--edge-padding)) / 100);
+  inset-inline-start: calc(var(--edge-padding) + var(--thumb-size) / 2 + var(--fill-percentage) * (100% - var(--edge-padding) - var(--thumb-size) - var(--edge-padding)) / 100);
 }
 
 .slider {
@@ -238,9 +238,9 @@
 
 .step-points {
   position: absolute;
-  left: calc(var(--edge-padding) + var(--thumb-size) / 2);
-  right: calc(var(--edge-padding) + var(--thumb-size) / 2);
-  top: 50%;
+  inset-inline-start: calc(var(--edge-padding) + var(--thumb-size) / 2);
+  inset-inline-end: calc(var(--edge-padding) + var(--thumb-size) / 2);
+  inset-block-start: 50%;
   transform: translateY(-50%);
   height: var(--tint-size-2);
   pointer-events: none;

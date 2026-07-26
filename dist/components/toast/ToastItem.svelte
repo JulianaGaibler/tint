@@ -339,8 +339,8 @@
 
 <style>.toast {
   position: absolute;
-  left: 0;
-  right: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -362,15 +362,15 @@
 .toast[data-expanded=true]::after {
   content: "";
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   width: 100%;
   height: calc(var(--gap) + 1px);
 }
 .toast[data-expanded=true][data-is-top=false]::after {
-  bottom: 100%;
+  inset-block-end: 100%;
 }
 .toast[data-expanded=true][data-is-top=true]::after {
-  top: 100%;
+  inset-block-start: 100%;
 }
 .toast[data-swiping=true] {
   transition: none;
@@ -465,7 +465,7 @@
 
 .description {
   opacity: 0.8;
-  margin-top: var(--tint-size-2);
+  margin-block-start: var(--tint-size-2);
 }
 
 .actions {

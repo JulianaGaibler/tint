@@ -901,7 +901,8 @@
   }
 }
 .track-wrap {
-  padding: var(--tint-size-4) 0;
+  padding-block: var(--tint-size-4);
+  padding-inline: 0;
 }
 
 .toggle-wrap {
@@ -932,7 +933,8 @@
   appearance: none;
   background: transparent;
   border: 0;
-  padding: var(--tint-size-2) 0;
+  padding-block: var(--tint-size-2);
+  padding-inline: 0;
   margin: 0;
   color: var(--tint-text);
   cursor: pointer;

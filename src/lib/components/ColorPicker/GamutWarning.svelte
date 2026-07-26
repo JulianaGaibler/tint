@@ -32,7 +32,8 @@
   font-weight: 600
 
 .detail
-  margin: var(--tint-size-2) 0 0 0
+  margin-block: var(--tint-size-2) 0
+  margin-inline: 0
   font-size: 0.78em
   color: var(--tint-text-secondary)
   overflow-wrap: anywhere

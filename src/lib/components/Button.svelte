@@ -173,7 +173,8 @@ a.tint--button
   vertical-align: top
   box-sizing: border-box
   min-height: var(--tint-size-48)
-  padding: var(--tint-size-8) var(--tint-size-24)
+  padding-block: var(--tint-size-8)
+  padding-inline: var(--tint-size-24)
   background-color: transparent
   border: var(--tint-border-width) solid var(--tint-action-secondary)
   color: var(--tint-action-secondary-text)
@@ -191,7 +192,8 @@ a.tint--button
     height: var(--tint-size-48)
   &.small
     min-height: var(--tint-size-32)
-    padding: var(--tint-size-2) var(--tint-size-16)
+    padding-block: var(--tint-size-2)
+    padding-inline: var(--tint-size-16)
     border-radius: var(--tint-radius-button-pill)
     &.icon
       padding: 0

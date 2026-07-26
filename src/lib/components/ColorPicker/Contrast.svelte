@@ -145,7 +145,8 @@
   grid-template-columns: auto 1fr auto auto
   align-items: center
   gap: var(--tint-size-8)
-  padding: var(--tint-size-4) var(--tint-size-8)
+  padding-block: var(--tint-size-4)
+  padding-inline: var(--tint-size-8)
   border-radius: var(--tint-radius-input)
   background: var(--tint-input-bg)
 
@@ -178,7 +179,8 @@
   font-variant-numeric: tabular-nums
   font-feature-settings: 'tnum'
   font-size: 0.85em
-  padding: var(--tint-size-2) var(--tint-size-8)
+  padding-block: var(--tint-size-2)
+  padding-inline: var(--tint-size-8)
   border-radius: var(--tint-size-4)
   border: 1px solid var(--tint-card-border)
   color: var(--tint-text)

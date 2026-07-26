@@ -146,7 +146,8 @@
   padding-inline-end: var(--tint-size-4)
   > .input
     border-radius: var(--tint-radius-input)
-    padding: calc(var(--tint-size-12) + 7px) var(--tint-size-12) calc(var(--tint-size-12) - 7px) var(--tint-size-12)
+    padding-block: calc(var(--tint-size-12) + 7px) calc(var(--tint-size-12) - 7px)
+    padding-inline: var(--tint-size-12)
     box-sizing: border-box
     width: 100%
     height: 100%
@@ -162,9 +163,9 @@
   > label
     color: var(--tint-text-secondary)
     position: absolute
-    left: var(--tint-size-12)
-    right: initial
-    top: 50%
+    inset-inline-start: var(--tint-size-12)
+    inset-inline-end: initial
+    inset-block-start: 50%
     transform-origin: left top
     transform: translateY(-106%) scale(1.0)
     pointer-events: none
@@ -177,7 +178,8 @@
 .helper-message
   line-height: normal
   color: var(--tint-text-secondary)
-  padding: 0 var(--tint-size-12)
+  padding-block: 0
+  padding-inline: var(--tint-size-12)
   padding-block-start: var(--tint-size-4)
 
 .warning-icon
