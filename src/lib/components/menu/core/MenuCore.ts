@@ -1,4 +1,4 @@
-import { throttle } from 'lodash-es'
+import { throttle } from '@lib/utils/timing'
 import { matchSorter } from 'match-sorter'
 import {
   type ActiveMenu,

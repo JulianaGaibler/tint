@@ -6,6 +6,7 @@ export const presetPalettes: PresetPalette[] = [
     colors: {
       plain: {
         bg: '#ffffff',
+        'bg-secondary': '#f4f4f6',
         text: '#1e1d25',
         'text-secondary': '#4e4c62',
         'text-accent': '#eb2a2f',
@@ -22,6 +23,7 @@ export const presetPalettes: PresetPalette[] = [
       },
       tint: {
         bg: '#fff6f6',
+        'bg-secondary': '#f7ecec',
         text: '#1e1d25',
         'text-secondary': '#9c5557',
         'text-accent': '#cc5d60',
@@ -47,6 +49,7 @@ export const presetPalettes: PresetPalette[] = [
     colors: {
       plain: {
         bg: '#ffffff',
+        'bg-secondary': '#f4f4f6',
         text: '#000000',
         'text-secondary': '#484848',
         'text-accent': '#d4213a',
@@ -63,6 +66,7 @@ export const presetPalettes: PresetPalette[] = [
       },
       tint: {
         bg: '#ffedec',
+        'bg-secondary': '#f7dedd',
         text: '#310206',
         'text-secondary': '#861021',
         'text-accent': '#d4213a',
@@ -85,6 +89,7 @@ export const presetPalettes: PresetPalette[] = [
     dark: {
       plain: {
         bg: '#150e0e',
+        'bg-secondary': '#241d1d',
         text: '#ffffff',
         'text-secondary': '#d6d6d6',
         'text-accent': '#f22643',
@@ -101,6 +106,7 @@ export const presetPalettes: PresetPalette[] = [
       },
       tint: {
         bg: '#3f1516',
+        'bg-secondary': '#4e2525',
         text: '#ffffff',
         'text-secondary': '#fcbbb8',
         'text-accent': '#f94b57',
@@ -126,6 +132,7 @@ export const presetPalettes: PresetPalette[] = [
     colors: {
       plain: {
         bg: '#ffffff',
+        'bg-secondary': '#f4f4f6',
         text: '#1e1d25',
         'text-secondary': '#4e4c62',
         'text-accent': '#ff543c',
@@ -142,6 +149,7 @@ export const presetPalettes: PresetPalette[] = [
       },
       tint: {
         bg: '#fff8f5',
+        'bg-secondary': '#f8ebe6',
         text: '#c31902',
         'text-secondary': '#9c5557',
         'text-accent': '#ff543c',
@@ -164,6 +172,7 @@ export const presetPalettes: PresetPalette[] = [
     dark: {
       plain: {
         bg: '#0f0f0f',
+        'bg-secondary': '#1d1d1d',
         text: '#ffe6e2',
         'text-secondary': '#d86d5c',
         'text-accent': '#ff543c',
@@ -180,6 +189,7 @@ export const presetPalettes: PresetPalette[] = [
       },
       tint: {
         bg: '#271614',
+        'bg-secondary': '#372321',
         text: '#ec8172',
         'text-secondary': '#c85b4d',
         'text-accent': '#ff543c',
@@ -205,6 +215,7 @@ export const presetPalettes: PresetPalette[] = [
     colors: {
       plain: {
         bg: '#ffffff',
+        'bg-secondary': '#f4f4f6',
         text: '#1e1d25',
         'text-secondary': '#4e4c62',
         'text-accent': '#eb2a2f',
@@ -221,6 +232,7 @@ export const presetPalettes: PresetPalette[] = [
       },
       tint: {
         bg: '#fff6f6',
+        'bg-secondary': '#f7ecec',
         text: '#1e1d25',
         'text-secondary': '#713032',
         'text-accent': '#cc5d60',
@@ -243,6 +255,7 @@ export const presetPalettes: PresetPalette[] = [
     dark: {
       plain: {
         bg: '#121212',
+        'bg-secondary': '#1f1f23',
         text: '#eeecfc',
         'text-secondary': '#9391aa',
         'text-accent': '#fa5e88',
@@ -259,6 +272,7 @@ export const presetPalettes: PresetPalette[] = [
       },
       tint: {
         bg: '#251316',
+        'bg-secondary': '#352124',
         text: '#fddfe4',
         'text-secondary': '#db8a98',
         'text-accent': '#fa5e88',

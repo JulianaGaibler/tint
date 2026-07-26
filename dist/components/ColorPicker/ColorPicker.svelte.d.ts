@@ -1,6 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { ColorFormat, ContrastOptions, ValueFor, WideGamutMode } from './format';
 import type { Color } from '../../color';
+import type { PaletteColor } from './palette';
 declare function $$render<F extends ColorFormat = 'hex'>(): {
     props: {
         /** Bindable value. Type derived from `format`. */
@@ -48,6 +49,14 @@ declare function $$render<F extends ColorFormat = 'hex'>(): {
         class?: string;
         /** Optional snippet for custom swatch content. */
         swatchOverlay?: Snippet;
+        /**
+         * Optional palette of named colors. When provided (and non-empty), the
+         * popover shows a Custom/Palette tab strip; the Palette pane lets users
+         * pick a token by name, with category headers, search, and keyboard nav.
+         * Names use "/" to denote categories: "color/red/70" groups under
+         * "color/red" alongside other "color/red/*" entries.
+         */
+        palette?: PaletteColor[];
     };
     exports: {};
     bindings: "element" | "value";

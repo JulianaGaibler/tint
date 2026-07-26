@@ -21,19 +21,22 @@ export type PopoverPlacement = 'top-left' | 'top-right' | 'bottom-left' | 'botto
 /**
  * Position a popover anchored to a trigger element. Decides vertical (above vs
  * below) and horizontal (extends right vs left) independently based on
- * available space, then falls back to viewport clamping when no orientation
- * fully fits, so the popover is always at least visible even on tight screens.
+ * available space. When neither side has full room vertically, picks the side
+ * with more space and returns a `maxHeight` cap so the popover shrinks instead
+ * of detaching from the anchor — the caller applies the cap and the popover's
+ * internal content scrolls.
  *
- * Modeled on the AUTOCOMPLETE branch of `menu/core/positioning.ts` but with
- * explicit corner placement and a more conservative clamp.
+ * Coordinates are viewport-relative — the popover is rendered in the top-layer
+ * via `showPopover()`, whose containing block is the viewport.
+ *
+ * Modeled on the AUTOCOMPLETE branch of `menu/core/positioning.ts`.
  */
 export declare function placePopover(anchor: DOMRect, popoverRect: DOMRect, windowDims: {
     innerWidth: number;
     innerHeight: number;
-    scrollX: number;
-    scrollY: number;
 }): {
     x: number;
     y: number;
     placement: PopoverPlacement;
+    maxHeight: number | undefined;
 };

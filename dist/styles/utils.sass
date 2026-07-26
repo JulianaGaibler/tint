@@ -10,24 +10,6 @@
   &:focus-visible
     @include effect-focus-base
 
-// Spacing and sizing
-$size-2: 2px
-$size-4: 4px
-$size-8: 8px
-$size-12: 12px
-$size-16: 16px
-$size-24: 24px
-$size-32: 32px
-$size-40: 40px
-$size-48: 48px
-$size-64: 64px
-$size-80: 80px
-
-// Constant sizes
-$button-radius-large: $size-12
-$button-radius-small: $size-80
-$input-radius: $size-8
-$card-radius: $size-12
-
-$button-border-width: $size-2
+// Spacing scale. Emitted as CSS custom properties (--tint-size-*) by generate-tokens()
+$sizes: (2: 2px, 4: 4px, 8: 8px, 12: 12px, 16: 16px, 24: 24px, 32: 32px, 40: 40px, 48: 48px, 64: 64px, 80: 80px)
 

@@ -67,13 +67,13 @@
   opacity: 0.5
 .box
   position: relative
-  height: tint.$size-48
+  height: var(--tint-size-48)
   width: 100%
   line-height: normal
   > :global(button.tint--button)
     position: absolute
     right: 0
-    margin: tint.$size-8
+    margin: var(--tint-size-8)
     visibility: hidden
   > .input
     color: var(--tint-text)
@@ -81,14 +81,14 @@
     inset: 0
     box-sizing: border-box
     background: transparent
-    border-radius: tint.$input-radius
+    border-radius: var(--tint-radius-input)
     border: 2px solid transparent
     width: 100%
     height: 100%
     margin: 0
-    padding: tint.$size-12 tint.$size-24
-    padding-inline-start: tint.$size-4
-    padding-inline-end: (tint.$size-8 * 2) + tint.$size-32
+    padding: var(--tint-size-12) var(--tint-size-24)
+    padding-inline-start: var(--tint-size-4)
+    padding-inline-end: calc(var(--tint-size-8) * 2 + var(--tint-size-32))
     transition: padding-inline-start 0.2s ease-in-out, background-color 0.2s ease-in-out
     @include tint.effect-focus
     @media (prefers-reduced-motion: reduce)
@@ -97,13 +97,13 @@
       color: var(--tint-text-secondary)
 
 .input:focus, .input.filled, .input:-webkit-autofill
-  padding-inline-start: tint.$size-24
+  padding-inline-start: var(--tint-size-24)
   background-color: var(--tint-input-bg)
   & + :global(button.tint--button)
     visibility: visible
 // has to be seperate as chrome doesn't apply the rule when using :autofill
 .input:autofill
-  padding-inline-start: tint.$size-24
+  padding-inline-start: var(--tint-size-24)
   background-color: var(--tint-input-bg)
   & + :global(button.tint--button)
     visibility: visible
@@ -111,7 +111,7 @@
 @media (forced-colors: active)
   .box > .input
     border-color: ButtonText
-    padding-inline-start: tint.$size-24
+    padding-inline-start: var(--tint-size-24)
   .disabled
     opacity: 1
     color: GrayText

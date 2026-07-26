@@ -359,8 +359,8 @@
   font-weight: 500;
   color: currentColor;
   background-color: color-mix(in srgb, transparent 90%, currentColor);
-  padding: 8px;
-  border-radius: 80px;
+  padding: var(--tint-size-8);
+  border-radius: var(--tint-radius-button-pill);
   white-space: nowrap;
   user-select: none;
   min-width: 4.5ch;

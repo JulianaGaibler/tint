@@ -211,7 +211,7 @@
   flex-wrap: wrap;
   gap: 0;
   align-items: stretch;
-  padding: 8px;
+  padding: var(--tint-size-8);
   background-color: var(--tint-input-bg);
   border-radius: 20px;
 }

@@ -309,7 +309,7 @@
   position: relative;
   width: 100%;
   aspect-ratio: 1/1;
-  border-radius: 8px;
+  border-radius: var(--tint-size-8);
   overflow: hidden;
   cursor: crosshair;
   touch-action: none;
@@ -323,6 +323,14 @@
   .container:focus-visible {
     outline-color: CanvasText;
   }
+}
+.container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  pointer-events: none;
 }
 
 canvas {
@@ -366,8 +374,8 @@ canvas {
 
 .cursor {
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: var(--tint-size-12);
+  height: var(--tint-size-12);
   border-radius: 50%;
   background: transparent;
   border: 2px solid #fff;
@@ -377,12 +385,12 @@ canvas {
 }
 
 .legend {
-  margin: 4px 0 0 0;
+  margin: var(--tint-size-4) 0 0 0;
   padding: 0;
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--tint-size-8);
   font-size: 0.72em;
   color: var(--tint-text-secondary);
 }
@@ -390,7 +398,7 @@ canvas {
 .legend li {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--tint-size-4);
 }
 
 .legend .swatch {

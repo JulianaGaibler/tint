@@ -12,15 +12,38 @@
 // Function to generate tint color variables
 @mixin generate-color-variables($colors)
   :root
+    --tint-bg-secondary: color-mix(in srgb, var(--tint-bg), var(--tint-text) 5%)
     @include generate-css-vars(map.get($colors, general))
   :root, .tint--plain
     @include generate-css-vars(map.get($colors, plain))
   .tint--tinted
     @include generate-css-vars(map.get($colors, tint))
 
-// generate-font-faces
-@mixin generate-font-faces($path: '~tint/fonts')
-  @each $font in fonts.$fonts
+// Dimensional design tokens. Radii and border width derive from the size scale;
+// override on :root to retheme, e.g. --tint-radius-input: 4px
+@mixin generate-tokens()
+  :root
+    @each $key, $value in utils.$sizes
+      --tint-size-#{$key}: #{$value}
+    --tint-radius-input: var(--tint-size-8)
+    --tint-radius-button: var(--tint-size-12)
+    --tint-radius-button-pill: var(--tint-size-80)
+    --tint-radius-menu: var(--tint-size-8)
+    --tint-radius-card: var(--tint-size-12)
+    --tint-border-width: var(--tint-size-2)
+
+// Font family tokens. Override on :root to swap fonts, e.g.
+// --tint-font-sans: 'Inter', sans-serif
+@mixin generate-fonts()
+  :root
+    --tint-font-sans: #{typography.$hk-grotesk-font}
+    --tint-font-serif: #{typography.$merriweather-font}
+    --tint-font-mono: monospace
+
+// generate-font-faces. Pass $font-list to generate @font-face rules for your
+// own woff2 files instead of tint's bundled fonts.
+@mixin generate-font-faces($path: '~tint/fonts', $font-list: fonts.$fonts)
+  @each $font in $font-list
     @font-face
       font-family: map.get($font, family)
       font-weight: map.get($font, weight)
@@ -42,26 +65,26 @@ $layer-names: tint-reset, tint-typography, tint-global
     // Headings
     h1
       @include typography.type-class(title-serif-1)
-      margin-block-start: utils.$size-32
-      margin-block-end: utils.$size-16
+      margin-block-start: var(--tint-size-32)
+      margin-block-end: var(--tint-size-16)
       &:first-child
         margin-block-start: 0
     h2
       @include typography.type-class(title-serif-2)
-      margin-block-start: utils.$size-32
-      margin-block-end: utils.$size-16
+      margin-block-start: var(--tint-size-32)
+      margin-block-end: var(--tint-size-16)
       &:first-child
         margin-block-start: 0
     h3
       @include typography.type-class(title-serif-3)
-      margin-block-start: utils.$size-24
-      margin-block-end: utils.$size-12
+      margin-block-start: var(--tint-size-24)
+      margin-block-end: var(--tint-size-12)
       &:first-child
         margin-block-start: 0
     h4, h5, h6
       @include typography.type-class(title-sans-3)
-      margin-block-start: utils.$size-24
-      margin-block-end: utils.$size-12
+      margin-block-start: var(--tint-size-24)
+      margin-block-end: var(--tint-size-12)
       &:first-child
         margin-block-start: 0
 
@@ -74,7 +97,7 @@ $layer-names: tint-reset, tint-typography, tint-global
 
     // Lists
     li
-      margin-block-end: utils.$size-8
+      margin-block-end: var(--tint-size-8)
       &:last-child
         margin-block-end: 0
 
@@ -83,18 +106,18 @@ $layer-names: tint-reset, tint-typography, tint-global
       @include typography.type-class(body-sans-small)
       background: var(--tint-input-bg)
       color: var(--tint-text-accent)
-      padding: utils.$size-2 utils.$size-4
-      border-radius: utils.$size-4
+      padding: var(--tint-size-2) var(--tint-size-4)
+      border-radius: var(--tint-size-4)
       border: 1px solid var(--tint-card-border)
     pre
       @include typography.type-class(body-sans-small)
       background: var(--tint-input-bg)
       color: var(--tint-text)
-      padding: utils.$size-16
-      border-radius: utils.$size-8
+      padding: var(--tint-size-16)
+      border-radius: var(--tint-size-8)
       border: 1px solid var(--tint-card-border)
       overflow-x: auto
-      margin-block-end: utils.$size-16
+      margin-block-end: var(--tint-size-16)
       line-height: 1.6
       &:last-child
         margin-block-end: 0
@@ -116,15 +139,15 @@ $layer-names: tint-reset, tint-typography, tint-global
       @include typography.type-class(ui-small)
       background: var(--tint-input-bg)
       color: var(--tint-text)
-      padding: utils.$size-2 utils.$size-8
-      border-radius: utils.$size-4
+      padding: var(--tint-size-2) var(--tint-size-8)
+      border-radius: var(--tint-size-4)
       border: 1px solid var(--tint-card-border)
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
-      font-family: monospace
+      font-family: var(--tint-font-mono)
 
     // Definition lists
     dl
-      margin-block-end: utils.$size-16
+      margin-block-end: var(--tint-size-16)
       &:last-child
         margin-block-end: 0
 
@@ -132,15 +155,15 @@ $layer-names: tint-reset, tint-typography, tint-global
     hr
       border: none
       border-top: 1px solid var(--tint-card-border)
-      margin-block-start: utils.$size-24
-      margin-block-end: utils.$size-24
+      margin-block-start: var(--tint-size-24)
+      margin-block-end: var(--tint-size-24)
 
   // Serif variant (default)
   .tint--type
     // Paragraphs
     p
       @include typography.type-class(body-serif)
-      margin-block-end: utils.$size-16
+      margin-block-end: var(--tint-size-16)
       line-height: 1.7
       &:last-child
         margin-block-end: 0
@@ -148,8 +171,8 @@ $layer-names: tint-reset, tint-typography, tint-global
     // Lists
     ul, ol
       @include typography.type-class(body-serif)
-      margin-block-end: utils.$size-16
-      padding-inline-start: utils.$size-24
+      margin-block-end: var(--tint-size-16)
+      padding-inline-start: var(--tint-size-24)
       line-height: 1.7
       &:last-child
         margin-block-end: 0
@@ -158,28 +181,28 @@ $layer-names: tint-reset, tint-typography, tint-global
     blockquote
       @include typography.type-class(body-serif)
       color: var(--tint-text-secondary)
-      border-left: utils.$size-4 solid var(--tint-card-border)
-      padding-inline-start: utils.$size-16
+      border-left: var(--tint-size-4) solid var(--tint-card-border)
+      padding-inline-start: var(--tint-size-16)
       margin-inline-start: 0
-      margin-block-end: utils.$size-16
+      margin-block-end: var(--tint-size-16)
       font-style: italic
       line-height: 1.7
       &:last-child
         margin-block-end: 0
       p
-        margin-block-end: utils.$size-12
+        margin-block-end: var(--tint-size-12)
         &:last-child
           margin-block-end: 0
 
     dt
       @include typography.type-class(body-serif-bold)
-      margin-block-start: utils.$size-12
+      margin-block-start: var(--tint-size-12)
       &:first-child
         margin-block-start: 0
     dd
       @include typography.type-class(body-serif)
-      margin-inline-start: utils.$size-24
-      margin-block-end: utils.$size-8
+      margin-inline-start: var(--tint-size-24)
+      margin-block-end: var(--tint-size-8)
       line-height: 1.7
 
   // Sans variant
@@ -187,7 +210,7 @@ $layer-names: tint-reset, tint-typography, tint-global
     // Paragraphs
     p
       @include typography.type-class(body-sans)
-      margin-block-end: utils.$size-16
+      margin-block-end: var(--tint-size-16)
       line-height: 1.4
       &:last-child
         margin-block-end: 0
@@ -195,8 +218,8 @@ $layer-names: tint-reset, tint-typography, tint-global
     // Lists
     ul, ol
       @include typography.type-class(body-sans)
-      margin-block-end: utils.$size-16
-      padding-inline-start: utils.$size-24
+      margin-block-end: var(--tint-size-16)
+      padding-inline-start: var(--tint-size-24)
       line-height: 1.4
       &:last-child
         margin-block-end: 0
@@ -205,27 +228,27 @@ $layer-names: tint-reset, tint-typography, tint-global
     blockquote
       @include typography.type-class(body-sans)
       color: var(--tint-text-secondary)
-      border-left: utils.$size-4 solid var(--tint-card-border)
-      padding-inline-start: utils.$size-16
+      border-left: var(--tint-size-4) solid var(--tint-card-border)
+      padding-inline-start: var(--tint-size-16)
       margin-inline-start: 0
-      margin-block-end: utils.$size-16
+      margin-block-end: var(--tint-size-16)
       line-height: 1.4
       &:last-child
         margin-block-end: 0
       p
-        margin-block-end: utils.$size-12
+        margin-block-end: var(--tint-size-12)
         &:last-child
           margin-block-end: 0
 
     dt
       @include typography.type-class(body-sans-bold)
-      margin-block-start: utils.$size-12
+      margin-block-start: var(--tint-size-12)
       &:first-child
         margin-block-start: 0
     dd
       @include typography.type-class(body-sans)
-      margin-inline-start: utils.$size-24
-      margin-block-end: utils.$size-8
+      margin-inline-start: var(--tint-size-24)
+      margin-block-end: var(--tint-size-8)
       line-height: 1.4
 
 // Define the tint base styles
@@ -241,7 +264,7 @@ $layer-names: tint-reset, tint-typography, tint-global
       margin: 0
       background: var(--tint-bg)
       color: var(--tint-text)
-      font-family: "HK Grotesk"
+      font-family: var(--tint-font-sans)
       font-weight: 500
       font-size: 16px
     h1.tint--type
@@ -255,7 +278,7 @@ $layer-names: tint-reset, tint-typography, tint-global
     a, button
       color: inherit
     .tint--card
-      border-radius: utils.$card-radius
+      border-radius: var(--tint-radius-card)
       border: 1px solid var(--tint-card-border)
       box-shadow: var(--tint-card-shadow)
       background: var(--tint-bg)
@@ -317,8 +340,8 @@ $layer-names: tint-reset, tint-typography, tint-global
     .tint-tooltip-bubble
       background-color: var(--tint-text)
       color: var(--tint-bg)
-      padding: utils.$size-4
-      border-radius: utils.$size-8
+      padding: var(--tint-size-4)
+      border-radius: var(--tint-size-8)
       word-wrap: break-word
       box-shadow: 0 2px 6px rgba(0, 0, 0, .15)
       text-align: center
@@ -329,9 +352,12 @@ $layer-names: tint-reset, tint-typography, tint-global
       -moz-osx-font-smoothing: grayscale
     @include prose-styles()
 
-@mixin full-bootstrap($path: '~tint/fonts')
+@mixin full-bootstrap($path: '~tint/fonts', $include-font-faces: true)
   @include layers()
+  @include generate-tokens()
+  @include generate-fonts()
   @include base()
   @layer tint-typography
     @include type-classes()
-  @include generate-font-faces($path)
+  @if $include-font-faces
+    @include generate-font-faces($path)

@@ -344,10 +344,10 @@
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px;
-  padding-inline-start: 12px;
-  border-radius: 12px;
+  gap: var(--tint-size-12);
+  padding: var(--tint-size-8);
+  padding-inline-start: var(--tint-size-12);
+  border-radius: var(--tint-radius-card);
   border: 1px solid var(--tint-card-border);
   background: var(--tint-bg);
   color: var(--tint-text);
@@ -465,11 +465,11 @@
 
 .description {
   opacity: 0.8;
-  margin-top: 2px;
+  margin-top: var(--tint-size-2);
 }
 
 .actions {
   display: flex;
-  gap: 8px;
+  gap: var(--tint-size-8);
   flex-shrink: 0;
 }</style>

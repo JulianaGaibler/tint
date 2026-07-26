@@ -54,10 +54,10 @@
   display: flex
   flex-wrap: wrap
   align-items: center
-  gap: tint.$size-4 tint.$size-8
+  gap: var(--tint-size-4) var(--tint-size-8)
   border: 2px solid var(--tint-text-secondary)
-  border-radius: tint.$size-8
-  padding: tint.$size-8
+  border-radius: var(--tint-radius-card)
+  padding: var(--tint-size-8)
 
 .box.warning
   border-color: var(--tint-text-accent)
@@ -65,8 +65,8 @@
 .icon
   color: var(--tint-text-secondary)
   line-height: 0
-  width: tint.$size-32
-  height: tint.$size-32
+  width: var(--tint-size-32)
+  height: var(--tint-size-32)
   display: flex
   align-items: center
   justify-content: center
@@ -81,13 +81,13 @@
   // shrink content past min-content rather than wrap.
   flex: 1 1 60%
   min-width: 60%
-  margin-block: tint.$size-4 + 1px
+  margin-block: calc(var(--tint-size-4) + 1px)
   color: var(--tint-text-primary)
 
 .actions
   display: flex
   align-items: center
-  gap: tint.$size-4
+  gap: var(--tint-size-4)
   flex: 0 0 auto
   // Right-align when inline AND when wrapped to a new row alone.
   margin-inline-start: auto

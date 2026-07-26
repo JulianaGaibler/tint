@@ -175,12 +175,12 @@ a.tint--button
 .tint--button
   vertical-align: top
   box-sizing: border-box
-  min-height: tint.$size-48
-  padding: tint.$size-8 tint.$size-24
+  min-height: var(--tint-size-48)
+  padding: var(--tint-size-8) var(--tint-size-24)
   background-color: transparent
-  border: tint.$button-border-width solid var(--tint-action-secondary)
+  border: var(--tint-border-width) solid var(--tint-action-secondary)
   color: var(--tint-action-secondary-text)
-  border-radius: tint.$button-radius-large
+  border-radius: var(--tint-radius-button)
   flex-shrink: 0
   @include tint.effect-focus
   > :global(*)
@@ -190,16 +190,16 @@ a.tint--button
     display: inline-flex
     justify-content: center
     align-items: center
-    width: tint.$size-48
-    height: tint.$size-48
+    width: var(--tint-size-48)
+    height: var(--tint-size-48)
   &.small
-    min-height: tint.$size-32
-    padding: tint.$size-2 tint.$size-16
-    border-radius: tint.$button-radius-small
+    min-height: var(--tint-size-32)
+    padding: var(--tint-size-2) var(--tint-size-16)
+    border-radius: var(--tint-radius-button-pill)
     &.icon
       padding: 0
-      width: tint.$size-32
-      height: tint.$size-32
+      width: var(--tint-size-32)
+      height: var(--tint-size-32)
   @media (forced-colors: none), (prefers-contrast: no-preference)
     &:global(.ghost)
       border-color: transparent

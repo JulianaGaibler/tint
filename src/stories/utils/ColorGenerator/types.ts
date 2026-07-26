@@ -1,5 +1,6 @@
 export interface PaletteColors {
   bg: string
+  'bg-secondary': string
   text: string
   'text-secondary': string
   'text-accent': string

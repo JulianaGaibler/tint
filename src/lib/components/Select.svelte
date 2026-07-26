@@ -117,25 +117,25 @@
   width: 100%
 .box
   position: relative
-  height: tint.$size-48
+  height: var(--tint-size-48)
   line-height: normal
   > .input
     appearance: none
     box-sizing: border-box
     background-color: var(--tint-input-bg)
     color: currentColor
-    border-radius: tint.$input-radius
+    border-radius: var(--tint-radius-input)
     border: 2px solid transparent
     width: 100%
     height: 100%
     margin: 0
-    padding: (tint.$size-12 + 7px) tint.$size-12 (tint.$size-12 - 7px) tint.$size-12
-    padding-inline-end: (tint.$size-8 * 3) + tint.$size-32
+    padding: calc(var(--tint-size-12) + 7px) var(--tint-size-12) calc(var(--tint-size-12) - 7px) var(--tint-size-12)
+    padding-inline-end: calc(var(--tint-size-8) * 3 + var(--tint-size-32))
     @include tint.effect-focus
   > label
     color: var(--tint-text-secondary)
     position: absolute
-    left: tint.$size-12
+    left: var(--tint-size-12)
     right: initial
     top: 50%
     transform: translateY(-55%) scale(1.166)
@@ -152,8 +152,8 @@
 .helper-message
   line-height: normal
   color: var(--tint-text-secondary)
-  padding: 0 tint.$size-12
-  padding-block-start: tint.$size-4
+  padding: 0 var(--tint-size-12)
+  padding-block-start: var(--tint-size-4)
 
 .warning-icon, .dropdown
   pointer-events: none
@@ -161,12 +161,12 @@
   line-height: 0
   right: 0
   top: 0
-  margin-block: tint.$size-16
-  margin-inline: tint.$size-12
+  margin-block: var(--tint-size-16)
+  margin-inline: var(--tint-size-12)
   color: var(--tint-text-secondary)
 .warning-icon
-  margin: tint.$size-12 + tint.$size-2
-  right: tint.$size-16
+  margin: calc(var(--tint-size-12) + var(--tint-size-2))
+  right: var(--tint-size-16)
   color: var(--tint-text-accent)
 
 @media (forced-colors: active)

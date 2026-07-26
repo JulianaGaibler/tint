@@ -2,6 +2,14 @@
 // shell (the closed swatch + label). Kept independent of `@lib/color` so
 // the shell renders without pulling in parsing or color-space conversion.
 // The full serializer in `@lib/color/serialize.ts` loads with the popover.
+//
+// For format='hex', `value` is contractually a hex string but consumers
+// commonly pass `rgb(...)`, `rgba(...)`, or named colors when the values
+// came from an external source (templates, imports, manifests). To keep
+// the displayed text consistent with what the picker emits, the shell
+// normalizes any CSS color string to hex via a DOM-based parse before
+// returning. Results are memoized so repeated renders don't keep
+// roundtripping through the DOM.
 
 import type {
   ColorFormat,
@@ -29,6 +37,7 @@ export function shellToCss<F extends ColorFormat>(
 ): string {
   switch (format) {
     case 'hex':
+      return normalizeHexDisplay(value as string)
     case 'css':
       return value as string
     case 'rgb': {
@@ -73,4 +82,79 @@ export function shellToCss<F extends ColorFormat>(
     default:
       return ''
   }
+}
+
+const hexCache = new Map<string, string>()
+const HEX_RE = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i
+
+/**
+ * Canonicalize an arbitrary CSS color string for **comparison** (not display).
+ * Same DOM-based normalization as the display path, then upper-cased and with
+ * any fully-opaque alpha stripped so `#ff0000` ↔ `#FF0000FF` ↔ `hsl(0 100%
+ * 50%)` collapse to the same key. Inputs the browser can't parse fall through
+ * unchanged.
+ *
+ * Kept here (instead of in palette.ts) so the always-loaded ColorPicker shell
+ * can match the current value against a palette without pulling in the
+ * `@lib/color` engine — that engine still loads with the popover.
+ */
+export function canonicalCss(value: string): string {
+  if (!value) return value
+  const hex = normalizeHexDisplay(value).toUpperCase()
+  if (/^#[0-9A-F]{8}$/.test(hex) && hex.endsWith('FF')) return hex.slice(0, 7)
+  if (/^#[0-9A-F]{4}$/.test(hex) && hex.endsWith('F')) return hex.slice(0, 4)
+  return hex
+}
+
+/**
+ * Normalize an arbitrary CSS color string to hex for display in the picker
+ * shell. Values already in hex pass through unchanged. Keyword colors with no
+ * hex representation (`transparent`, `currentColor`) are preserved so the label
+ * stays meaningful. Anything the browser can't parse is returned as given.
+ */
+function normalizeHexDisplay(value: string): string {
+  if (!value) return value
+  if (HEX_RE.test(value)) return value
+  if (value === 'transparent' || value === 'currentColor') return value
+
+  const cached = hexCache.get(value)
+  if (cached !== undefined) return cached
+
+  if (typeof document === 'undefined') return value
+
+  const probe = document.createElement('span')
+  probe.style.color = value
+  if (!probe.style.color) {
+    hexCache.set(value, value)
+    return value
+  }
+  document.body.appendChild(probe)
+  const computed = getComputedStyle(probe).color
+  probe.remove()
+
+  const match = computed.match(/^rgba?\(([^)]+)\)$/i)
+  if (!match) {
+    hexCache.set(value, value)
+    return value
+  }
+  const parts = match[1]
+    .split(/[,\s/]+/)
+    .filter(Boolean)
+    .map(Number)
+  if (parts.length < 3 || parts.some((n) => !Number.isFinite(n))) {
+    hexCache.set(value, value)
+    return value
+  }
+  const [r, g, b, a = 1] = parts
+  const hex = (n: number) =>
+    Math.round(Math.max(0, Math.min(255, n)))
+      .toString(16)
+      .padStart(2, '0')
+      .toUpperCase()
+  const result =
+    a < 1
+      ? `#${hex(r)}${hex(g)}${hex(b)}${hex(a * 255)}`
+      : `#${hex(r)}${hex(g)}${hex(b)}`
+  hexCache.set(value, result)
+  return result
 }

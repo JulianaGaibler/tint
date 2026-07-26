@@ -152,15 +152,13 @@
 {/if}
 
 <style lang="sass">
-@use 'sass:math'
-
 input, button
   appearance: none
   background-color: transparent
   margin: 0
-  width: tint.$size-24
-  height: tint.$size-24
-  border: tint.$button-border-width solid var(--tint-action-primary)
+  width: var(--tint-size-24)
+  height: var(--tint-size-24)
+  border: var(--tint-border-width) solid var(--tint-action-primary)
   transform: translateY(-0.075em)
   display: flex
   align-items: center
@@ -185,20 +183,20 @@ input:checked, button[aria-checked="true"]
     background-color: var(--tint-action-primary-active)
 
 button[role="switch"]
-  width: tint.$size-40
+  width: var(--tint-size-40)
   color: var(--tint-action-primary)
   transform: translateY(-0.075em) // ???
   justify-content: flex-start
-  border-radius: tint.$button-radius-small
+  border-radius: var(--tint-radius-button-pill)
   &::before
     // prevent weird bug in Chrome
     display: block
     forced-color-adjust: none
-    width: tint.$size-12
-    height: tint.$size-12
+    width: var(--tint-size-12)
+    height: var(--tint-size-12)
     border-radius: 50%
     position: relative
-    left: math.div(tint.$size-24 - tint.$size-12, 2) - 1px
+    left: calc((var(--tint-size-24) - var(--tint-size-12)) / 2 - 1px)
     transition: left 250ms cubic-bezier(0.42, 1.67, 0.21, 0.90)
     @media (prefers-reduced-motion: reduce)
       transition: none
@@ -206,7 +204,7 @@ button[role="switch"]
     background-color: var(--tint-action-primary)
     color: var(--tint-action-primary-text)
     &::before
-      left: tint.$size-40 - tint.$size-12 - math.div(tint.$size-24 - tint.$size-12, 2) - 1px
+      left: calc(var(--tint-size-40) - var(--tint-size-12) - (var(--tint-size-24) - var(--tint-size-12)) / 2 - 1px)
 
 /* Common styles for ::before pseudo-elements of toggleable inputs */
 input[type="checkbox"]::before,
@@ -217,7 +215,7 @@ input[type="radio"]::before
     transition: scale 250ms cubic-bezier(0.42, 1.67, 0.21, 0.90)
 
 input[type="checkbox"]
-  border-radius: tint.$size-4
+  border-radius: var(--tint-size-4)
   &::before
     width: 14px
     height: 14px
@@ -227,8 +225,8 @@ input[type="checkbox"]
 input[type="radio"]
   border-radius: 50%
   &::before
-    width: tint.$size-12
-    height: tint.$size-12
+    width: var(--tint-size-12)
+    height: var(--tint-size-12)
     border-radius: 50%
 
 input[type="radio"], input[type="checkbox"]

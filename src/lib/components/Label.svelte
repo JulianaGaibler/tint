@@ -77,7 +77,7 @@
 .label
   display: flex
   align-items: center
-  gap: tint.$size-8
+  gap: var(--tint-size-8)
   font-weight: 500
   color: var(--tint-text-primary)
   cursor: pointer
@@ -98,7 +98,7 @@
   line-height: 1.4
 
 .additional-content
-  margin-block-start: tint.$size-4
+  margin-block-start: var(--tint-size-4)
 
 .label-content.disabled
   .label

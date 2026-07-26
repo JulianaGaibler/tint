@@ -176,12 +176,12 @@
 .tint--button {
   vertical-align: top;
   box-sizing: border-box;
-  min-height: 48px;
-  padding: 8px 24px;
+  min-height: var(--tint-size-48);
+  padding: var(--tint-size-8) var(--tint-size-24);
   background-color: transparent;
-  border: 2px solid var(--tint-action-secondary);
+  border: var(--tint-border-width) solid var(--tint-action-secondary);
   color: var(--tint-action-secondary-text);
-  border-radius: 12px;
+  border-radius: var(--tint-radius-button);
   flex-shrink: 0;
 }
 .tint--button:focus-visible {
@@ -201,18 +201,18 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 48px;
-  height: 48px;
+  width: var(--tint-size-48);
+  height: var(--tint-size-48);
 }
 .tint--button.small {
-  min-height: 32px;
-  padding: 2px 16px;
-  border-radius: 80px;
+  min-height: var(--tint-size-32);
+  padding: var(--tint-size-2) var(--tint-size-16);
+  border-radius: var(--tint-radius-button-pill);
 }
 .tint--button.small.icon {
   padding: 0;
-  width: 32px;
-  height: 32px;
+  width: var(--tint-size-32);
+  height: var(--tint-size-32);
 }
 @media (forced-colors: none), (prefers-contrast: no-preference) {
   .tint--button:global(.ghost) {

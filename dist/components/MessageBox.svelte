@@ -53,10 +53,10 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px 8px;
+  gap: var(--tint-size-4) var(--tint-size-8);
   border: 2px solid var(--tint-text-secondary);
-  border-radius: 8px;
-  padding: 8px;
+  border-radius: var(--tint-radius-card);
+  padding: var(--tint-size-8);
 }
 
 .box.warning {
@@ -66,8 +66,8 @@
 .icon {
   color: var(--tint-text-secondary);
   line-height: 0;
-  width: 32px;
-  height: 32px;
+  width: var(--tint-size-32);
+  height: var(--tint-size-32);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,14 +81,14 @@
 .content {
   flex: 1 1 60%;
   min-width: 60%;
-  margin-block: 5px;
+  margin-block: calc(var(--tint-size-4) + 1px);
   color: var(--tint-text-primary);
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--tint-size-4);
   flex: 0 0 auto;
   margin-inline-start: auto;
 }

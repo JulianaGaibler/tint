@@ -64,7 +64,7 @@ export function toHex(c) {
     const r = clip(srgb.components[0]);
     const g = clip(srgb.components[1]);
     const b = clip(srgb.components[2]);
-    const hex2 = (n) => n.toString(16).padStart(2, '0');
+    const hex2 = (n) => n.toString(16).padStart(2, '0').toUpperCase();
     if (srgb.alpha < 1) {
         return '#' + hex2(r) + hex2(g) + hex2(b) + hex2(clip(srgb.alpha));
     }

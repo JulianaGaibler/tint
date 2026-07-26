@@ -161,11 +161,11 @@
 .grid
   display: grid
   grid-template-columns: repeat(3, minmax(0, 1fr))
-  gap: tint.$size-8
+  gap: var(--tint-size-8)
 
 .grid.show-alpha
   grid-template-columns: repeat(4, minmax(0, 1fr))
 
 .hex-row
-  margin-block-start: tint.$size-8
+  margin-block-start: var(--tint-size-8)
 </style>

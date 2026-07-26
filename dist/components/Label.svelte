@@ -77,7 +77,7 @@
 .label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tint-size-8);
   font-weight: 500;
   color: var(--tint-text-primary);
   cursor: pointer;
@@ -103,7 +103,7 @@
 }
 
 .additional-content {
-  margin-block-start: 4px;
+  margin-block-start: var(--tint-size-4);
 }
 
 .label-content.disabled .label {

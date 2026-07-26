@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from 'svelte/elements'
   import IconWarning from '@lib/icons/20-warning.svg?raw'
+  import ChevronUp from '@lib/icons/14-chevron-menu-up.svg?raw'
+  import ChevronDown from '@lib/icons/14-chevron-menu-down.svg?raw'
   import { onMount } from 'svelte'
 
   interface Props extends Omit<
@@ -148,29 +150,54 @@
     return fixed.replace(/0+$/, '').replace(/\.$/, '')
   }
 
-  function handleArrowStep(e: KeyboardEvent): boolean {
-    if (step === undefined) return false
-    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return false
+  // A number input renders custom spinner buttons in place of the native ones.
+  let isNumber = $derived(variant === 'input' && type === 'number')
 
-    const multiplier = e.shiftKey ? 10 : e.altKey ? 0.1 : 1
-    const effectiveStep = step * multiplier
-    const direction = e.key === 'ArrowUp' ? 1 : -1
+  const numeric = $derived(parseFloat(value))
+  let atMax = $derived(
+    max !== undefined && Number.isFinite(numeric) && numeric >= max,
+  )
+  let atMin = $derived(
+    min !== undefined && Number.isFinite(numeric) && numeric <= min,
+  )
 
+  // Step the value by `step` (defaulting to 1 for number inputs), clamped to
+  // [min, max] and formatted. Shared by Arrow Up/Down and the spinner buttons.
+  function stepValue(direction: 1 | -1, multiplier = 1) {
+    const effectiveStep = (step ?? 1) * multiplier
     const fallback = min !== undefined ? min : 0
     const current = parseFloat(value)
     const base = Number.isFinite(current) ? current : fallback
-    let next = base + effectiveStep * direction
 
     const lo = min !== undefined ? min : -Infinity
     const hi = max !== undefined ? max : Infinity
-    next = Math.max(lo, Math.min(hi, next))
+    const next = Math.max(lo, Math.min(hi, base + effectiveStep * direction))
 
-    e.preventDefault()
     const formatted = formatStepResult(next)
     value = formatted
     oncommit?.(formatted)
+  }
+
+  function handleArrowStep(e: KeyboardEvent): boolean {
+    if (step === undefined && !isNumber) return false
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return false
+
+    const multiplier = e.shiftKey ? 10 : e.altKey ? 0.1 : 1
+    e.preventDefault()
+    stepValue(e.key === 'ArrowUp' ? 1 : -1, multiplier)
     return true
   }
+
+  function spin(direction: 1 | -1) {
+    if (disabled) return
+    stepValue(direction)
+    // Keep focus on the field so typing and blur-commit still work.
+    element?.focus()
+  }
+
+  // Tracks which spinner button is held. The mousedown preventDefault that keeps
+  // focus on the input also suppresses the native :active state, so drive it here.
+  let pressed = $state<'up' | 'down' | null>(null)
 
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Escape' && preEditValue !== undefined) {
@@ -220,6 +247,7 @@
   class:error
   class:disabled
   class:fillWidth
+  class:hasSpinner={isNumber}
   class:textarea={variant === 'textarea'}
   class={className}
 >
@@ -303,6 +331,38 @@
       />
     {/if}
     <label class="tint--type-input-small" for={id}>{label}</label>
+    {#if isNumber}
+      <div class="spinner">
+        <button
+          type="button"
+          tabindex="-1"
+          class="spin-up"
+          class:pressed={pressed === 'up'}
+          aria-label="Increase value"
+          disabled={disabled || atMax}
+          onmousedown={(e) => e.preventDefault()}
+          onpointerdown={() => (pressed = 'up')}
+          onpointerup={() => (pressed = null)}
+          onpointerleave={() => (pressed = null)}
+          onpointercancel={() => (pressed = null)}
+          onclick={() => spin(1)}>{@html ChevronUp}</button
+        >
+        <button
+          type="button"
+          tabindex="-1"
+          class="spin-down"
+          class:pressed={pressed === 'down'}
+          aria-label="Decrease value"
+          disabled={disabled || atMin}
+          onmousedown={(e) => e.preventDefault()}
+          onpointerdown={() => (pressed = 'down')}
+          onpointerup={() => (pressed = null)}
+          onpointerleave={() => (pressed = null)}
+          onpointercancel={() => (pressed = null)}
+          onclick={() => spin(-1)}>{@html ChevronDown}</button
+        >
+      </div>
+    {/if}
     {#if error}
       <span aria-hidden="true" class="warning-icon">{@html IconWarning}</span>
     {/if}
@@ -331,24 +391,24 @@
     line-height: normal
   > .input
     box-sizing: border-box
-    min-height: tint.$size-48
-    border-radius: tint.$input-radius
+    min-height: var(--tint-size-48)
+    border-radius: var(--tint-radius-input)
     border: 2px solid transparent
     background-color: var(--tint-input-bg)
     color: currentColor
     width: 100%
     height: 100%
     margin: 0
-    padding: (tint.$size-12 + 7px) tint.$size-12 (tint.$size-12 - 7px) tint.$size-12
+    padding: calc(var(--tint-size-12) + 7px) var(--tint-size-12) calc(var(--tint-size-12) - 7px) var(--tint-size-12)
     @include tint.effect-focus
   > textarea
     resize: none
   > label
     color: var(--tint-text-secondary)
     position: absolute
-    left: tint.$size-12
+    left: var(--tint-size-12)
     right: initial
-    top: calc(tint.$size-48 * 0.5 - 1lh * 0.60)
+    top: calc(var(--tint-size-48) * 0.5 - 1lh * 0.60)
     transform: scale(1.166)
     // transform: translateY(-55%) scale(1.166)
     transform-origin: left top
@@ -358,10 +418,63 @@
       transition: none
 
 .textarea .box
-  min-height: tint.$size-48
+  min-height: var(--tint-size-48)
 
 .error .input
-  padding-inline-end: (tint.$size-8 * 2) + tint.$size-32
+  padding-inline-end: calc(var(--tint-size-8) * 2 + var(--tint-size-32))
+
+// Number inputs: hide the native spinner and make room for the custom one.
+.input[type='number']
+  appearance: textfield
+  -moz-appearance: textfield
+.input[type='number']::-webkit-outer-spin-button, .input[type='number']::-webkit-inner-spin-button
+  -webkit-appearance: none
+  margin: 0
+.hasSpinner .input
+  padding-inline-end: var(--tint-size-40)
+.hasSpinner.error .input
+  padding-inline-end: calc(var(--tint-size-40) + var(--tint-size-32))
+.hasSpinner .warning-icon
+  right: var(--tint-size-40)
+
+.spinner
+  position: absolute
+  top: 2px
+  inset-inline-end: 2px
+  bottom: 2px
+  display: flex
+  flex-direction: column
+  border-inline-start: 1px solid var(--tint-card-border)
+  > button
+    box-sizing: border-box
+    aspect-ratio: 1
+    height: 50%
+    display: flex
+    align-items: center
+    justify-content: center
+    padding: 0
+    border: none
+    background: transparent
+    color: var(--tint-text-secondary)
+    cursor: pointer
+    line-height: 0
+    &:hover
+      background: var(--tint-action-secondary-hover)
+      color: var(--tint-text)
+    &:active, &.pressed
+      background: var(--tint-action-secondary-active)
+      color: var(--tint-text)
+    &:disabled
+      color: var(--tint-text-secondary)
+      opacity: 0.4
+      background: transparent
+      cursor: default
+  > .spin-up
+    padding-block-start: 4px
+    border-start-end-radius: calc(var(--tint-radius-input) - 2px)
+  > .spin-down
+    padding-block-end: 4px
+    border-end-end-radius: calc(var(--tint-radius-input) - 2px)
 
 .input:focus + label, .input.filled + label, .input:-webkit-autofill + label
   transform: translateY(-55%) scale(1.0)
@@ -372,8 +485,8 @@
 .helper-message
   line-height: normal
   color: var(--tint-text-secondary)
-  padding: 0 tint.$size-12
-  padding-block-start: tint.$size-4
+  padding: 0 var(--tint-size-12)
+  padding-block-start: var(--tint-size-4)
 
 .warning-icon
   pointer-events: none
@@ -381,12 +494,18 @@
   right: 0
   top: 0
   line-height: 0
-  margin: tint.$size-12 + tint.$size-2
+  margin: calc(var(--tint-size-12) + var(--tint-size-2))
   color: var(--tint-text-accent)
 
 @media (forced-colors: active)
   .box > .input
     border-color: ButtonText
+  .spinner
+    border-inline-start: 1px solid ButtonText
+    > button
+      color: ButtonText
+    > .spin-up
+      border-block-end-color: ButtonText
   .disabled
     opacity: 1
     color: GrayText

@@ -107,5 +107,5 @@
 <style lang="sass">
 .labeled-slider
   display: grid
-  gap: tint.$size-8
+  gap: var(--tint-size-8)
 </style>

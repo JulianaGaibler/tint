@@ -160,6 +160,57 @@ for blog posts, articles, or any content-heavy pages:
 The prose styles are included automatically when you use `full-bootstrap()` or
 `base()`.
 
+## Using Your Own Fonts
+
+Font families are exposed as CSS custom properties, so you can swap them at
+runtime by overriding `--tint-font-sans` and `--tint-font-serif` (and
+`--tint-font-mono` for code). There are two ways to load the replacement fonts.
+
+### Load the fonts yourself
+
+Set the family variables and skip tint's bundled `@font-face` with
+`$include-font-faces: false`. Load your own fonts however you like
+(`@fontsource`, Google Fonts, or your own `@font-face`). In a Vite app importing
+tint from npm:
+
+```sass
+@use 'tint/styles/bootstrap' as bootstrap
+
+// Point tint's typography at your fonts
+:root
+  --tint-font-sans: 'Inter', sans-serif
+  --tint-font-serif: 'Lora', serif
+
+// Don't emit tint's HK Grotesk / Merriweather @font-face rules
+@include bootstrap.full-bootstrap($include-font-faces: false)
+```
+
+```javascript
+// Load the fonts yourself, e.g. via @fontsource in your entry file
+import '@fontsource/inter'
+import '@fontsource/lora'
+```
+
+### Let tint generate the @font-face rules
+
+If you have your own woff2 files, pass a font map to `generate-font-faces()` in
+the same shape as tint's (`family`, `weight`, `style`, `filename`):
+
+```sass
+@use 'tint/styles/bootstrap' as bootstrap
+
+$my-fonts: (
+  (family: 'Inter', weight: 400, style: normal, filename: 'Inter-Regular'),
+  (family: 'Inter', weight: 700, style: normal, filename: 'Inter-Bold'),
+)
+
+:root
+  --tint-font-sans: 'Inter', sans-serif
+
+@include bootstrap.full-bootstrap($include-font-faces: false)
+@include bootstrap.generate-font-faces('/fonts', $my-fonts)
+```
+
 ## Customizing Font Paths
 
 By default, `full-bootstrap()` uses `~tint/fonts` for font paths (your bundler
@@ -191,8 +242,14 @@ If you need more control, you can generate font-face declarations independently:
 ### From `tint/styles/bootstrap`:
 
 - `type-classes()` - Generate typography utility classes
-- `generate-font-faces($path)` - Generate @font-face declarations
-- `full-bootstrap($path)` - Includes everything (recommended)
+- `generate-fonts()` - Generate the font family CSS custom properties
+  (`--tint-font-sans`, `--tint-font-serif`, `--tint-font-mono`); already called
+  by `full-bootstrap()`
+- `generate-font-faces($path, $font-list)` - Generate @font-face declarations.
+  Pass `$font-list` to use your own font map instead of tint's bundled fonts
+- `full-bootstrap($path, $include-font-faces)` - Includes everything
+  (recommended). Set `$include-font-faces: false` to skip tint's bundled
+  @font-face rules when using your own fonts
 
 ### From `tint/styles/typography`:
 

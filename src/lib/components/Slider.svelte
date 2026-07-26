@@ -136,16 +136,16 @@
   display: flex
   align-items: center
   width: 100%
-  --track-height: #{tint.$size-32}
-  --track-radius: #{tint.$size-16}
-  --thumb-size: #{tint.$size-24 + 4}
-  --edge-padding: #{tint.$size-2}
+  --track-height: var(--tint-size-32)
+  --track-radius: var(--tint-size-16)
+  --thumb-size: calc(var(--tint-size-24) + 4px)
+  --edge-padding: var(--tint-size-2)
   height: var(--track-height)
   &.small
-    --track-height: #{tint.$size-16}
-    --track-radius: #{tint.$size-8}
-    --thumb-size: #{tint.$size-12}
-    --edge-padding: #{tint.$size-2}
+    --track-height: var(--tint-size-16)
+    --track-radius: var(--tint-size-8)
+    --thumb-size: var(--tint-size-12)
+    --edge-padding: var(--tint-size-2)
 
 .slider-track
   position: absolute
@@ -195,7 +195,7 @@
   padding: 0
   position: relative
   z-index: 2
-  border-radius: tint.$size-32
+  border-radius: var(--tint-size-32)
   @include tint.effect-focus
 
   // Hide the track
@@ -244,14 +244,14 @@
   right: calc(var(--edge-padding) + var(--thumb-size) / 2)
   top: 50%
   transform: translateY(-50%)
-  height: tint.$size-2
+  height: var(--tint-size-2)
   pointer-events: none
   z-index: 0
 
 .step-point
   position: absolute
-  width: tint.$size-2
-  height: tint.$size-2
+  width: var(--tint-size-2)
+  height: var(--tint-size-2)
   background: var(--tint-text-secondary)
   border-radius: 50%
   transform: translateX(-50%)

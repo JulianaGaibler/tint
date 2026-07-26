@@ -136,21 +136,21 @@
 
 .box {
   position: relative;
-  height: 48px;
+  height: var(--tint-size-48);
   line-height: normal;
   display: flex;
-  gap: 12px;
+  gap: var(--tint-size-12);
   align-items: center;
   background-color: var(--tint-input-bg);
-  border-radius: 8px;
+  border-radius: var(--tint-radius-input);
   color: currentColor;
   box-sizing: border-box;
   border: 2px solid transparent;
-  padding-inline-end: 4px;
+  padding-inline-end: var(--tint-size-4);
 }
 .box > .input {
-  border-radius: 8px;
-  padding: 19px 12px 5px 12px;
+  border-radius: var(--tint-radius-input);
+  padding: calc(var(--tint-size-12) + 7px) var(--tint-size-12) calc(var(--tint-size-12) - 7px) var(--tint-size-12);
   box-sizing: border-box;
   width: 100%;
   height: 100%;
@@ -178,7 +178,7 @@
 .box > label {
   color: var(--tint-text-secondary);
   position: absolute;
-  left: 12px;
+  left: var(--tint-size-12);
   right: initial;
   top: 50%;
   transform-origin: left top;
@@ -192,20 +192,20 @@
 }
 
 .error .input {
-  padding-inline-end: 48px;
+  padding-inline-end: calc(var(--tint-size-8) * 2 + var(--tint-size-32));
 }
 
 .helper-message {
   line-height: normal;
   color: var(--tint-text-secondary);
-  padding: 0 12px;
-  padding-block-start: 4px;
+  padding: 0 var(--tint-size-12);
+  padding-block-start: var(--tint-size-4);
 }
 
 .warning-icon {
   pointer-events: none;
   line-height: 0;
-  margin-block: 14px;
+  margin-block: calc(var(--tint-size-12) + var(--tint-size-2));
   color: var(--tint-text-accent);
 }
 

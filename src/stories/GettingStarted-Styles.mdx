@@ -26,6 +26,12 @@ Import and include the full bootstrap in your global stylesheet:
 The `full-bootstrap()` mixin sets up:
 
 - CSS layers for proper cascade order
+- Dimensional design tokens as CSS custom properties (`--tint-size-*`,
+  `--tint-radius-*`, `--tint-border-width`) — see
+  [Customizing Dimensions](#customizing-dimensions)
+- Font family tokens (`--tint-font-sans`, `--tint-font-serif`,
+  `--tint-font-mono`) — see [Fonts](/?path=/docs/getting-started-fonts--docs)
+  for swapping in your own fonts
 - Base reset and global styles
 - Typography classes
 - Font-face declarations (no need to call `generate-font-faces()` separately)
@@ -221,11 +227,14 @@ export default {
 }
 ```
 
-Now you can use Tint utilities in any component without importing:
+Now you can use Tint mixins (like `effect-focus`) in any component without
+importing. Dimensional values, however, are plain CSS custom properties, so you
+don't need SASS or any import to use them — reference them directly:
 
 ```tsx
 <style lang="sass">
-  .my-component padding: tint.$size-16 border-radius: tint.$size-8
+  .my-component padding: var(--tint-size-16) border-radius:
+  var(--tint-radius-input)
 </style>
 ```
 
@@ -257,18 +266,60 @@ Switch between plain and tinted color palettes using CSS classes:
 
 - `layers()` - Define CSS cascade layers
 - `base()` - Base reset and global styles
-- `full-bootstrap($path)` - All of the above plus typography and font-faces
+- `full-bootstrap($path)` - All of the above plus typography, font-faces, and
+  dimensional tokens
 - `generate-color-variables($colors)` - Generate CSS custom properties for
   colors
+- `generate-tokens()` - Generate the dimensional design tokens (`--tint-size-*`,
+  `--tint-radius-*`, `--tint-border-width`); already called by
+  `full-bootstrap()`
 
 ### From `tint/styles/utils`:
 
 - `effect-focus()` - Add focus outline styles
 - `effect-focus-base()` - Base focus styles without pseudo-selector
 
-Available size variables: `$size-2`, `$size-4`, `$size-8`, `$size-12`,
-`$size-16`, `$size-24`, `$size-32`, `$size-40`, `$size-48`, `$size-64`,
-`$size-80`
+## Customizing Dimensions
+
+Spacing and roundness are exposed as CSS custom properties (emitted by
+`full-bootstrap()`), so you can retheme them at runtime — no SASS or rebuild
+required. Override them anywhere in your own CSS, typically on `:root` or scoped
+to a subtree.
+
+### Semantic tokens
+
+These are the values most projects will want to change. Each derives from the
+spacing scale by default:
+
+| Token                       | Default               | Applies to                                                           |
+| --------------------------- | --------------------- | -------------------------------------------------------------------- |
+| `--tint-radius-input`       | `var(--tint-size-8)`  | Text fields, selects, search, file input, autocomplete, color inputs |
+| `--tint-radius-button`      | `var(--tint-size-12)` | Buttons                                                              |
+| `--tint-radius-button-pill` | `var(--tint-size-80)` | Pill / toggle controls                                               |
+| `--tint-radius-menu`        | `var(--tint-size-8)`  | Menus, dropdowns, popovers                                           |
+| `--tint-radius-card`        | `var(--tint-size-12)` | Cards, toasts, message boxes                                         |
+| `--tint-border-width`       | `var(--tint-size-2)`  | Button / control borders                                             |
+
+```css
+/* Sharper inputs and buttons across the whole app */
+:root {
+  --tint-radius-input: 4px;
+  --tint-radius-button: 4px;
+}
+```
+
+### The spacing scale
+
+The semantic tokens above are built on the spacing scale (`--tint-size-2`
+through `--tint-size-80`, mirroring `2, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80`
+px). It's used for nearly all padding, gaps, and margins, so overriding it is
+rarely a good idea — prefer the semantic tokens. It's available if you need it:
+
+```css
+.compact-region {
+  --tint-size-12: 8px; /* tighten a subtree */
+}
+```
 
 ## Typography and Fonts
 

@@ -100,7 +100,7 @@
 <style>.labeled-toggleable {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 12px;
+  gap: var(--tint-size-12);
   align-items: start;
 }
 

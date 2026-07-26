@@ -412,8 +412,8 @@
   display: flex
   flex-direction: column
   min-width: 172px
-  border-radius: tint.$size-8
-  padding: tint.$size-4
+  border-radius: var(--tint-radius-menu)
+  padding: var(--tint-size-4)
   overflow: hidden
   inset: unset
   color: var(--tint-text)
@@ -451,7 +451,7 @@
   display: none
 
 .context_menu :global(hr)
-  margin: tint.$size-4
+  margin: var(--tint-size-4)
   border: 0
   border-top: 1px solid var(--tint-card-border)
 
@@ -474,31 +474,31 @@
   opacity: 0.8
   font-size: 6px
   text-align: center
-  padding-inline: tint.$size-4
+  padding-inline: var(--tint-size-4)
   color: grey
   background: var(--tint-bg)
-  height: tint.$size-12
+  height: var(--tint-size-12)
   display: flex
   justify-content: center
 
 .overflow_top
   top: 0
   border-bottom-style: solid
-  padding-block-start: tint.$size-4
+  padding-block-start: var(--tint-size-4)
   align-items: flex-start
 
 .overflow_bottom
   bottom: 0
   border-top-style: solid
-  padding-block-end: tint.$size-4
+  padding-block-end: var(--tint-size-4)
   align-items: flex-end
 
 .item
   padding: 6px
-  padding-inline-end: tint.$size-8
+  padding-inline-end: var(--tint-size-8)
   outline: none
   user-select: none
-  border-radius: tint.$size-4
+  border-radius: var(--tint-size-4)
   white-space: nowrap
 
 .item[data-selected="true"]
@@ -525,7 +525,7 @@
 .item_default
   display: grid
   grid-template-columns: 14px auto minmax(0, 1fr) minmax(14px, auto)
-  gap: tint.$size-4
+  gap: var(--tint-size-4)
   align-items: center
 
 .item_default :global(> span:not(.item-icon))
@@ -566,14 +566,14 @@
   grid-column: 1 / 2
 
 .context_menu.large .item
-  padding-block: tint.$size-12
-  padding-inline: tint.$size-8
-  gap: tint.$size-4
+  padding-block: var(--tint-size-12)
+  padding-inline: var(--tint-size-8)
+  gap: var(--tint-size-4)
 
 .context_menu.large .item.hide-all-gutters
-  padding-block: tint.$size-12
-  padding-inline: tint.$size-16
-  gap: tint.$size-8
+  padding-block: var(--tint-size-12)
+  padding-inline: var(--tint-size-16)
+  gap: var(--tint-size-8)
 
 @keyframes clicked_animation
   0%, 40%

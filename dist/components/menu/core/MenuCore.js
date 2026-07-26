@@ -1,4 +1,4 @@
-import { throttle } from 'lodash-es';
+import { throttle } from '../../../utils/timing';
 import { matchSorter } from 'match-sorter';
 import { MenuBehavior, MENU_SEPARATOR, } from './types';
 import { calculatePosition, checkIfInTriangle } from './positioning';

@@ -39,3 +39,19 @@
     error: 'Password must be at least 8 characters long',
   }}
 />
+
+<!-- Setting `type` to `number` hides the native spinner and shows two
+  square stepper buttons. Arrow Up/Down and the buttons step by `step`
+  (default 1), clamped to `min`/`max`. -->
+<Story
+  name="Number"
+  args={{
+    id: 'input',
+    label: 'Quantity',
+    type: 'number',
+    value: '1',
+    min: 0,
+    max: 10,
+    step: 1,
+  }}
+/>

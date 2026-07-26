@@ -160,7 +160,7 @@
 <style>.grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  gap: var(--tint-size-8);
 }
 
 .grid.show-alpha {
@@ -168,5 +168,5 @@
 }
 
 .hex-row {
-  margin-block-start: 8px;
+  margin-block-start: var(--tint-size-8);
 }</style>

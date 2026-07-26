@@ -99,10 +99,10 @@
   display: flex
   align-items: center
   width: 100%
-  --track-height: #{tint.$size-32}
-  --track-radius: #{tint.$size-16}
-  --thumb-size: #{tint.$size-24 + 4}
-  --edge-padding: #{tint.$size-2}
+  --track-height: var(--tint-size-32)
+  --track-radius: var(--tint-size-16)
+  --thumb-size: calc(var(--tint-size-24) + 4px)
+  --edge-padding: var(--tint-size-2)
   height: var(--track-height)
   cursor: pointer
   touch-action: none
@@ -110,10 +110,10 @@
   border-radius: var(--track-radius)
   @include tint.effect-focus
   &.small
-    --track-height: #{tint.$size-16}
-    --track-radius: #{tint.$size-8}
-    --thumb-size: #{tint.$size-12}
-    --edge-padding: #{tint.$size-2}
+    --track-height: var(--tint-size-16)
+    --track-radius: var(--tint-size-8)
+    --thumb-size: var(--tint-size-12)
+    --edge-padding: var(--tint-size-2)
 
 .track
   position: absolute
@@ -133,7 +133,7 @@
   position: absolute
   inset: 0
   background-image: conic-gradient(rgba(0,0,0,0.18) 25%, transparent 0 50%, rgba(0,0,0,0.18) 0 75%, transparent 0)
-  background-size: tint.$size-8 tint.$size-8
+  background-size: var(--tint-size-8) var(--tint-size-8)
   z-index: 0
 
 .gradient

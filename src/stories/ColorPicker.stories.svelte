@@ -13,6 +13,8 @@
 </script>
 
 <script lang="ts">
+  import type { PaletteColor } from '@lib/components/ColorPicker/palette'
+
   let hex = $state('#3366cc')
   let hexAlpha = $state('#3366cc99')
   let oklchVal = $state({ l: 0.7, c: 0.18, h: 22, alpha: 1 })
@@ -22,6 +24,42 @@
   let contrastFg = $state('#1e1d25')
   let contrastFgAlpha = $state('#1e1d2580')
   let outOfGamut = $state('#ff0000')
+
+  // A representative ~120-entry palette: 12 hues × 10 shades. Hues sampled
+  // around the HSL hue wheel; shades step lightness from 5% (darkest) to
+  // 95% (lightest) at a fixed saturation. The exact values don't matter for
+  // the picker — what matters is exercising the grouping, matching, search,
+  // and keyboard nav at a realistic scale.
+  const HUES: { name: string; h: number }[] = [
+    { name: 'red', h: 0 },
+    { name: 'orange', h: 30 },
+    { name: 'yellow', h: 55 },
+    { name: 'lime', h: 90 },
+    { name: 'green', h: 130 },
+    { name: 'teal', h: 170 },
+    { name: 'cyan', h: 195 },
+    { name: 'blue', h: 220 },
+    { name: 'indigo', h: 250 },
+    { name: 'violet', h: 275 },
+    { name: 'magenta', h: 305 },
+    { name: 'pink', h: 335 },
+  ]
+  const SHADES = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95]
+
+  const designSystemPalette: PaletteColor[] = HUES.flatMap((hue) =>
+    SHADES.map((l) => ({
+      name: `color/${hue.name}/${l}`,
+      value: `hsl(${hue.h} 70% ${l}%)`,
+    })),
+  ).concat([
+    // A few ungrouped entries to exercise the headerless path.
+    { name: 'background', value: '#ffffff' },
+    { name: 'foreground', value: '#1e1d25' },
+    { name: 'accent', value: '#3366cc' },
+  ])
+
+  let paletteHex = $state('hsl(0 70% 55%)') // matches color/red/55
+  let paletteHexNoMatch = $state('#abcdef')
 </script>
 
 <!-- Default: outputs an 8-character hex string. -->
@@ -227,5 +265,70 @@
 >
   {#snippet template(args: any)}
     <ColorPicker {...args} />
+  {/snippet}
+</Story>
+
+<!-- 120-entry palette (12 hues × 10 shades) + 3 ungrouped tokens.
+  Initial value matches a palette entry, so the popover opens on the
+  Palette tab with that row highlighted and scrolled into view. -->
+<Story
+  name="With palette (matched)"
+  args={{
+    id: 'cp-palette-match',
+    label: 'Design token',
+    value: 'hsl(0 70% 55%)',
+    palette: designSystemPalette,
+  }}
+>
+  {#snippet template(args: any)}
+    <ColorPicker {...args} bind:value={paletteHex} />
+    <p style="margin-top:1em;">Bound value: <code>{paletteHex}</code></p>
+  {/snippet}
+</Story>
+
+<!-- Short viewport + tall content (alpha + contrast). With the trigger
+  vertically centered, neither above nor below the anchor has full room for
+  the popover, so `placePopover` falls back to its shrink-and-scroll path:
+  the popover anchors against the trigger on whichever side has more space
+  and caps `maxHeight` to that space, letting its inner sections scroll. -->
+<Story
+  name="Constrained viewport"
+  args={{
+    id: 'cp-constrained',
+    label: 'Brand color',
+    alpha: true,
+    value: '#1e1d2580',
+    contrast: {
+      against: '#ffffff',
+      backdrop: '#ffffff',
+      role: 'foreground',
+      category: 'body',
+    },
+  }}
+  parameters={{
+    viewport: { defaultViewport: 'mobile1' },
+  }}
+>
+  {#snippet template(args: any)}
+    <div style="padding-block: 35vh;">
+      <ColorPicker {...args} bind:value={hexAlpha} />
+    </div>
+  {/snippet}
+</Story>
+
+<!-- Same palette, but the initial value isn't a member.
+  The popover defaults to the Custom tab. -->
+<Story
+  name="With palette (unmatched)"
+  args={{
+    id: 'cp-palette-unmatched',
+    label: 'Design token',
+    value: '#abcdef',
+    palette: designSystemPalette,
+  }}
+>
+  {#snippet template(args: any)}
+    <ColorPicker {...args} bind:value={paletteHexNoMatch} />
+    <p style="margin-top:1em;">Bound value: <code>{paletteHexNoMatch}</code></p>
   {/snippet}
 </Story>

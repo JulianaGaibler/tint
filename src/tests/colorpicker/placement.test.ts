@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { placePopover } from '@lib/components/ColorPicker/core'
 
-const WIN = { innerWidth: 1024, innerHeight: 768, scrollX: 0, scrollY: 0 }
+const WIN = { innerWidth: 1024, innerHeight: 768 }
 const POPOVER = new DOMRect(0, 0, 280, 400)
 
 const anchorAt = (x: number, y: number, w = 200, h = 48) =>
@@ -73,22 +73,6 @@ describe('placePopover viewport clamping', () => {
     // popover wider than the viewport, the clamp pushes it to negative
     // territory and we settle at PAD.
     expect(result.x).toBe(8)
-  })
-})
-
-describe('placePopover — scroll compensation', () => {
-  it('adds scrollX/scrollY to the returned coords', () => {
-    const anchor = anchorAt(40, 80)
-    const result = placePopover(anchor, POPOVER, {
-      ...WIN,
-      scrollX: 100,
-      scrollY: 250,
-    })
-    // Same anchor → same RELATIVE placement, but coords offset by scroll.
-    const base = placePopover(anchor, POPOVER, WIN)
-    expect(result.x).toBe(base.x + 100)
-    expect(result.y).toBe(base.y + 250)
-    expect(result.placement).toBe(base.placement)
   })
 })
 

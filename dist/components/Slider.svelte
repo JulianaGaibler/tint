@@ -133,17 +133,17 @@
   display: flex;
   align-items: center;
   width: 100%;
-  --track-height: 32px;
-  --track-radius: 16px;
-  --thumb-size: 28px;
-  --edge-padding: 2px;
+  --track-height: var(--tint-size-32);
+  --track-radius: var(--tint-size-16);
+  --thumb-size: calc(var(--tint-size-24) + 4px);
+  --edge-padding: var(--tint-size-2);
   height: var(--track-height);
 }
 .slider-wrapper.small {
-  --track-height: 16px;
-  --track-radius: 8px;
-  --thumb-size: 12px;
-  --edge-padding: 2px;
+  --track-height: var(--tint-size-16);
+  --track-radius: var(--tint-size-8);
+  --thumb-size: var(--tint-size-12);
+  --edge-padding: var(--tint-size-2);
 }
 
 .slider-track {
@@ -193,7 +193,7 @@
   padding: 0;
   position: relative;
   z-index: 2;
-  border-radius: 32px;
+  border-radius: var(--tint-size-32);
 }
 .slider:focus-visible {
   outline: 2px solid var(--tint-action-primary);
@@ -242,15 +242,15 @@
   right: calc(var(--edge-padding) + var(--thumb-size) / 2);
   top: 50%;
   transform: translateY(-50%);
-  height: 2px;
+  height: var(--tint-size-2);
   pointer-events: none;
   z-index: 0;
 }
 
 .step-point {
   position: absolute;
-  width: 2px;
-  height: 2px;
+  width: var(--tint-size-2);
+  height: var(--tint-size-2);
   background: var(--tint-text-secondary);
   border-radius: 50%;
   transform: translateX(-50%);

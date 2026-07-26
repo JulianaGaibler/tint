@@ -43,6 +43,12 @@
     ValueFor,
     WideGamutMode,
   } from './format'
+  import PalettePicker from './PalettePicker.svelte'
+  import {
+    findPaletteMatch,
+    normalizePalette,
+    type PaletteColor,
+  } from './palette'
 
   interface Props {
     value: unknown
@@ -54,6 +60,7 @@
     anchorEl: HTMLElement
     onclose: () => void
     onpick?: (e: { value: unknown; color: Color }) => void
+    palette?: PaletteColor[]
   }
 
   let {
@@ -66,6 +73,7 @@
     anchorEl,
     onclose,
     onpick,
+    palette,
   }: Props = $props()
 
   // ---------- Internal authoritative state ----------
@@ -73,8 +81,9 @@
   function initialEditor(f: ColorFormat): EditorSpace {
     if (f === 'oklch' || f === 'oklab') return 'oklch'
     if (f === 'hsl') return 'hsl'
-    if (f === 'rgb' || f === 'p3') return 'rgb'
-    return 'hsl' // hex/css/color default
+    // RGB is the default for hex / css / color since hex is the most common
+    // value format and channel sliders read naturally next to a hex preview.
+    return 'rgb'
   }
 
   function initialColor(): Color {
@@ -298,16 +307,51 @@
    * Try to apply the user-typed CSS string. Returns true on success so the hex
    * field knows the value was accepted. On parse failure returns false and the
    * field reverts to the canonical hex.
+   *
+   * Accepts hex strings without a leading `#` (e.g. `eaeaed`, `5b5b66ff`) and
+   * normalizes them before parsing.
    */
   function commitHex(input: string): boolean {
     try {
-      const c = parseColor(input)
+      const c = parseColor(normalizeCssColorInput(input))
       emit(c, { refreshHue: true })
       return true
     } catch (e) {
       if (e instanceof ColorParseError) return false
       throw e
     }
+  }
+
+  /**
+   * Prepend `#` to bare hex strings so callers can type `eaeaed` and get the
+   * same result as `#eaeaed`. Leaves anything else (named colors, rgb(), hsl(),
+   * already-prefixed hex) untouched.
+   */
+  function normalizeCssColorInput(raw: string): string {
+    const s = raw.trim()
+    if (s.startsWith('#')) return s
+    if (/^[0-9a-f]{3,4}$|^[0-9a-f]{6}$|^[0-9a-f]{8}$/i.test(s)) return `#${s}`
+    return s
+  }
+
+  /**
+   * Paste handler attached to the popover root. When the user pastes from
+   * outside a text input (so native paste isn't already doing the work) and the
+   * clipboard holds a parseable CSS color, apply it as if the user typed it
+   * into the hex field.
+   */
+  function onPopoverPaste(ev: ClipboardEvent) {
+    const target = ev.target as Element | null
+    if (
+      target?.closest(
+        'input, textarea, [contenteditable=""], [contenteditable="true"]',
+      )
+    ) {
+      return
+    }
+    const text = ev.clipboardData?.getData('text')?.trim()
+    if (!text) return
+    if (commitHex(text)) ev.preventDefault()
   }
 
   function switchEditor(next: EditorSpace) {
@@ -426,8 +470,10 @@
   })
 
   const hexCurrent = $derived.by(() => {
-    if (alpha && color.alpha < 1) return toHex(color)
-    return toCss(color)
+    // Project into the editor's native space so the field updates when the
+    // user toggles between RGB / OKLCH / HSL. All three CSS function forms
+    // carry alpha, so no hex fallback is needed for translucent colors.
+    return toCss(inEditor(color, editor))
   })
 
   // ---------- Contrast & gamut ----------
@@ -509,10 +555,16 @@
   // ---------- Popover positioning + focus-trap ----------
 
   let popoverEl: HTMLDivElement | undefined = $state(undefined)
-  let position = $state<{ x: number; y: number; placement: PopoverPlacement }>({
+  let position = $state<{
+    x: number
+    y: number
+    placement: PopoverPlacement
+    maxHeight: number | undefined
+  }>({
     x: 0,
     y: 0,
     placement: 'top-left',
+    maxHeight: undefined,
   })
   let trap: focusTrap.FocusTrap | null = null
   let resizeObserver: ResizeObserver | null = null
@@ -520,7 +572,19 @@
   function recalculatePosition() {
     if (!popoverEl) return
     const anchor = anchorEl.getBoundingClientRect()
-    const rect = popoverEl.getBoundingClientRect()
+    // Use offsetWidth/offsetHeight (untransformed layout box) rather than
+    // getBoundingClientRect(): the open animation scales the popover from
+    // 0.92→1, so the visual rect under-reports the popover's real footprint
+    // mid-animation. With the wrong (smaller) size, the placement logic
+    // thinks the popover fits in spaces it won't, skips the clamp, and
+    // the popover lands past the viewport edge — only correcting itself
+    // on the next scroll/resize, by which point the animation has ended.
+    const rect = new DOMRect(
+      0,
+      0,
+      popoverEl.offsetWidth,
+      popoverEl.offsetHeight,
+    )
     // `documentElement.clientWidth/clientHeight` excludes the visible
     // scrollbar (`window.innerWidth/innerHeight` includes it), so the
     // popover won't overflow into the scrollbar gutter when the anchor
@@ -529,8 +593,6 @@
     position = placePopover(anchor, rect, {
       innerWidth: root.clientWidth || window.innerWidth,
       innerHeight: root.clientHeight || window.innerHeight,
-      scrollX: window.scrollX,
-      scrollY: window.scrollY,
     })
   }
 
@@ -591,6 +653,42 @@
     { value: 'oklch' as EditorSpace, label: 'OKLCH' },
     { value: 'hsl' as EditorSpace, label: 'HSL' },
   ]
+
+  // ---------- Optional palette tab ----------
+  //
+  // The Custom/Palette tab strip only appears when the caller supplies a
+  // non-empty palette. Initial tab is decided **once at mount** by whether
+  // the incoming value is a member — never via a reactive $effect on `value`,
+  // because dragging across the canvas updates `value` continuously and would
+  // unmount the canvas mid-drag the moment the cursor crossed a palette color.
+  const hasPalette = $derived(!!palette && palette.length > 0)
+
+  let tab = $state<'custom' | 'palette'>(
+    untrack(() =>
+      palette &&
+      palette.length > 0 &&
+      findPaletteMatch(palette, normalizePalette(palette), toHex(color))
+        ? 'palette'
+        : 'custom',
+    ),
+  )
+
+  const tabItems = [
+    { value: 'custom' as const, label: 'Custom' },
+    { value: 'palette' as const, label: 'Palette' },
+  ]
+
+  // What the PalettePicker reads as "the picker's current value". Any
+  // parseable CSS form works; toHex matches palette.canonicalize's output
+  // exactly so match detection is cheap.
+  const paletteCurrentCss = $derived(toHex(color))
+
+  function pickFromPalette(cssValue: string) {
+    // Reuse the existing hex-commit path so any CSS form the palette emits
+    // (named, hex, rgb(), oklch()) gets parsed, validated, and propagated
+    // out through the standard `emit` flow.
+    commitHex(cssValue)
+  }
 </script>
 
 <div
@@ -602,158 +700,183 @@
   class="popover tint--card popover-{position.placement}"
   style:left="{position.x}px"
   style:top="{position.y}px"
+  style:max-height={position.maxHeight ? `${position.maxHeight}px` : undefined}
   onkeydown={onPopoverKey}
+  onpaste={onPopoverPaste}
 >
-  <Canvas
-    {editor}
-    {hue}
-    x={canvasXY.x}
-    y={canvasXY.y}
-    chromaMax={CHROMA_MAX}
-    wideGamut={effectiveWideGamut}
-    curves={canvasCurves}
-    onPick={pickFromCanvas}
-  />
+  {#if hasPalette}
+    <div class="tab-wrap">
+      <SegmentedControl
+        id="color-picker-tab"
+        label="Picker mode"
+        items={tabItems}
+        bind:value={tab}
+        small
+      />
+    </div>
+  {/if}
 
-  <div class="track-wrap">
-    <Track
-      value={hue}
-      min={0}
-      max={360}
-      step={1}
-      background={hueTrackBg}
-      aria-label="Hue"
-      onChange={changeHue}
+  {#if tab === 'custom'}
+    <Canvas
+      {editor}
+      {hue}
+      x={canvasXY.x}
+      y={canvasXY.y}
+      chromaMax={CHROMA_MAX}
+      wideGamut={effectiveWideGamut}
+      curves={canvasCurves}
+      onPick={pickFromCanvas}
     />
-  </div>
 
-  {#if alpha}
     <div class="track-wrap">
       <Track
-        value={color.alpha}
+        value={hue}
         min={0}
-        max={1}
-        step={0.01}
-        background={alphaTrackBg}
-        checker
-        aria-label="Alpha"
-        onChange={changeAlpha}
-      />
-    </div>
-  {/if}
-
-  <div class="toggle-wrap">
-    <SegmentedControl
-      id="color-editor-toggle"
-      label="Color model"
-      items={editorItems}
-      value={editor}
-      small
-      onchange={(v) => switchEditor(v)}
-    />
-  </div>
-
-  {#if editor === 'oklch'}
-    <div class="relative-row">
-      <TextField
-        label="Relative chroma %"
-        value={formatRelativePct(currentRelativePct)}
+        max={360}
         step={1}
-        min={0}
-        max={100}
-        oninput={(e) =>
-          onRelativePctInput((e.target as HTMLInputElement).value)}
-        oncommit={(v) => onRelativePctInput(v)}
+        background={hueTrackBg}
+        aria-label="Hue"
+        onChange={changeHue}
       />
-      <Button
-        small
-        icon
-        variant="ghost"
-        toggled={lockRelativeChroma}
-        aria-label={lockRelativeChroma
-          ? `Unlock relative chroma (${Math.round(lockedRelativePct)}%)`
-          : 'Lock relative chroma'}
-        tooltip={lockRelativeChroma
-          ? `Relative chroma locked at ${Math.round(lockedRelativePct)}%`
-          : 'Lock relative chroma'}
-        onclick={toggleLockRelativeChroma}
-      >
-        {@html lockRelativeChroma ? IconLock : IconLockUnlocked}
-      </Button>
     </div>
-  {/if}
 
-  <Channels
-    {editor}
-    components={channelsView.components}
-    alpha={channelsView.alpha}
-    showAlpha={alpha}
-    hexOrCss={hexCurrent}
-    onChannel={setChannel}
-    onAlpha={changeAlpha}
-    onHex={commitHex}
-  />
+    {#if alpha}
+      <div class="track-wrap">
+        <Track
+          value={color.alpha}
+          min={0}
+          max={1}
+          step={0.01}
+          background={alphaTrackBg}
+          checker
+          aria-label="Alpha"
+          onChange={changeAlpha}
+        />
+      </div>
+    {/if}
 
-  {#if outOfGamut}
-    <GamutWarning
-      gamut={format === 'p3' ? 'Display-P3' : 'sRGB'}
-      {clippedCss}
-      onClip={clipToGamut}
+    <div class="toggle-wrap">
+      <SegmentedControl
+        id="color-editor-toggle"
+        label="Color model"
+        items={editorItems}
+        value={editor}
+        small
+        onchange={(v) => switchEditor(v)}
+      />
+    </div>
+
+    {#if editor === 'oklch'}
+      <div class="relative-row">
+        <TextField
+          label="Relative chroma %"
+          value={formatRelativePct(currentRelativePct)}
+          step={1}
+          min={0}
+          max={100}
+          oninput={(e) =>
+            onRelativePctInput((e.target as HTMLInputElement).value)}
+          oncommit={(v) => onRelativePctInput(v)}
+        />
+        <Button
+          small
+          icon
+          variant="ghost"
+          toggled={lockRelativeChroma}
+          aria-label={lockRelativeChroma
+            ? `Unlock relative chroma (${Math.round(lockedRelativePct)}%)`
+            : 'Lock relative chroma'}
+          tooltip={lockRelativeChroma
+            ? `Relative chroma locked at ${Math.round(lockedRelativePct)}%`
+            : 'Lock relative chroma'}
+          onclick={toggleLockRelativeChroma}
+        >
+          {@html lockRelativeChroma ? IconLock : IconLockUnlocked}
+        </Button>
+      </div>
+    {/if}
+
+    <Channels
+      {editor}
+      components={channelsView.components}
+      alpha={channelsView.alpha}
+      showAlpha={alpha}
+      hexOrCss={hexCurrent}
+      onChannel={setChannel}
+      onAlpha={changeAlpha}
+      onHex={commitHex}
     />
-  {/if}
 
-  {#if contrastOpts && contrastResult}
-    <ContrastPanel
-      result={contrastResult}
-      role={contrastOpts.role ?? 'foreground'}
-      againstCss={contrastOpts.against}
-      pickedCss={toCss(color)}
-      {category}
-      {curveMode}
-      onCategoryChange={(c) => (category = c)}
-      onCurveModeChange={(m) => (curveMode = m)}
-    />
-  {/if}
+    {#if outOfGamut}
+      <GamutWarning
+        gamut={format === 'p3' ? 'Display-P3' : 'sRGB'}
+        {clippedCss}
+        onClip={clipToGamut}
+      />
+    {/if}
 
-  <footer class="footer-row">
-    <button
-      type="button"
-      class="hex-copy"
-      title={copied ? 'Copied' : 'Click to copy'}
-      aria-label={copied ? 'Hex copied' : `Copy hex ${copyableHex}`}
-      onclick={copyHex}
-    >
-      <code class="hex-copy__value">{copyableHex}</code>
-      <span class="hex-copy__hint" aria-hidden="true">
-        {@html copied ? IconDone : IconCopy}
+    {#if contrastOpts && contrastResult}
+      <ContrastPanel
+        result={contrastResult}
+        role={contrastOpts.role ?? 'foreground'}
+        againstCss={contrastOpts.against}
+        pickedCss={toCss(color)}
+        {category}
+        {curveMode}
+        onCategoryChange={(c) => (category = c)}
+        onCurveModeChange={(m) => (curveMode = m)}
+      />
+    {/if}
+
+    <footer class="footer-row">
+      <button
+        type="button"
+        class="hex-copy"
+        title={copied ? 'Copied' : 'Click to copy'}
+        aria-label={copied ? 'Hex copied' : `Copy hex ${copyableHex}`}
+        onclick={copyHex}
+      >
+        <code class="hex-copy__value">{copyableHex}</code>
+        <span class="hex-copy__hint" aria-hidden="true">
+          {@html copied ? IconDone : IconCopy}
+        </span>
+      </button>
+      <span class="display-tag" aria-live="polite">
+        Display: {effectiveWideGamut ? 'P3' : 'sRGB'}
       </span>
-    </button>
-    <span class="display-tag" aria-live="polite">
-      Display: {effectiveWideGamut ? 'P3' : 'sRGB'}
-    </span>
-  </footer>
+    </footer>
+  {:else if palette}
+    <PalettePicker
+      {palette}
+      currentCss={paletteCurrentCss}
+      onpick={pickFromPalette}
+    />
+  {/if}
 </div>
 
 <style lang="sass">
 .popover
-  position: absolute
+  // Top-layer (via showPopover) makes the viewport the containing block,
+  // so absolute and fixed behave the same here. `fixed` makes the intent
+  // explicit and keeps the fallback path (no popover API) viewport-anchored
+  // instead of drifting with document scroll.
+  position: fixed
   z-index: 100
   width: 280px
-  padding: tint.$size-12
-  border-radius: tint.$size-12
-  background: var(--tint-bg)
+  padding: var(--tint-size-12)
+  // `color` overrides the UA [popover] default of CanvasText. Border,
+  // border-radius, background, and box-shadow come from the .tint--card
+  // class on the element.
   color: var(--tint-text)
   display: flex
   flex-direction: column
-  gap: tint.$size-8
+  gap: var(--tint-size-8)
+  // The UA [popover] stylesheet sets `inset: 0` for its dialog-centered
+  // default — clear it so our absolute `left`/`top` apply.
   inset: unset
-  border: 0
-  box-shadow: var(--tint-card-shadow, 0 8px 32px rgba(0, 0, 0, 0.18))
-  // Cap height to the viewport (minus the placePopover PAD per side)
-  // so tall content (canvas + alpha + contrast + gamut warning) can't
-  // overflow when anchored near a viewport edge. Inner sections scroll.
-  // The chart's box-shadow + 12px padding mask the seam.
-  max-height: calc(100dvh - #{tint.$size-16})
+  // Height cap is applied inline by `placePopover` only when neither
+  // above nor below the anchor has full room. In that case inner
+  // sections scroll; the chart's box-shadow + 12px padding mask the seam.
   overflow-y: auto
   overscroll-behavior: contain
   // Corner-aware open animation: scales toward the anchor so the
@@ -782,38 +905,38 @@
     animation: none
 
 .track-wrap
-  padding: tint.$size-4 0
+  padding: var(--tint-size-4) 0
 
 .toggle-wrap
-  margin-block-start: tint.$size-4
+  margin-block-start: var(--tint-size-4)
 
 .relative-row
   display: grid
   grid-template-columns: 1fr auto
   align-items: center
-  gap: tint.$size-8
+  gap: var(--tint-size-8)
 
 .footer-row
   display: flex
   align-items: center
   justify-content: space-between
-  gap: tint.$size-8
-  margin-block-start: tint.$size-4
+  gap: var(--tint-size-8)
+  margin-block-start: var(--tint-size-4)
   font-size: 0.78em
   color: var(--tint-text-secondary)
 
 .hex-copy
   display: inline-flex
   align-items: center
-  gap: tint.$size-4
+  gap: var(--tint-size-4)
   appearance: none
   background: transparent
   border: 0
-  padding: tint.$size-2 0
+  padding: var(--tint-size-2) 0
   margin: 0
   color: var(--tint-text)
   cursor: pointer
-  border-radius: tint.$size-4
+  border-radius: var(--tint-size-4)
   @include tint.effect-focus
   &:hover
     color: var(--tint-text-link)
@@ -831,8 +954,8 @@
   color: var(--tint-text-secondary)
   // Optical fit for the 20px copy icon at this row height.
   > :global(svg)
-    width: tint.$size-16
-    height: tint.$size-16
+    width: var(--tint-size-16)
+    height: var(--tint-size-16)
 
 .display-tag
   white-space: nowrap

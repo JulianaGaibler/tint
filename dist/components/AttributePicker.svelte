@@ -2,7 +2,7 @@
   import IconWarning from '../icons/20-warning.svg?raw'
   import IconClose from '../icons/14-close.svg?raw'
   import type { FullAutoFill } from 'svelte/elements'
-  import { debounce } from 'lodash-es'
+  import { debounce } from '../utils/timing'
   import MenuInternal, {
     MENU_SEPARATOR,
     MenuBehavior,
@@ -399,14 +399,14 @@
   cursor: text;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--tint-size-8);
   line-height: normal;
   width: 100%;
   line-height: 0;
   background-color: var(--tint-input-bg);
   border: 2px solid transparent;
-  border-radius: 8px;
-  padding: 23px 12px 5px 12px;
+  border-radius: var(--tint-radius-input);
+  padding: calc(var(--tint-size-12) + 7px + 4px) var(--tint-size-12) calc(var(--tint-size-12) - 7px) var(--tint-size-12);
 }
 .box > * {
   line-height: normal;
@@ -416,7 +416,7 @@
   color: currentColor;
   background: unset;
   border: none;
-  min-height: 28px;
+  min-height: calc(var(--tint-size-24) + var(--tint-size-4));
   flex: 1;
   margin: 0;
 }
@@ -439,9 +439,9 @@
 .box > label {
   color: var(--tint-text-secondary);
   position: absolute;
-  left: 12px;
+  left: var(--tint-size-12);
   right: initial;
-  top: 5px;
+  top: calc(var(--tint-size-4) + 1px);
   transform-origin: left top;
   transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms;
   pointer-events: none;
@@ -456,24 +456,24 @@
 }
 .box .tag {
   background: var(--tint-bg);
-  border-radius: 64px;
+  border-radius: var(--tint-size-64);
   display: flex;
-  gap: 2px;
+  gap: var(--tint-size-2);
   align-items: center;
-  padding-inline-end: 2px;
+  padding-inline-end: var(--tint-size-2);
   cursor: initial;
   border: 1px solid transparent;
 }
 .box .tag > span {
-  padding-block: 4px;
-  padding-inline-start: 8px;
+  padding-block: var(--tint-size-4);
+  padding-inline-start: var(--tint-size-8);
   flex-grow: 1;
 }
 .box .tag > button {
   background: none;
   border: none;
-  border-radius: 64px;
-  height: calc(1lh + 4px);
+  border-radius: var(--tint-size-64);
+  height: calc(1lh + var(--tint-size-2) * 2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -507,14 +507,14 @@
 }
 
 .error .input {
-  padding-inline-end: 48px;
+  padding-inline-end: calc(var(--tint-size-8) * 2 + var(--tint-size-32));
 }
 
 .helper-message {
   line-height: normal;
   color: var(--tint-text-secondary);
-  padding: 0 12px;
-  padding-block-start: 4px;
+  padding: 0 var(--tint-size-12);
+  padding-block-start: var(--tint-size-4);
 }
 
 .warning-icon {
@@ -523,7 +523,7 @@
   right: 0;
   top: 0;
   line-height: 0;
-  margin: 14px;
+  margin: calc(var(--tint-size-12) + var(--tint-size-2));
   color: var(--tint-text-accent);
 }
 

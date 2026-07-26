@@ -345,10 +345,10 @@
     box-sizing: border-box
     display: flex
     align-items: center
-    gap: tint.$size-12
-    padding: tint.$size-8
-    padding-inline-start: tint.$size-12
-    border-radius: tint.$card-radius
+    gap: var(--tint-size-12)
+    padding: var(--tint-size-8)
+    padding-inline-start: var(--tint-size-12)
+    border-radius: var(--tint-radius-card)
     border: 1px solid var(--tint-card-border)
     background: var(--tint-bg)
     color: var(--tint-text)
@@ -470,10 +470,10 @@
 
   .description
     opacity: 0.8
-    margin-top: tint.$size-2
+    margin-top: var(--tint-size-2)
 
   .actions
     display: flex
-    gap: tint.$size-8
+    gap: var(--tint-size-8)
     flex-shrink: 0
 </style>

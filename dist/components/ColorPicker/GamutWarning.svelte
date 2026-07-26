@@ -32,7 +32,7 @@
 }
 
 .detail {
-  margin: 2px 0 0 0;
+  margin: var(--tint-size-2) 0 0 0;
   font-size: 0.78em;
   color: var(--tint-text-secondary);
   overflow-wrap: anywhere;

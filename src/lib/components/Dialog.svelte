@@ -127,20 +127,20 @@
 
 <style lang="sass">
   .dialog
-    padding: tint.$size-24
+    padding: var(--tint-size-24)
     display: flex
     flex-direction: column
-    gap: tint.$size-16
+    gap: var(--tint-size-16)
     max-width: 448px
     min-width: min(calc(100vw - 128px), 448px)
 
   .content
     h2
-      margin-block-end: tint.$size-8
+      margin-block-end: var(--tint-size-8)
 
   .actions
     display: flex
     flex-wrap: wrap
     justify-content: flex-end
-    gap: tint.$size-8
+    gap: var(--tint-size-8)
 </style>

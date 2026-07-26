@@ -120,7 +120,7 @@
 
 .box {
   position: relative;
-  height: 48px;
+  height: var(--tint-size-48);
   line-height: normal;
 }
 .box > .input {
@@ -128,13 +128,13 @@
   box-sizing: border-box;
   background-color: var(--tint-input-bg);
   color: currentColor;
-  border-radius: 8px;
+  border-radius: var(--tint-radius-input);
   border: 2px solid transparent;
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 19px 12px 5px 12px;
-  padding-inline-end: 56px;
+  padding: calc(var(--tint-size-12) + 7px) var(--tint-size-12) calc(var(--tint-size-12) - 7px) var(--tint-size-12);
+  padding-inline-end: calc(var(--tint-size-8) * 3 + var(--tint-size-32));
 }
 .box > .input:focus-visible {
   outline: 2px solid var(--tint-action-primary);
@@ -148,7 +148,7 @@
 .box > label {
   color: var(--tint-text-secondary);
   position: absolute;
-  left: 12px;
+  left: var(--tint-size-12);
   right: initial;
   top: 50%;
   transform: translateY(-55%) scale(1.166);
@@ -168,8 +168,8 @@
 .helper-message {
   line-height: normal;
   color: var(--tint-text-secondary);
-  padding: 0 12px;
-  padding-block-start: 4px;
+  padding: 0 var(--tint-size-12);
+  padding-block-start: var(--tint-size-4);
 }
 
 .warning-icon, .dropdown {
@@ -178,14 +178,14 @@
   line-height: 0;
   right: 0;
   top: 0;
-  margin-block: 16px;
-  margin-inline: 12px;
+  margin-block: var(--tint-size-16);
+  margin-inline: var(--tint-size-12);
   color: var(--tint-text-secondary);
 }
 
 .warning-icon {
-  margin: 14px;
-  right: 16px;
+  margin: calc(var(--tint-size-12) + var(--tint-size-2));
+  right: var(--tint-size-16);
   color: var(--tint-text-accent);
 }
 
@@ -208,7 +208,7 @@
 }
 select option {
   font-size: 0.875rem;
-  font-family: "HK Grotesk", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--tint-font-sans);
   font-weight: 500;
 }
 select, select::picker(select) {

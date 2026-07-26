@@ -155,9 +155,9 @@
   appearance: none;
   background-color: transparent;
   margin: 0;
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--tint-action-primary);
+  width: var(--tint-size-24);
+  height: var(--tint-size-24);
+  border: var(--tint-border-width) solid var(--tint-action-primary);
   transform: translateY(-0.075em);
   display: flex;
   align-items: center;
@@ -197,20 +197,20 @@ input:checked:not(:disabled):active, button[aria-checked=true]:not(:disabled):ac
 }
 
 button[role=switch] {
-  width: 40px;
+  width: var(--tint-size-40);
   color: var(--tint-action-primary);
   transform: translateY(-0.075em);
   justify-content: flex-start;
-  border-radius: 80px;
+  border-radius: var(--tint-radius-button-pill);
 }
 button[role=switch]::before {
   display: block;
   forced-color-adjust: none;
-  width: 12px;
-  height: 12px;
+  width: var(--tint-size-12);
+  height: var(--tint-size-12);
   border-radius: 50%;
   position: relative;
-  left: 5px;
+  left: calc((var(--tint-size-24) - var(--tint-size-12)) / 2 - 1px);
   transition: left 250ms cubic-bezier(0.42, 1.67, 0.21, 0.9);
 }
 @media (prefers-reduced-motion: reduce) {
@@ -223,7 +223,7 @@ button[role=switch][aria-checked=true] {
   color: var(--tint-action-primary-text);
 }
 button[role=switch][aria-checked=true]::before {
-  left: 21px;
+  left: calc(var(--tint-size-40) - var(--tint-size-12) - (var(--tint-size-24) - var(--tint-size-12)) / 2 - 1px);
 }
 
 /* Common styles for ::before pseudo-elements of toggleable inputs */
@@ -240,7 +240,7 @@ input[type=radio]::before {
 }
 
 input[type=checkbox] {
-  border-radius: 4px;
+  border-radius: var(--tint-size-4);
 }
 input[type=checkbox]::before {
   width: 14px;
@@ -253,8 +253,8 @@ input[type=radio] {
   border-radius: 50%;
 }
 input[type=radio]::before {
-  width: 12px;
-  height: 12px;
+  width: var(--tint-size-12);
+  height: var(--tint-size-12);
   border-radius: 50%;
 }
 

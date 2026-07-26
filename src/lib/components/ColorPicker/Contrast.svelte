@@ -144,18 +144,18 @@
   display: grid
   grid-template-columns: auto 1fr auto auto
   align-items: center
-  gap: tint.$size-8
-  padding: tint.$size-4 tint.$size-8
-  border-radius: tint.$input-radius
+  gap: var(--tint-size-8)
+  padding: var(--tint-size-4) var(--tint-size-8)
+  border-radius: var(--tint-radius-input)
   background: var(--tint-input-bg)
 
 .preview
   display: inline-flex
   align-items: center
   justify-content: center
-  width: tint.$size-32
-  height: tint.$size-32
-  border-radius: tint.$size-4
+  width: var(--tint-size-32)
+  height: var(--tint-size-32)
+  border-radius: var(--tint-size-4)
   font: inherit
   font-weight: 700
   font-size: 1.1em
@@ -178,8 +178,8 @@
   font-variant-numeric: tabular-nums
   font-feature-settings: 'tnum'
   font-size: 0.85em
-  padding: tint.$size-2 tint.$size-8
-  border-radius: tint.$size-4
+  padding: var(--tint-size-2) var(--tint-size-8)
+  border-radius: var(--tint-size-4)
   border: 1px solid var(--tint-card-border)
   color: var(--tint-text)
 

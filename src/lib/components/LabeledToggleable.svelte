@@ -101,7 +101,7 @@
 .labeled-toggleable
   display: grid
   grid-template-columns: auto 1fr
-  gap: tint.$size-12
+  gap: var(--tint-size-12)
   align-items: start
 
 :global(.labeled-toggleable .toggleable)

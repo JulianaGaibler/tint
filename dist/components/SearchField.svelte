@@ -68,14 +68,14 @@
 
 .box {
   position: relative;
-  height: 48px;
+  height: var(--tint-size-48);
   width: 100%;
   line-height: normal;
 }
 .box > :global(button.tint--button) {
   position: absolute;
   right: 0;
-  margin: 8px;
+  margin: var(--tint-size-8);
   visibility: hidden;
 }
 .box > .input {
@@ -84,14 +84,14 @@
   inset: 0;
   box-sizing: border-box;
   background: transparent;
-  border-radius: 8px;
+  border-radius: var(--tint-radius-input);
   border: 2px solid transparent;
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 12px 24px;
-  padding-inline-start: 4px;
-  padding-inline-end: 48px;
+  padding: var(--tint-size-12) var(--tint-size-24);
+  padding-inline-start: var(--tint-size-4);
+  padding-inline-end: calc(var(--tint-size-8) * 2 + var(--tint-size-32));
   transition: padding-inline-start 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 .box > .input:focus-visible {
@@ -113,7 +113,7 @@
 }
 
 .input:focus, .input.filled, .input:-webkit-autofill {
-  padding-inline-start: 24px;
+  padding-inline-start: var(--tint-size-24);
   background-color: var(--tint-input-bg);
 }
 .input:focus + :global(button.tint--button), .input.filled + :global(button.tint--button), .input:-webkit-autofill + :global(button.tint--button) {
@@ -121,7 +121,7 @@
 }
 
 .input:autofill {
-  padding-inline-start: 24px;
+  padding-inline-start: var(--tint-size-24);
   background-color: var(--tint-input-bg);
 }
 .input:autofill + :global(button.tint--button) {
@@ -131,7 +131,7 @@
 @media (forced-colors: active) {
   .box > .input {
     border-color: ButtonText;
-    padding-inline-start: 24px;
+    padding-inline-start: var(--tint-size-24);
   }
   .disabled {
     opacity: 1;

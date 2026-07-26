@@ -126,21 +126,21 @@
 </Modal>
 
 <style>.dialog {
-  padding: 24px;
+  padding: var(--tint-size-24);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--tint-size-16);
   max-width: 448px;
   min-width: min(100vw - 128px, 448px);
 }
 
 .content h2 {
-  margin-block-end: 8px;
+  margin-block-end: var(--tint-size-8);
 }
 
 .actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 8px;
+  gap: var(--tint-size-8);
 }</style>

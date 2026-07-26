@@ -106,5 +106,5 @@
 
 <style>.labeled-slider {
   display: grid;
-  gap: 8px;
+  gap: var(--tint-size-8);
 }</style>

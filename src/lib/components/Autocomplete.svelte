@@ -2,7 +2,7 @@
   import IconWarning from '@lib/icons/20-warning.svg?raw'
   import IconClose from '@lib/icons/14-close.svg?raw'
   import type { FullAutoFill } from 'svelte/elements'
-  import { debounce } from 'lodash-es'
+  import { debounce } from '@lib/utils/timing'
   import MenuInternal, {
     MENU_SEPARATOR,
     MenuBehavior,
@@ -481,7 +481,7 @@
   width: 100%
 .box
   position: relative
-  height: tint.$size-48
+  height: var(--tint-size-48)
   line-height: normal
   width: 100%
   > .input
@@ -489,16 +489,16 @@
     color: currentColor
     background-color: var(--tint-input-bg)
     border: 2px solid transparent
-    border-radius: tint.$input-radius
+    border-radius: var(--tint-radius-input)
     width: 100%
     height: 100%
     margin: 0
-    padding: (tint.$size-12 + 7px) tint.$size-12 (tint.$size-12 - 7px) tint.$size-12
+    padding: calc(var(--tint-size-12) + 7px) var(--tint-size-12) calc(var(--tint-size-12) - 7px) var(--tint-size-12)
     @include tint.effect-focus
   > label
     color: var(--tint-text-secondary)
     position: absolute
-    left: tint.$size-12
+    left: var(--tint-size-12)
     right: initial
     top: 50%
     transform: translateY(-55%) scale(1.166)
@@ -517,15 +517,15 @@
 .clear-button
   background: none
   border: none
-  border-radius: tint.$size-4
-  height: tint.$size-24
-  width: tint.$size-24
+  border-radius: var(--tint-size-4)
+  height: var(--tint-size-24)
+  width: var(--tint-size-24)
   display: flex
   align-items: center
   justify-content: center
   flex-shrink: 0
   position: absolute
-  right: tint.$size-12
+  right: var(--tint-size-12)
   top: 50%
   transform: translateY(-50%)
   @include tint.effect-focus
@@ -542,19 +542,19 @@
       border-color: SelectedItem
 
 .error .input
-  padding-inline-end: (tint.$size-8 * 2) + tint.$size-32
+  padding-inline-end: calc(var(--tint-size-8) * 2 + var(--tint-size-32))
 
 .has-value .input
-  padding-inline-end: (tint.$size-8 * 2) + tint.$size-24
+  padding-inline-end: calc(var(--tint-size-8) * 2 + var(--tint-size-24))
 
 .error .has-value .input
-  padding-inline-end: (tint.$size-8 * 3) + tint.$size-32 + tint.$size-24
+  padding-inline-end: calc(var(--tint-size-8) * 3 + var(--tint-size-32) + var(--tint-size-24))
 
 .helper-message
   line-height: normal
   color: var(--tint-text-secondary)
-  padding: 0 tint.$size-12
-  padding-block-start: tint.$size-4
+  padding: 0 var(--tint-size-12)
+  padding-block-start: var(--tint-size-4)
 
 .warning-icon
   pointer-events: none
@@ -562,11 +562,11 @@
   right: 0
   top: 0
   line-height: 0
-  margin: tint.$size-12 + tint.$size-2
+  margin: calc(var(--tint-size-12) + var(--tint-size-2))
   color: var(--tint-text-accent)
 
 .has-value .warning-icon
-  right: tint.$size-24 + tint.$size-8
+  right: calc(var(--tint-size-24) + var(--tint-size-8))
 
 @media (forced-colors: active)
   .box > .input

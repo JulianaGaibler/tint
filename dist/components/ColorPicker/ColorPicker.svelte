@@ -8,7 +8,8 @@
   } from './format'
   import type { Color } from '../../color'
   import IconWarning from '../../icons/20-warning.svg?raw'
-  import { shellToCss } from './shell-serialize'
+  import { shellToCss, canonicalCss } from './shell-serialize'
+  import type { PaletteColor } from './palette'
 
   interface Props {
     /** Bindable value. Type derived from `format`. */
@@ -53,6 +54,14 @@
     class?: string
     /** Optional snippet for custom swatch content. */
     swatchOverlay?: Snippet
+    /**
+     * Optional palette of named colors. When provided (and non-empty), the
+     * popover shows a Custom/Palette tab strip; the Palette pane lets users
+     * pick a token by name, with category headers, search, and keyboard nav.
+     * Names use "/" to denote categories: "color/red/70" groups under
+     * "color/red" alongside other "color/red/*" entries.
+     */
+    palette?: PaletteColor[]
   }
 
   let {
@@ -74,6 +83,7 @@
     'aria-describedby': ariaDescribedby = undefined,
     class: className = '',
     swatchOverlay = undefined,
+    palette = undefined,
   }: Props = $props()
 
   $effect.pre(() => {
@@ -85,6 +95,43 @@
   // Closed-state swatch CSS, computed via the shell serializer so the
   // shell stays independent of `@lib/color`.
   const displayCss = $derived(shellToCss(format, value))
+
+  // Normalize the palette once for shell-side matching. The shell deliberately
+  // avoids importing the full color engine, so we match via DOM-based
+  // canonicalization in shell-serialize. The result is a Map<canonical, name>.
+  const palettelookup = $derived.by(() => {
+    if (!palette || palette.length === 0) return null
+    // Pure lookup rebuilt by this $derived on palette change and never mutated
+    // afterward, so a plain Map (not SvelteMap) is correct here.
+    // eslint-disable-next-line svelte/prefer-svelte-reactivity
+    const m = new Map<string, string>()
+    for (const p of palette) {
+      const k = canonicalCss(p.value)
+      if (k && !m.has(k)) m.set(k, p.name)
+    }
+    return m
+  })
+
+  // When the current value matches a palette entry, prefer its name over the
+  // raw hex/CSS string in the closed-state display.
+  const paletteName = $derived.by(() => {
+    if (!palettelookup) return null
+    return palettelookup.get(canonicalCss(displayCss)) ?? null
+  })
+
+  // Split the palette name at its final "/" so the leaf segment can be kept
+  // visible even when the prefix overflows.
+  const paletteNameParts = $derived.by<{ prefix: string; leaf: string } | null>(
+    () => {
+      if (!paletteName) return null
+      const idx = paletteName.lastIndexOf('/')
+      if (idx < 0) return { prefix: '', leaf: paletteName }
+      return {
+        prefix: paletteName.slice(0, idx + 1),
+        leaf: paletteName.slice(idx + 1),
+      }
+    },
+  )
 
   // Popover module is loaded on first open and cached.
   type PopoverModule = typeof import('./Popover.svelte')
@@ -125,7 +172,15 @@
         (helperText || error ? `${id ?? 'colorpicker'}-helpertext` : undefined)}
       onclick={openPicker}
     >
-      <span class="display-value">{displayCss}</span>
+      {#if paletteNameParts}
+        <span class="display-value display-value--palette">
+          <span class="prefix">{paletteNameParts.prefix}</span><span
+            class="leaf">{paletteNameParts.leaf}</span
+          >
+        </span>
+      {:else}
+        <span class="display-value">{displayCss}</span>
+      {/if}
     </button>
     <label class="tint--type-input-small" for={id}>{label}</label>
 
@@ -161,6 +216,7 @@
       {contrast}
       {gamutWarning}
       {wideGamut}
+      {palette}
       anchorEl={element}
       onclose={closePicker}
       onpick={handleChange}
@@ -178,7 +234,7 @@
 
 .box {
   position: relative;
-  height: 48px;
+  height: var(--tint-size-48);
   line-height: normal;
 }
 .box > .input {
@@ -186,13 +242,13 @@
   box-sizing: border-box;
   background-color: var(--tint-input-bg);
   color: currentColor;
-  border-radius: 8px;
+  border-radius: var(--tint-radius-input);
   border: 2px solid transparent;
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 19px 12px 5px 12px;
-  padding-inline-end: 48px;
+  padding: calc(var(--tint-size-12) + 7px) var(--tint-size-12) calc(var(--tint-size-12) - 7px) var(--tint-size-12);
+  padding-inline-end: calc(var(--tint-size-32) + var(--tint-size-16));
   text-align: start;
   cursor: pointer;
 }
@@ -211,7 +267,7 @@
 .box > label {
   color: var(--tint-text-secondary);
   position: absolute;
-  left: 12px;
+  left: var(--tint-size-12);
   right: initial;
   top: 50%;
   transform: translateY(-55%) scale(1.166);
@@ -231,11 +287,29 @@
   text-overflow: ellipsis;
 }
 
+.display-value--palette {
+  display: flex;
+  max-width: 100%;
+  min-width: 0;
+  font-variant-numeric: normal;
+  overflow: visible;
+}
+.display-value--palette > .prefix {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.display-value--palette > .leaf {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 .helper-message {
   line-height: normal;
   color: var(--tint-text-secondary);
-  padding: 0 12px;
-  padding-block-start: 4px;
+  padding: 0 var(--tint-size-12);
+  padding-block-start: var(--tint-size-4);
 }
 
 .warning-icon {
@@ -244,17 +318,17 @@
   line-height: 0;
   right: 0;
   top: 0;
-  margin: 14px;
+  margin: calc(var(--tint-size-12) + var(--tint-size-2));
   color: var(--tint-text-accent);
 }
 
 .swatch-wrap {
   position: absolute;
-  right: 12px;
+  right: var(--tint-size-12);
   top: 50%;
   transform: translateY(-50%);
-  width: 24px;
-  height: 24px;
+  width: var(--tint-size-24);
+  height: var(--tint-size-24);
   border-radius: 50%;
   overflow: hidden;
   pointer-events: none;
@@ -265,7 +339,7 @@
   position: absolute;
   inset: 0;
   background-image: conic-gradient(rgba(0, 0, 0, 0.18) 25%, transparent 0 50%, rgba(0, 0, 0, 0.18) 0 75%, transparent 0);
-  background-size: 8px 8px;
+  background-size: var(--tint-size-8) var(--tint-size-8);
 }
 
 .swatch {

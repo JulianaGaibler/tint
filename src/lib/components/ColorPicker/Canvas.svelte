@@ -310,12 +310,20 @@
   position: relative
   width: 100%
   aspect-ratio: 1 / 1
-  border-radius: tint.$size-8
+  border-radius: var(--tint-size-8)
   overflow: hidden
   cursor: crosshair
   touch-action: none
   user-select: none
   @include tint.effect-focus
+
+  &::after
+    content: ''
+    position: absolute
+    inset: 0
+    border-radius: inherit
+    border: 1px solid rgba(0, 0, 0, 0.2)
+    pointer-events: none
 
 canvas
   width: 100%
@@ -360,8 +368,8 @@ canvas
 
 .cursor
   position: absolute
-  width: tint.$size-12
-  height: tint.$size-12
+  width: var(--tint-size-12)
+  height: var(--tint-size-12)
   border-radius: 50%
   background: transparent
   border: 2px solid #fff
@@ -370,19 +378,19 @@ canvas
   pointer-events: none
 
 .legend
-  margin: tint.$size-4 0 0 0
+  margin: var(--tint-size-4) 0 0 0
   padding: 0
   list-style: none
   display: flex
   flex-wrap: wrap
-  gap: tint.$size-8
+  gap: var(--tint-size-8)
   font-size: 0.72em
   color: var(--tint-text-secondary)
 
 .legend li
   display: inline-flex
   align-items: center
-  gap: tint.$size-4
+  gap: var(--tint-size-4)
 
 .legend .swatch
   display: inline-block

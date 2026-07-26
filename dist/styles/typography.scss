@@ -15,49 +15,49 @@ $typography-styles: (
   // Display
   display-serif-3: (
       font-size: 3rem,
-      font-family: $merriweather-font,
+      font-family: var(--tint-font-serif),
       font-weight: 700,
     ),
   display-sans-3: (
     font-size: 3.375rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 700,
   ),
   // Title
   title-serif-1: (
       font-size: 2rem,
-      font-family: $merriweather-font,
+      font-family: var(--tint-font-serif),
       font-weight: 700,
     ),
   title-sans-1: (
     font-size: 2.25rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 700,
   ),
   title-serif-2: (
     font-size: 1.5rem,
-    font-family: $merriweather-font,
+    font-family: var(--tint-font-serif),
     font-weight: 700,
   ),
   title-sans-2: (
     font-size: 1.688rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 700,
   ),
   title-serif-3: (
     font-size: 1.166rem,
-    font-family: $merriweather-font,
+    font-family: var(--tint-font-serif),
     font-weight: 700,
   ),
   title-sans-3: (
     font-size: 1.312rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 700,
   ),
   // Action
   action: (
       font-size: 0.875rem,
-      font-family: $hk-grotesk-font,
+      font-family: var(--tint-font-sans),
       font-weight: 700,
       letter-spacing: 1px,
       text-transform: uppercase,
@@ -65,119 +65,119 @@ $typography-styles: (
   // Input
   input: (
       font-size: 0.875rem,
-      font-family: $hk-grotesk-font,
+      font-family: var(--tint-font-sans),
       font-weight: 500,
     ),
   input-small: (
     font-size: 0.75rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 500,
   ),
   // UI
   ui: (
       font-size: 0.938rem,
-      font-family: $hk-grotesk-font,
+      font-family: var(--tint-font-sans),
       font-weight: 500,
     ),
   ui-small: (
     font-size: 0.812rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 500,
   ),
   ui-bold: (
     font-size: 0.938rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 700,
   ),
   ui-small-bold: (
     font-size: 0.812rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 700,
   ),
   ui-italic: (
     font-size: 0.938rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 500,
     font-style: italic,
   ),
   ui-small-italic: (
     font-size: 0.812rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 500,
     font-style: italic,
   ),
   // Body
   body-serif-large: (
       font-size: 1.166rem,
-      font-family: $merriweather-font,
+      font-family: var(--tint-font-serif),
       font-weight: 400,
     ),
   body-sans-large: (
     font-size: 1.312rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 500,
   ),
   body-serif: (
     font-size: 1rem,
-    font-family: $merriweather-font,
+    font-family: var(--tint-font-serif),
     font-weight: 400,
   ),
   body-sans: (
     font-size: 1.125rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 500,
   ),
   body-serif-small: (
     font-size: 0.812rem,
-    font-family: $merriweather-font,
+    font-family: var(--tint-font-serif),
     font-weight: 400,
   ),
   body-sans-small: (
     font-size: 0.906rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 500,
   ),
   body-serif-bold: (
     font-size: 1rem,
-    font-family: $merriweather-font,
+    font-family: var(--tint-font-serif),
     font-weight: 700,
   ),
   body-sans-bold: (
     font-size: 1.125rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 700,
   ),
   body-serif-italic: (
     font-size: 1rem,
-    font-family: $merriweather-font,
+    font-family: var(--tint-font-serif),
     font-weight: 400,
     font-style: italic,
   ),
   body-sans-italic: (
     font-size: 1.125rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 500,
     font-style: italic,
   ),
   body-serif-small-bold: (
     font-size: 0.812rem,
-    font-family: $merriweather-font,
+    font-family: var(--tint-font-serif),
     font-weight: 700,
   ),
   body-sans-small-bold: (
     font-size: 0.906rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 700,
   ),
   body-serif-small-italic: (
     font-size: 0.812rem,
-    font-family: $merriweather-font,
+    font-family: var(--tint-font-serif),
     font-weight: 400,
     font-style: italic,
   ),
   body-sans-small-italic: (
     font-size: 0.906rem,
-    font-family: $hk-grotesk-font,
+    font-family: var(--tint-font-sans),
     font-weight: 500,
     font-style: italic,
   )
