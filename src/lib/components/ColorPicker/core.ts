@@ -148,10 +148,7 @@ export function tryParseColor(input: string): Color | null {
  * LEFT
  */
 export type PopoverPlacement =
-  | 'top-left'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-right'
+  'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 
 const WINDOW_PADDING = 8
 

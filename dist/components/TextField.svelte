@@ -305,8 +305,7 @@
                 'width',
               ].includes(key),
           ),
-        )}
-      ></textarea>
+        )}></textarea>
     {:else}
       <input
         {disabled}

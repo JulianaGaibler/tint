@@ -38,10 +38,7 @@
       'aria-checked'?: boolean | undefined
       // HTML element of the button @type {HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement | undefined}
       element?:
-        | HTMLButtonElement
-        | HTMLAnchorElement
-        | HTMLSpanElement
-        | undefined
+        HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement | undefined
       // Content of the button @type {Snippet | undefined}
       children?: import('svelte').Snippet
       // Click event handler @type {(e: MouseEvent) => void | undefined}
