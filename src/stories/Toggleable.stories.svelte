@@ -2,11 +2,13 @@
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import Toggleable from '@lib/components/Toggleable.svelte'
   import { fn, expect, userEvent } from 'storybook/test'
+  import ToggleableDocs from './docs/Toggleable.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/Toggleable',
     component: Toggleable,
     render: template,
+    parameters: { docs: { description: { component: ToggleableDocs } } },
     argTypes: {
       type: {
         control: 'inline-radio',
@@ -38,7 +40,6 @@
   <Toggleable {...args} />
 {/snippet}
 
-<!-- A standard checkbox that can be toggled on and off. -->
 <Story
   name="Checkbox"
   args={{ checked: false, id: 'checkbox-input', type: 'checkbox' }}
@@ -68,11 +69,6 @@
   }}
 />
 
-<!--
-  The individual radio button can also be toggled on and off.
-  A higher level component has to manage the state of multiple
-  radio buttons.
--->
 <Story
   name="Radio"
   args={{ checked: false, id: 'radio-input', type: 'radio' }}
@@ -93,7 +89,6 @@
   }}
 />
 
-<!-- A switch that can be toggled on and off. Behaves like a checkbox. -->
 <Story
   name="Switch"
   args={{

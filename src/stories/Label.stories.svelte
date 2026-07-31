@@ -3,10 +3,12 @@
   import Label from '@lib/components/Label.svelte'
   import { expect } from 'storybook/test'
   import IconHome from '@lib/icons/20-home.svg?raw'
+  import LabelDocs from './docs/Label.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/Label',
     component: Label,
+    parameters: { docs: { description: { component: LabelDocs } } },
     render: template,
     argTypes: {
       for: {
@@ -44,7 +46,6 @@
   </div>
 {/snippet}
 
-<!-- Basic label with description -->
 <Story
   name="Basic"
   args={{
@@ -65,7 +66,6 @@
   }}
 />
 
-<!-- Label with icon -->
 <Story
   name="With Icon"
   args={{
@@ -77,7 +77,6 @@
   }}
 />
 
-<!-- Label only (no description) -->
 <Story
   name="Label Only"
   args={{
@@ -87,7 +86,6 @@
   }}
 />
 
-<!-- Description only (no label) -->
 <Story
   name="Description Only"
   args={{
@@ -97,7 +95,6 @@
   }}
 />
 
-<!-- Disabled label -->
 <Story
   name="Disabled"
   args={{
@@ -115,7 +112,6 @@
   }}
 />
 
-<!-- Long label text -->
 <Story
   name="Long Label"
   args={{
@@ -128,7 +124,6 @@
   }}
 />
 
-<!-- Label with icon and disabled -->
 <Story
   name="Icon and Disabled"
   args={{

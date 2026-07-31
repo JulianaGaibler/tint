@@ -1,10 +1,12 @@
 <script module lang="ts">
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import ProgressBar from '@src/lib/components/ProgressBar.svelte'
+  import ProgressBarDocs from './docs/ProgressBar.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/ProgressBar',
     component: ProgressBar,
+    parameters: { docs: { description: { component: ProgressBarDocs } } },
     argTypes: {
       progress: {
         control: { type: 'range', min: 0, max: 100, step: 1 },
@@ -28,7 +30,6 @@
   })
 </script>
 
-<!-- Animated progress indicator with squiggly animation for active states -->
 <Story name="Default" args={{ progress: 75 }}>
   {#snippet template(args: any)}
     <div style="width: 300px;">
@@ -37,7 +38,6 @@
   {/snippet}
 </Story>
 
-<!-- Progress bar with progress text -->
 <Story name="With Progress Text" args={{ progress: 45, showProgress: true }}>
   {#snippet template(args: any)}
     <div style="width: 300px;">
@@ -46,7 +46,6 @@
   {/snippet}
 </Story>
 
-<!-- Inactive progress bar without animation -->
 <Story name="Inactive" args={{ progress: 60, active: false }}>
   {#snippet template(args: any)}
     <div style="width: 300px;">
@@ -55,7 +54,6 @@
   {/snippet}
 </Story>
 
-<!-- Progress bar at 100% completion -->
 <Story name="Complete" args={{ progress: 100, showProgress: true }}>
   {#snippet template(args: any)}
     <div style="width: 300px;">
@@ -64,7 +62,6 @@
   {/snippet}
 </Story>
 
-<!-- Progress bar with very low progress -->
 <Story name="Just Started" args={{ progress: 5, showProgress: true }}>
   {#snippet template(args: any)}
     <div style="width: 300px;">
@@ -73,7 +70,6 @@
   {/snippet}
 </Story>
 
-<!-- Progress bar with no progress -->
 <Story name="No Progress" args={{ progress: 0, showProgress: true }}>
   {#snippet template(args: any)}
     <div style="width: 300px;">

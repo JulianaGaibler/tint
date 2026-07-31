@@ -2,10 +2,12 @@
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import Autocomplete from '@lib/components/Autocomplete.svelte'
   import { fn } from 'storybook/test'
+  import AutocompleteDocs from './docs/Autocomplete.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/Autocomplete',
     component: Autocomplete,
+    parameters: { docs: { description: { component: AutocompleteDocs } } },
     render: child,
     argTypes: {
       autocomplete: { control: 'select' },
@@ -21,7 +23,6 @@
   <Autocomplete {...args} />
 {/snippet}
 
-<!-- This is the most basic usage of the autocomplete. -->
 <Story
   name="Basic"
   args={{
@@ -48,7 +49,6 @@
   }}
 />
 
-<!-- Autocomplete with a preselected value. -->
 <Story
   name="With value"
   args={{
@@ -71,7 +71,6 @@
   }}
 />
 
-<!-- Disabled autocomplete. -->
 <Story
   name="Disabled"
   args={{
@@ -87,16 +86,6 @@
   }}
 />
 
-<!--
-Autocomplete with free text input enabled.
-
-In free text mode, the component behaves differently:
-- Users can type any arbitrary text, not just select from predefined options
-- The `value` prop will be set to the text content (label) rather than the item's value
-- Items serve as suggestions that can be selected, but are not required
-- Text persists on blur - it won't reset to empty or a previous selection
-- The clear button appears whenever there's text content
--->
 <Story
   name="Free Text"
   args={{
@@ -119,7 +108,6 @@ In free text mode, the component behaves differently:
   }}
 />
 
-<!-- Free text autocomplete with a preselected value. -->
 <Story
   name="Free Text with value"
   args={{
@@ -143,7 +131,6 @@ In free text mode, the component behaves differently:
   }}
 />
 
-<!-- Autocomplete with dynamic items that simulates API calls with delay. -->
 <Story
   name="Dynamic Items"
   args={{

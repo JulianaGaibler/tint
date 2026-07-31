@@ -1,8 +1,10 @@
 <script context="module" lang="ts">
   import { defineMeta } from '@storybook/addon-svelte-csf'
+  import TooltipDocs from './docs/Tooltip.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Actions/Tooltip',
+    parameters: { docs: { description: { component: TooltipDocs } } },
   })
 </script>
 
@@ -10,9 +12,6 @@
   import { tooltip } from '@src/lib/actions/tooltip'
 </script>
 
-<!--
-  Tooltips provide additional information when hovering over or focusing on elements.
--->
 <Story name="Basic Usage">
   <button
     class="demo-button"
@@ -24,11 +23,6 @@
   </button>
 </Story>
 
-<!--
-  The tooltip action accepts an `offset` parameter that controls the distance
-  between the tooltip and its target element. This example shows different
-  offset values for comparison.
--->
 <Story name="Offset Options">
   <div class="offset-row">
     <button
@@ -61,12 +55,6 @@
   </div>
 </Story>
 
-<!--
-  Tooltips automatically position themselves based on available space.
-  This example demonstrates how tooltips adjust their position when elements are placed
-  near the edges of the viewport. The tooltip will appear in the direction with the most space
-  and will shift horizontally to stay within the viewport boundaries.
--->
 <Story name="Auto Positioning">
   <div class="positioning-container">
     <!-- Top-left corner -->

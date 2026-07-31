@@ -356,7 +356,7 @@
 
 .progress-text {
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: var(--tint-font-weight-sans-regular);
   color: currentColor;
   background-color: color-mix(in srgb, transparent 90%, currentColor);
   padding: var(--tint-size-8);

@@ -8,7 +8,7 @@ Tint uses SASS for styling. The styles are provided as source files (not
 pre-compiled CSS), giving you full control over how they're included in your
 project.
 
-## Quick Start
+## Quick start
 
 Import and include the full bootstrap in your global stylesheet:
 
@@ -27,17 +27,17 @@ The `full-bootstrap()` mixin sets up:
 
 - CSS layers for proper cascade order
 - Dimensional design tokens as CSS custom properties (`--tint-size-*`,
-  `--tint-radius-*`, `--tint-border-width`) — see
-  [Customizing Dimensions](#customizing-dimensions)
+  `--tint-radius-*`, `--tint-border-width`). See
+  [Customizing dimensions](#customizing-dimensions)
 - Font family tokens (`--tint-font-sans`, `--tint-font-serif`,
-  `--tint-font-mono`) — see [Fonts](/?path=/docs/getting-started-fonts--docs)
-  for swapping in your own fonts
+  `--tint-font-mono`). See [Fonts](/?path=/docs/getting-started-fonts--docs) for
+  swapping in your own fonts
 - Base reset and global styles
 - Typography classes
 - Font-face declarations (no need to call `generate-font-faces()` separately)
 - All utility styles
 
-## Dark Mode Support
+## Dark mode support
 
 You can add dark mode support using media queries:
 
@@ -77,7 +77,7 @@ $colors-dark: (
 );
 ```
 
-## Complete Astro Project Setup
+## Complete Astro project setup
 
 Here's a real-world example of setting up Tint in an Astro project:
 
@@ -155,7 +155,7 @@ body
 </style>
 ```
 
-## Auto-Import Utils (Optional)
+## Auto-import utils (optional)
 
 To use Tint utilities in all your component styles without importing them every
 time, configure Vite's SASS preprocessor:
@@ -217,7 +217,7 @@ export default {
 
 Now you can use Tint mixins (like `effect-focus`) in any component without
 importing. Dimensional values, however, are plain CSS custom properties, so you
-don't need SASS or any import to use them — reference them directly:
+can reference them directly without SASS or any import:
 
 ```tsx
 <style lang="sass">
@@ -226,7 +226,7 @@ don't need SASS or any import to use them — reference them directly:
 </style>
 ```
 
-## Color Palettes
+## Color palettes
 
 Switch between plain and tinted color palettes using CSS classes:
 
@@ -238,7 +238,7 @@ Switch between plain and tinted color palettes using CSS classes:
 <div class="tint--tinted">Content using tinted colors</div>
 ```
 
-## Available Style Imports
+## Available style imports
 
 ```scss
 // Main bootstrap with all mixins
@@ -248,7 +248,7 @@ Switch between plain and tinted color palettes using CSS classes:
 @use 'tint/styles/utils' as utils;
 ```
 
-## Available Mixins
+## Available mixins
 
 ### From `tint/styles/bootstrap`:
 
@@ -259,7 +259,7 @@ Switch between plain and tinted color palettes using CSS classes:
 - `generate-color-variables($colors)` - Generate CSS custom properties for
   colors
 - `generate-tokens()` - Generate the dimensional design tokens (`--tint-size-*`,
-  `--tint-radius-*`, `--tint-border-width`); already called by
+  `--tint-radius-*`, `--tint-border-width`), already called by
   `full-bootstrap()`
 
 ### From `tint/styles/utils`:
@@ -267,10 +267,10 @@ Switch between plain and tinted color palettes using CSS classes:
 - `effect-focus()` - Add focus outline styles
 - `effect-focus-base()` - Base focus styles without pseudo-selector
 
-## Customizing Dimensions
+## Customizing dimensions
 
 Spacing and roundness are exposed as CSS custom properties (emitted by
-`full-bootstrap()`), so you can retheme them at runtime — no SASS or rebuild
+`full-bootstrap()`), so you can retheme them at runtime, with no SASS or rebuild
 required. Override them anywhere in your own CSS, typically on `:root` or scoped
 to a subtree.
 
@@ -301,7 +301,7 @@ spacing scale by default:
 The semantic tokens above are built on the spacing scale (`--tint-size-2`
 through `--tint-size-80`, mirroring `2, 4, 8, 12, 16, 24, 32, 40, 48, 64, 80`
 px). It's used for nearly all padding, gaps, and margins, so overriding it is
-rarely a good idea — prefer the semantic tokens. It's available if you need it:
+rarely a good idea. Prefer the semantic tokens. It's available if you need it:
 
 ```css
 .compact-region {
@@ -309,7 +309,7 @@ rarely a good idea — prefer the semantic tokens. It's available if you need it
 }
 ```
 
-## Typography and Fonts
+## Typography and fonts
 
 For typography classes, font-face setup, and font preloading, see the
 [Fonts](/?path=/docs/getting-started-fonts--docs) page.

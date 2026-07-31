@@ -4,10 +4,12 @@
   import { fn, expect, userEvent } from 'storybook/test'
   import { createRadioGroup, createCheckboxGroup } from '@lib/stores/index.js'
   import IconHome from '@lib/icons/20-home.svg?raw'
+  import LabeledToggleableDocs from './docs/LabeledToggleable.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/LabeledToggleable',
     component: LabeledToggleable,
+    parameters: { docs: { description: { component: LabeledToggleableDocs } } },
     argTypes: {
       type: {
         control: 'inline-radio',
@@ -47,7 +49,6 @@
   const notificationPreference = createRadioGroup('important') // Pre-select important only
 </script>
 
-<!-- Basic checkbox with text label and description -->
 <Story
   name="Checkbox with Text"
   args={{
@@ -78,7 +79,6 @@
   {/snippet}
 </Story>
 
-<!-- Checkbox with icon in label -->
 <Story
   name="Checkbox with Icon"
   args={{
@@ -97,7 +97,6 @@
   {/snippet}
 </Story>
 
-<!-- Radio button example -->
 <Story
   name="Radio Button"
   args={{
@@ -128,7 +127,6 @@
   {/snippet}
 </Story>
 
-<!-- Switch example -->
 <Story
   name="Switch"
   args={{
@@ -158,7 +156,6 @@
   {/snippet}
 </Story>
 
-<!-- Example with custom slots -->
 <Story name="Custom Slots">
   {#snippet template(_args: any)}
     <div>
@@ -185,7 +182,6 @@
   {/snippet}
 </Story>
 
-<!-- Disabled state -->
 <Story
   name="Disabled"
   args={{
@@ -204,7 +200,6 @@
   {/snippet}
 </Story>
 
-<!-- Example with groupStore for checkboxes -->
 <Story name="Checkbox Group">
   {#snippet template(_args: any)}
     <div>
@@ -253,7 +248,6 @@
   {/snippet}
 </Story>
 
-<!-- Radio button group with proper group binding -->
 <Story name="Radio Group with Binding">
   {#snippet template(_args: any)}
     <div>

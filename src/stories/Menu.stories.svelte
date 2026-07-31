@@ -7,10 +7,12 @@
   import Btn from '@src/lib/components/Button.svelte'
   import StarIcon from '@lib/icons/20-crown.svg?raw'
   import InfoIcon from '@lib/icons/20-info.svg?raw'
+  import MenuDocs from './docs/Menu.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/Menu',
     component: Menu,
+    parameters: { docs: { description: { component: MenuDocs } } },
     render: child,
   })
   let contextClickHandlers: ((e: Event) => void) | undefined = $state()
@@ -135,22 +137,16 @@
   <Menu bind:contextClick={contextClickHandlers} {...args} />
 {/snippet}
 
-<!-- A menu that opens attached to the element that triggered the contextmenu event. -->
 <Story name="Button" args={{ variant: 'button', items }} />
 
-<!-- A menu that opens at the location of the mouse event. -->
 <Story name="Context" args={{ variant: 'context', items }} />
 
-<!-- A menu with animation enabled (default behavior) -->
 <Story name="Animated" args={{ variant: 'button', items, animated: true }} />
 
-<!-- A menu with large size for more spacing -->
 <Story name="Large size" args={{ variant: 'button', items, size: 'large' }} />
 
-<!-- A menu with icons in menu items -->
 <Story name="With icons" args={{ variant: 'button', items: itemsWithIcons }} />
 
-<!-- A menu with items that have no checkboxes or submenu indicators (auto-hidden gutters) -->
 <Story
   name="Auto-hidden gutters"
   args={{

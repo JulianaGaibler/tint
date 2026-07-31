@@ -5,14 +5,15 @@
   import { toast } from '@lib/stores/toast.js'
   import IconCrown from '@lib/icons/20-crown.svg?raw'
   import IconInfo from '@lib/icons/20-info.svg?raw'
+  import ToastDocs from './docs/Toast.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/Toast',
     component: Toaster,
+    parameters: { docs: { description: { component: ToastDocs } } },
   })
 </script>
 
-<!-- Basic toast triggered by a button click -->
 <Story name="Default" args={{}}>
   {#snippet template(args: any)}
     <Button onclick={() => toast('This is a toast message')}>Show Toast</Button>
@@ -20,7 +21,6 @@
   {/snippet}
 </Story>
 
-<!-- Toast with loading spinner -->
 <Story name="Loading" args={{}}>
   {#snippet template(args: any)}
     <Button onclick={() => toast.loading('Loading...')}>
@@ -30,7 +30,6 @@
   {/snippet}
 </Story>
 
-<!-- Toast with error styling -->
 <Story name="Error" args={{}}>
   {#snippet template(args: any)}
     <Button onclick={() => toast.error('Failed to save changes')}>
@@ -40,7 +39,6 @@
   {/snippet}
 </Story>
 
-<!-- Toast with both a title and a description -->
 <Story name="With Description" args={{}}>
   {#snippet template(args: any)}
     <Button
@@ -55,7 +53,6 @@
   {/snippet}
 </Story>
 
-<!-- Toast with custom icon -->
 <Story name="With Custom Icon" args={{}}>
   {#snippet template(args: any)}
     <div style="display: flex; gap: 8px;">
@@ -81,7 +78,6 @@
   {/snippet}
 </Story>
 
-<!-- Promise toast that transitions from loading to complete -->
 <Story name="Promise" args={{}}>
   {#snippet template(args: any)}
     <div style="display: flex; gap: 8px;">
@@ -115,7 +111,6 @@
   {/snippet}
 </Story>
 
-<!-- Toast with action button -->
 <Story name="With Action" args={{}}>
   {#snippet template(args: any)}
     <Button
@@ -133,7 +128,6 @@
   {/snippet}
 </Story>
 
-<!-- Toast with action and cancel buttons -->
 <Story name="With Action & Cancel" args={{}}>
   {#snippet template(args: any)}
     <Button

@@ -1,6 +1,6 @@
 {
   "name": "tint",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "scripts": {
     "dev": "vite dev",
     "preview": "vite preview",

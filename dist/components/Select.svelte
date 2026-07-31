@@ -211,7 +211,7 @@
 select option {
   font-size: 0.875rem;
   font-family: var(--tint-font-sans);
-  font-weight: 500;
+  font-weight: var(--tint-font-weight-sans-regular);
 }
 select, select::picker(select) {
   appearance: base-select;

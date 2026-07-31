@@ -7,7 +7,7 @@ import { Meta } from '@storybook/addon-docs/blocks'
 Tint is a design system for Svelte and Astro projects, providing components,
 fonts, icons, and styles.
 
-## Install the Package
+## Install the package
 
 Install Tint from GitHub using npm:
 
@@ -25,15 +25,15 @@ pnpm add github:JulianaGaibler/tint
 
 Tint requires the following to work properly:
 
-- **Svelte 5+** - Tint components are built with Svelte 5 using runes syntax
-- **SASS compiler** - Styles are provided as SASS source files (not pre-compiled
-  CSS)
-- **Modern bundler** - Vite, Webpack, or similar to handle asset imports
-  (developed and tested with Vite)
+- Svelte 5+, since Tint components are built with Svelte 5 using runes syntax
+- A SASS compiler, since styles are provided as SASS source files (not
+  pre-compiled CSS)
+- A modern bundler such as Vite or Webpack to handle asset imports (developed
+  and tested with Vite)
 
-## Configuration for Astro Projects
+## Configuration for Astro projects
 
-### TypeScript Path Mappings (tsconfig.json)
+### TypeScript path mappings (tsconfig.json)
 
 Add path mappings to help TypeScript resolve Tint imports:
 
@@ -50,13 +50,19 @@ Add path mappings to help TypeScript resolve Tint imports:
 }
 ```
 
-### Vite Configuration (astro.config.mjs)
+### Vite configuration (astro.config.mjs)
 
 Configure Vite to properly handle Tint in SSR builds:
 
 ```javascript
 import svelte from '@astrojs/svelte'
 import { defineConfig } from 'astro/config'
+import path from 'node:path'
+import { createRequire } from 'node:module'
+
+const require = createRequire(import.meta.url)
+// Resolve Tint's location so ~tint works with pnpm, hoisting, and monorepos
+const tintDist = path.dirname(require.resolve('tint'))
 
 export default defineConfig({
   vite: {
@@ -67,7 +73,7 @@ export default defineConfig({
     resolve: {
       alias: {
         // Allow using ~tint/fonts in SASS imports
-        '~tint': '/node_modules/tint/dist',
+        '~tint': tintDist,
         '@src': '/src',
       },
     },
@@ -76,11 +82,11 @@ export default defineConfig({
 })
 ```
 
-**Why this configuration?**
+What each part does:
 
-- **`noExternal: ['tint*']`**: Ensures Tint is bundled during SSR, preventing
-  module resolution errors
-- **`'~tint'` alias**: Allows using `~tint/fonts` in SASS `@font-face`
-  declarations (used by the bootstrap mixin)
-- **`@src` alias**: Convenient shorthand for project imports (optional but
-  recommended)
+- `noExternal: ['tint*']` bundles Tint during SSR, preventing module resolution
+  errors
+- The `'~tint'` alias resolves `~tint/fonts` in SASS `@font-face` declarations
+  to Tint's `dist` folder. Using `require.resolve` instead of a hardcoded
+  `node_modules/tint/dist` path keeps it working under pnpm and in monorepos
+- The `@src` alias is a shorthand for project imports (optional but recommended)

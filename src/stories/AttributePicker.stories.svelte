@@ -2,10 +2,12 @@
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import AttributePicker from '@lib/components/AttributePicker.svelte'
   import { fn } from 'storybook/test'
+  import AttributePickerDocs from './docs/AttributePicker.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/AttributePicker',
     component: AttributePicker,
+    parameters: { docs: { description: { component: AttributePickerDocs } } },
     render: child,
     argTypes: {
       autocomplete: { control: 'select' },
@@ -20,7 +22,6 @@
   <AttributePicker {...args} />
 {/snippet}
 
-<!-- This is the most basic usage of the attribute picker. -->
 <Story
   name="Basic"
   args={{
@@ -43,7 +44,6 @@
   }}
 />
 
-<!-- You can also add a helper text to the attribute picker. -->
 <Story
   name="Helper text"
   args={{
@@ -59,7 +59,6 @@
   }}
 />
 
-<!-- You can also add an error text to the attribute picker. -->
 <Story
   name="Error text"
   args={{

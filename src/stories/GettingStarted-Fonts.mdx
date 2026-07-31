@@ -10,7 +10,7 @@ format. These fonts are bundled with the package and can be preloaded.
 The fonts are automatically included when you use the `full-bootstrap()` mixin
 in your [Styles](/?path=/docs/getting-started-styles--docs) setup.
 
-## Font Preloading
+## Font preloading
 
 The recommended way to use Tint's fonts is to preload them selectively using the
 `getFontPreloads()` helper function. This generates the proper `<link>` tag
@@ -56,7 +56,7 @@ const preloads = getFontPreloads(['hkGroteskBold', 'merriweatherRegular'])
 </head>
 ```
 
-### Preload All Fonts
+### Preload all fonts
 
 If you want to preload all fonts (not recommended unless you're using all of
 them):
@@ -68,9 +68,9 @@ import { getFontPreloads } from 'tint/fonts'
 const preloads = getFontPreloads()
 ```
 
-## Font Metadata
+## Font metadata
 
-Each font object includes rich metadata that you can use programmatically:
+Each font object includes metadata that you can use programmatically:
 
 ```javascript
 import { fonts } from 'tint/fonts'
@@ -88,15 +88,15 @@ console.log(headingFont)
 // }
 ```
 
-## Best Practices
+## Best practices
 
-- **Preload selectively**: Only preload fonts that are used above the fold or
-  are critical for initial render
-- **Use the helper**: The `getFontPreloads()` function ensures correct
-  attributes and type safety
-- **Check usage**: Before preloading a font, make sure it's actually used.
+- Only preload fonts that are used above the fold or are critical for initial
+  render
+- Use the `getFontPreloads()` helper, which ensures correct attributes and type
+  safety
+- Before preloading a font, make sure it's actually used
 
-## Typography Utilities
+## Typography utilities
 
 Tint provides typography utilities through SASS imports that are included with
 the `full-bootstrap()` mixin:
@@ -109,7 +109,7 @@ the `full-bootstrap()` mixin:
 @use 'tint/styles/font-face-info' as fonts;
 ```
 
-### Typography Classes
+### Typography classes
 
 When you include `full-bootstrap()`, typography utility classes are
 automatically generated. You can also generate them separately:
@@ -121,7 +121,7 @@ automatically generated. You can also generate them separately:
 @include bootstrap.type-classes();
 ```
 
-### Apply Typography in SASS
+### Apply typography in SASS
 
 Use the `type-class()` mixin to apply typography styles directly in your SASS:
 
@@ -137,7 +137,7 @@ Use the `type-class()` mixin to apply typography styles directly in your SASS:
 }
 ```
 
-## Prose Styles
+## Prose styles
 
 Tint includes a `.tint--type` class for styling long-form content. This is ideal
 for blog posts, articles, or any content-heavy pages:
@@ -160,7 +160,7 @@ for blog posts, articles, or any content-heavy pages:
 The prose styles are included automatically when you use `full-bootstrap()` or
 `base()`.
 
-## Using Your Own Fonts
+## Using your own fonts
 
 Font families are exposed as CSS custom properties, so you can swap them at
 runtime by overriding `--tint-font-sans` and `--tint-font-serif` (and
@@ -211,7 +211,7 @@ $my-fonts: (
 @include bootstrap.generate-font-faces('/fonts', $my-fonts)
 ```
 
-## Customizing Font Paths
+## Customizing font paths
 
 By default, `full-bootstrap()` uses `~tint/fonts` for font paths (your bundler
 will resolve this). If you're hosting fonts statically:
@@ -226,7 +226,7 @@ will resolve this). If you're hosting fonts statically:
 **Note:** Since `full-bootstrap()` already calls `generate-font-faces()`, you
 don't need to call it separately unless you want a different path.
 
-### Generate Font Faces Separately
+### Generate font faces separately
 
 If you need more control, you can generate font-face declarations independently:
 
@@ -237,13 +237,13 @@ If you need more control, you can generate font-face declarations independently:
 @include bootstrap.generate-font-faces('/static/fonts');
 ```
 
-## Typography Imports Reference
+## Typography imports reference
 
 ### From `tint/styles/bootstrap`:
 
 - `type-classes()` - Generate typography utility classes
 - `generate-fonts()` - Generate the font family CSS custom properties
-  (`--tint-font-sans`, `--tint-font-serif`, `--tint-font-mono`); already called
+  (`--tint-font-sans`, `--tint-font-serif`, `--tint-font-mono`), already called
   by `full-bootstrap()`
 - `generate-font-faces($path, $font-list)` - Generate @font-face declarations.
   Pass `$font-list` to use your own font map instead of tint's bundled fonts

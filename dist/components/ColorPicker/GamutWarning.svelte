@@ -15,7 +15,7 @@
   let { gamut, clippedCss, onClip }: Props = $props()
 </script>
 
-<MessageBox icon={IconWarning} tone="warning">
+<MessageBox icon={IconWarning}>
   <p class="title">Outside {gamut}</p>
   <p class="detail">
     Will be clipped to <code>{clippedCss}</code>.

@@ -6,10 +6,12 @@
   import IconInfo from '@lib/icons/20-info.svg?raw'
   import IconWarning from '@lib/icons/20-warning.svg?raw'
   import IconSearch from '@lib/icons/20-search.svg?raw'
+  import SegmentedControlDocs from './docs/SegmentedControl.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/SegmentedControl',
     component: SegmentedControl,
+    parameters: { docs: { description: { component: SegmentedControlDocs } } },
     render: child,
     argTypes: {
       value: {
@@ -74,7 +76,6 @@
   <SegmentedControl {...args} />
 {/snippet}
 
-<!-- Default segmented control with text -->
 <Story
   name="Text Options"
   args={{
@@ -87,7 +88,6 @@
   }}
 />
 
-<!-- Segmented control with icons only -->
 <Story
   name="Icon Options"
   args={{
@@ -100,7 +100,6 @@
   }}
 />
 
-<!-- Small segmented control -->
 <Story
   name="Small"
   args={{
@@ -113,7 +112,6 @@
   }}
 />
 
-<!-- Disabled segmented control -->
 <Story
   name="Disabled"
   args={{
@@ -126,7 +124,6 @@
   }}
 />
 
-<!-- Segmented control with tooltips -->
 <Story
   name="With Tooltips"
   args={{

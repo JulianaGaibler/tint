@@ -1,11 +1,13 @@
 <script module lang="ts">
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import TextField from '@lib/components/TextField.svelte'
+  import TextFieldDocs from './docs/TextField.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/TextField',
     component: TextField,
     render: child,
+    parameters: { docs: { description: { component: TextFieldDocs } } },
     argTypes: {
       autocomplete: { control: 'select' },
     },
@@ -16,10 +18,8 @@
   <TextField {...args} />
 {/snippet}
 
-<!-- This is the most basic usage of the text field. -->
 <Story name="Basic" args={{ id: 'input', label: 'Label' }} />
 
-<!-- You can also add a helper text to the text field. -->
 <Story
   name="Helper text"
   args={{
@@ -29,8 +29,6 @@
   }}
 />
 
-<!-- You can also add an error text to the text field,
-  which replaces the helper text and adds an error icon. -->
 <Story
   name="Error text"
   args={{
@@ -40,9 +38,6 @@
   }}
 />
 
-<!-- Setting `type` to `number` hides the native spinner and shows two
-  square stepper buttons. Arrow Up/Down and the buttons step by `step`
-  (default 1), clamped to `min`/`max`. -->
 <Story
   name="Number"
   args={{

@@ -2,6 +2,7 @@
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import ColorPicker from '@lib/components/ColorPicker/ColorPicker.svelte'
   import { fn } from 'storybook/test'
+  import ColorPickerDocs from './docs/ColorPicker.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/ColorPicker',
@@ -9,6 +10,7 @@
     args: {
       onchange: fn(),
     },
+    parameters: { docs: { description: { component: ColorPickerDocs } } },
   })
 </script>
 
@@ -62,7 +64,6 @@
   let paletteHexNoMatch = $state('#abcdef')
 </script>
 
-<!-- Default: outputs an 8-character hex string. -->
 <Story
   name="Basic (hex)"
   args={{
@@ -78,8 +79,6 @@
   {/snippet}
 </Story>
 
-<!-- Output value is a structured OKLCH object. The picker preserves the
-  full OKLCH precision on round-trip. -->
 <Story
   name="Structured OKLCH"
   args={{
@@ -97,7 +96,6 @@
   {/snippet}
 </Story>
 
-<!-- Structured RGB output. -->
 <Story
   name="Structured RGB"
   args={{
@@ -115,7 +113,6 @@
   {/snippet}
 </Story>
 
-<!-- Structured HSL output. -->
 <Story
   name="Structured HSL"
   args={{
@@ -133,7 +130,6 @@
   {/snippet}
 </Story>
 
-<!-- Display-P3 output. Useful for wide-gamut displays. -->
 <Story
   name="Display-P3 wide gamut"
   args={{
@@ -151,7 +147,6 @@
   {/snippet}
 </Story>
 
-<!-- Alpha slider + 8-digit hex output. -->
 <Story
   name="With alpha"
   args={{
@@ -167,8 +162,6 @@
   {/snippet}
 </Story>
 
-<!-- Contrast check against white. The popover shows the WCAG 2 ratio
-  and AA/AAA badges. -->
 <Story
   name="Contrast check"
   args={{
@@ -186,9 +179,7 @@
   {/snippet}
 </Story>
 
-<!-- Contrast with translucent foreground over a flatten-against backdrop.
-  Without `backdrop`, the picker shows "undefined" because WCAG 2 is undefined
-  for translucent colors. -->
+<!-- WCAG 2 is undefined for translucent colors, so without a backdrop to flatten against the picker shows undefined. -->
 <Story
   name="Contrast w/ alpha + backdrop"
   args={{
@@ -212,8 +203,7 @@
   {/snippet}
 </Story>
 
-<!-- Pick a saturated OKLCH color via the popover to see the gamut warning
-  when the output format requires sRGB. -->
+<!-- The warning appears when the chosen color falls outside the output format's gamut. -->
 <Story
   name="Out-of-gamut warning"
   args={{
@@ -274,9 +264,6 @@
   {/snippet}
 </Story>
 
-<!-- 120-entry palette (12 hues × 10 shades) + 3 ungrouped tokens.
-  Initial value matches a palette entry, so the popover opens on the
-  Palette tab with that row highlighted and scrolled into view. -->
 <Story
   name="With palette (matched)"
   args={{
@@ -294,11 +281,6 @@
   {/snippet}
 </Story>
 
-<!-- Short viewport + tall content (alpha + contrast). With the trigger
-  vertically centered, neither above nor below the anchor has full room for
-  the popover, so `placePopover` falls back to its shrink-and-scroll path:
-  the popover anchors against the trigger on whichever side has more space
-  and caps `maxHeight` to that space, letting its inner sections scroll. -->
 <Story
   name="Constrained viewport"
   args={{
@@ -324,8 +306,6 @@
   {/snippet}
 </Story>
 
-<!-- Same palette, but the initial value isn't a member.
-  The popover defaults to the Custom tab. -->
 <Story
   name="With palette (unmatched)"
   args={{

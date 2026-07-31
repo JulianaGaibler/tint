@@ -2,11 +2,13 @@
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import Slider from '@lib/components/Slider.svelte'
   import { fn } from 'storybook/test'
+  import SliderDocs from './docs/Slider.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/Slider',
     component: Slider,
     render: template,
+    parameters: { docs: { description: { component: SliderDocs } } },
     argTypes: {
       id: {
         control: 'text',
@@ -43,7 +45,6 @@
   </div>
 {/snippet}
 
-<!-- Basic slider -->
 <Story
   name="Basic"
   args={{
@@ -55,7 +56,6 @@
   }}
 />
 
-<!-- With step markers -->
 <Story
   name="With Steps"
   args={{
@@ -68,7 +68,6 @@
   }}
 />
 
-<!-- Disabled -->
 <Story
   name="Disabled"
   args={{
@@ -81,7 +80,6 @@
   }}
 />
 
-<!-- Large size -->
 <Story
   name="Large"
   args={{

@@ -1,0 +1,1 @@
+A text input that filters a list as you type. Pass static `items`, or a `dynamicItems` function for async results. Set `allowFreeText` to accept any typed value instead of only listed options, in which case `value` is the text itself.

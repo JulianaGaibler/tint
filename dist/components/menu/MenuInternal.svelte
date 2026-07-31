@@ -74,7 +74,7 @@
   })
   let overlayRef: HTMLElement | null = null
   let trap: focusTrap.FocusTrap | null = null
-  let core: MenuCore | null = null
+  let core: MenuCore | null = $state(null)
 
   // Derived values
   let displayActiveMenus = $derived(displayState.activeMenus)
@@ -104,7 +104,10 @@
     },
     scrollIntoView(
       el: HTMLElement,
-      opts?: { block?: string; inline?: string },
+      opts?: {
+        block?: 'start' | 'center' | 'end' | 'nearest'
+        inline?: 'start' | 'center' | 'end' | 'nearest'
+      },
     ) {
       el.scrollIntoView(opts)
     },

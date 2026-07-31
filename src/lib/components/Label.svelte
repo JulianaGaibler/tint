@@ -78,7 +78,7 @@
   display: flex
   align-items: center
   gap: var(--tint-size-8)
-  font-weight: 500
+  font-weight: var(--tint-font-weight-sans-regular)
   color: var(--tint-text-primary)
   cursor: pointer
   .icon

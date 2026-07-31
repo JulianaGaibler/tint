@@ -2,10 +2,12 @@
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import Dialog, { type OpenDialog } from '@lib/components/Dialog.svelte'
   import Button from '@lib/components/Button.svelte'
+  import DialogDocs from './docs/Dialog.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/Dialog',
     component: Dialog,
+    parameters: { docs: { description: { component: DialogDocs } } },
   })
 </script>
 
@@ -14,7 +16,6 @@
   let openAcknowledgmentDialog = $state<OpenDialog | undefined>(undefined)
 </script>
 
-<!-- A transactional dialog requires the user to take action to complete a task. Usually, this is a confirmation dialog. -->
 <Story
   name="Transactional"
   args={{
@@ -35,7 +36,6 @@
     </Dialog>{/snippet}</Story
 >
 
-<!-- An acknowledgment dialog informs the user that a task has been completed. -->
 <Story
   name="Acknowledgment"
   args={{

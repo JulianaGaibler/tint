@@ -2,6 +2,7 @@
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import IconDragHandle from '@lib/icons/14-drag-handle.svg?raw'
   import { fn } from 'storybook/test'
+  import ReorderableDocs from './docs/Reorderable.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Actions/Reorderable',
@@ -9,6 +10,7 @@
       actions: {
         handles: ['reorder', 'dragstarted', 'dragended'],
       },
+      docs: { description: { component: ReorderableDocs } },
     },
   })
 </script>
@@ -152,7 +154,6 @@
   }
 </script>
 
-<!-- A list where items can be reorderable by dragging and dropping -->
 <Story name="Basic List">
   <div>
     <h3 class="tint--type">Reorderable List Demo</h3>
@@ -178,7 +179,6 @@
   </div>
 </Story>
 
-<!-- A list with drag handles where only the handles are draggable -->
 <Story name="With Drag Handles">
   <div>
     <h3 class="tint--type">Reorderable List with Drag Handles</h3>
@@ -207,7 +207,6 @@
   </div>
 </Story>
 
-<!-- A list with keyboard support for reordering -->
 <Story name="With Keyboard Support">
   <div>
     <h3 class="tint--type">Reorderable List with Keyboard Support</h3>
@@ -233,7 +232,6 @@
   </div>
 </Story>
 
-<!-- Two lists sharing a dropGroup, allowing items to be dragged between them -->
 <Story name="Cross-Container">
   <div>
     <h3 class="tint--type">Cross-Container Drag and Drop</h3>

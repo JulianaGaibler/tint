@@ -1,0 +1,1 @@
+A `<details>`-based disclosure styled as a card. The summary row shows a chevron (down when collapsed, up when open) and a label, followed by a separator and the revealed body. Choose a `bg` or `bg-secondary` background, and use `padded` to match the body to the summary padding or unset it for edge-to-edge content.

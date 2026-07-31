@@ -2,10 +2,12 @@
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import Select, { SELECT_SEPARATOR } from '@lib/components/Select.svelte'
   import { fn } from 'storybook/test'
+  import SelectDocs from './docs/Select.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/Select',
     component: Select,
+    parameters: { docs: { description: { component: SelectDocs } } },
     args: {
       onchange: fn(),
     },
@@ -29,7 +31,6 @@
   ]
 </script>
 
-<!-- Users can select an item from a dropdown list. -->
 <Story
   name="Basic"
   args={{ id: 'select', label: 'Fruit', value: undefined, items }}
@@ -39,7 +40,6 @@
   {/snippet}
 </Story>
 
-<!-- Items can be visually grouped using separators. -->
 <Story
   name="With separators"
   args={{

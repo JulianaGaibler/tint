@@ -10,15 +10,15 @@ and include TypeScript definitions.
 Browse the **Components** section in the sidebar to see all available components
 with live examples and full API documentation.
 
-## Basic Usage
+## Basic usage
 
-Import components from the main package or from the components subpath:
+Import each component directly from its file:
 
 ```tsx
 <script>
-  import { Button, TextField, Select } from 'tint'
-  // Or explicitly from components
-  import { Button } from 'tint/components'
+  import Button from 'tint/components/Button.svelte'
+  import TextField from 'tint/components/TextField.svelte'
+  import Select from 'tint/components/Select.svelte'
 </script>
 
 <Button>Click me</Button>
@@ -26,12 +26,19 @@ Import components from the main package or from the components subpath:
 <Select options={['Option 1', 'Option 2']} />
 ```
 
-## Import Paths
+The package barrel also re-exports everything, so
+`import { Button } from 'tint'` works too. Direct file imports are preferred,
+since they let the bundler skip components you don't use.
+
+## Import paths
 
 ```javascript
-// Components
+// Components (import each from its file)
+import Button from 'tint/components/Button.svelte'
+import TextField from 'tint/components/TextField.svelte'
+
+// Or from the package barrel
 import { Button, TextField } from 'tint'
-import { Button } from 'tint/components'
 
 // Actions (Svelte actions)
 import { tooltip, reorderable } from 'tint/actions'
@@ -42,11 +49,12 @@ import { createRadioGroup, createCheckboxGroup } from 'tint/stores'
 // Fonts
 import { getFontPreloads, fonts } from 'tint/fonts'
 
-// Icons (direct asset imports)
+// Icons (raw SVG string for a component's icon prop, or a URL for <img>)
+import closeIcon from 'tint/icons/20-close.svg?raw'
 import addIcon from 'tint/icons/20-add.svg'
 ```
 
-## Example: Form with Multiple Components
+## Example: form with multiple components
 
 ```tsx
 <script>
@@ -93,7 +101,7 @@ import addIcon from 'tint/icons/20-add.svg'
 </form>
 ```
 
-## Using Actions
+## Using actions
 
 Tint provides Svelte actions for common behaviors:
 
@@ -121,7 +129,7 @@ Tint provides Svelte actions for common behaviors:
 </div>
 ```
 
-## Using Stores
+## Using stores
 
 Tint provides stores for managing grouped form controls:
 
@@ -154,19 +162,25 @@ Tint provides stores for managing grouped form controls:
 </label>
 ```
 
-## Using Icons
+## Using icons
 
-Import SVG icons directly as modules:
+Icons are SVG files. Import one as a URL for an `<img>` tag, or add the `?raw`
+suffix to get the SVG source as a string:
 
 ```tsx
 <script>
+  // As a URL, for an <img> tag
   import addIcon from 'tint/icons/20-add.svg'
-  import closeIcon from 'tint/icons/14-close.svg'
+  // As a raw string, to inline or pass to a component's icon prop
+  import closeIcon from 'tint/icons/20-close.svg?raw'
 </script>
 
 <img src={addIcon} alt="Add" />
-<img src={closeIcon} alt="Close" />
+<span>{@html closeIcon}</span>
 ```
+
+Components that take an `icon` prop expect the raw SVG string, so use `?raw`
+when passing icons to them.
 
 Icons are available in two sizes: 14px and 20px. The naming pattern is
 `{size}-{name}.svg`.
@@ -174,7 +188,7 @@ Icons are available in two sizes: 14px and 20px. The naming pattern is
 Browse available icons in the
 [Iconography Library](?path=/docs/iconography-library--docs).
 
-## TypeScript Support
+## TypeScript support
 
 All components include full TypeScript definitions. Your IDE will provide
 autocomplete for props and type checking:

@@ -13,3 +13,6 @@ export { default as ButtonMenu } from './Menu.svelte';
 export { default as FileInput } from './FileInput.svelte';
 export { default as Autocomplete } from './Autocomplete.svelte';
 export { default as Toaster } from './Toaster.svelte';
+export { default as MessageBox } from './MessageBox.svelte';
+export { default as CollapsibleCard } from './CollapsibleCard.svelte';
+export { default as Filmstrip } from './Filmstrip.svelte';

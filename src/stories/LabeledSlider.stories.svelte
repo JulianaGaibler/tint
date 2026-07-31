@@ -3,11 +3,13 @@
   import LabeledSlider from '@lib/components/LabeledSlider.svelte'
   import { fn } from 'storybook/test'
   import IconHome from '@lib/icons/20-home.svg?raw'
+  import LabeledSliderDocs from './docs/LabeledSlider.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/LabeledSlider',
     component: LabeledSlider,
     render: template,
+    parameters: { docs: { description: { component: LabeledSliderDocs } } },
     argTypes: {
       id: {
         control: 'text',
@@ -53,7 +55,6 @@
   </div>
 {/snippet}
 
-<!-- Basic -->
 <Story
   name="Basic"
   args={{
@@ -67,7 +68,6 @@
   }}
 />
 
-<!-- With icon -->
 <Story
   name="With Icon"
   args={{
@@ -82,7 +82,6 @@
   }}
 />
 
-<!-- With steps -->
 <Story
   name="With Steps"
   args={{
@@ -97,7 +96,6 @@
   }}
 />
 
-<!-- Disabled -->
 <Story
   name="Disabled"
   args={{
@@ -112,7 +110,6 @@
   }}
 />
 
-<!-- Large -->
 <Story
   name="Large"
   args={{

@@ -555,14 +555,7 @@
             <Button onclick={() => toast('This is a toast message')}
               >Default</Button
             >
-            <Button onclick={() => toast.success('Success toast')}
-              >Success</Button
-            >
             <Button onclick={() => toast.error('Error toast')}>Error</Button>
-            <Button onclick={() => toast.warning('Warning toast')}
-              >Warning</Button
-            >
-            <Button onclick={() => toast.info('Info toast')}>Info</Button>
             <Button onclick={() => toast.loading('Loading toast')}
               >Loading</Button
             >

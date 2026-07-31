@@ -3,10 +3,12 @@
   import MessageBox from '@src/lib/components/MessageBox.svelte'
   import IconHome from '@lib/icons/20-home.svg?raw'
   import { fn } from 'storybook/test'
+  import MessageBoxDocs from './docs/MessageBox.docs.md?raw'
 
   const { Story } = defineMeta({
     title: 'Components/MessageBox',
     component: MessageBox,
+    parameters: { docs: { description: { component: MessageBoxDocs } } },
     render: child,
     args: {
       onclose: fn(),

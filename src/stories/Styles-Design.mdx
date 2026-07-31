@@ -7,7 +7,7 @@ import { Meta } from '@storybook/addon-docs/blocks'
 Tint's color system is built around a dual-palette concept that allows you to
 create visual variety within your projects while maintaining consistency.
 
-## The Dual Palette System
+## The dual palette system
 
 Tint provides two color palettes that work together:
 
@@ -31,7 +31,7 @@ interface.
 </div>
 ```
 
-### When to Use Each Palette
+### When to use each palette
 
 Ideally one palette should dominate your design, with the other used for
 blocking or emphasis.
@@ -55,7 +55,7 @@ Within a single palette there are a few background layers:
 Reach for `--tint-bg-secondary` when a region needs subtle separation but
 switching it to the tinted palette would be too much (or the project only
 defines the plain palette). It has a built-in default derived from `--tint-bg`,
-so it works even if your palette map doesn't list it; add a `bg-secondary` entry
+so it works even if your palette map doesn't list it. Add a `bg-secondary` entry
 to the map to set an exact color:
 
 ```scss
@@ -73,7 +73,7 @@ $colors: (
 );
 ```
 
-## Dark Mode
+## Dark mode
 
 For projects that support dark mode, you can define a separate set of color
 palettes using `@media (prefers-color-scheme: dark)`:
