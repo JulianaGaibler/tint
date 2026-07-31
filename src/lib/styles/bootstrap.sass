@@ -74,6 +74,59 @@ $layer-names: tint-reset, tint-typography, tint-global
 @mixin type-classes()
   @include typography.generate-tint-classes()
 
+// Per-family prose flow content. Serif and sans variants differ only by their
+// body type class and prose line height, so both derive from $family (serif |
+// sans). The serif variant adds italic blockquotes on top of this.
+@mixin prose-variant($family)
+  $font: body-#{$family}
+  $font-bold: body-#{$family}-bold
+  $line-height: var(--tint-line-height-prose-#{$family})
+
+  // Paragraphs
+  p
+    @include typography.type-class($font)
+    margin-block-end: var(--tint-size-16)
+    line-height: $line-height
+    &:last-child
+      margin-block-end: 0
+
+  // Lists
+  ul, ol
+    @include typography.type-class($font)
+    margin-block-end: var(--tint-size-16)
+    padding-inline-start: var(--tint-size-24)
+    line-height: $line-height
+    &:last-child
+      margin-block-end: 0
+
+  // Blockquote
+  blockquote
+    @include typography.type-class($font)
+    color: var(--tint-text-secondary)
+    border-inline-start: var(--tint-size-8) solid var(--tint-card-border)
+    padding-inline-start: var(--tint-size-24)
+    margin-inline-start: 0
+    padding-block: var(--tint-size-16)
+    margin-block-end: var(--tint-size-16)
+    line-height: $line-height
+    &:last-child
+      margin-block-end: 0
+    p
+      margin-block-end: var(--tint-size-12)
+      &:last-child
+        margin-block-end: 0
+
+  dt
+    @include typography.type-class($font-bold)
+    margin-block-start: var(--tint-size-12)
+    &:first-child
+      margin-block-start: 0
+  dd
+    @include typography.type-class($font)
+    margin-inline-start: var(--tint-size-24)
+    margin-block-end: var(--tint-size-8)
+    line-height: $line-height
+
 // Prose styles for standardized content
 @mixin prose-styles()
   .tint--type, .tint--type-sans
@@ -175,99 +228,15 @@ $layer-names: tint-reset, tint-typography, tint-global
       margin-block-start: var(--tint-size-24)
       margin-block-end: var(--tint-size-24)
 
-  // Serif variant (default)
+  // Serif variant (default) — italic blockquotes on top of the shared flow
   .tint--type
-    // Paragraphs
-    p
-      @include typography.type-class(body-serif)
-      margin-block-end: var(--tint-size-16)
-      line-height: var(--tint-line-height-prose-serif)
-      &:last-child
-        margin-block-end: 0
-
-    // Lists
-    ul, ol
-      @include typography.type-class(body-serif)
-      margin-block-end: var(--tint-size-16)
-      padding-inline-start: var(--tint-size-24)
-      line-height: var(--tint-line-height-prose-serif)
-      &:last-child
-        margin-block-end: 0
-
-    // Blockquote
+    @include prose-variant(serif)
     blockquote
-      @include typography.type-class(body-serif)
-      color: var(--tint-text-secondary)
-      border-inline-start: var(--tint-size-8) solid var(--tint-card-border)
-      padding-inline-start: var(--tint-size-24)
-      margin-inline-start: 0
-      padding-block: var(--tint-size-16)
-      margin-block-end: var(--tint-size-16)
       font-style: italic
-      line-height: var(--tint-line-height-prose-serif)
-      &:last-child
-        margin-block-end: 0
-      p
-        margin-block-end: var(--tint-size-12)
-        &:last-child
-          margin-block-end: 0
-
-    dt
-      @include typography.type-class(body-serif-bold)
-      margin-block-start: var(--tint-size-12)
-      &:first-child
-        margin-block-start: 0
-    dd
-      @include typography.type-class(body-serif)
-      margin-inline-start: var(--tint-size-24)
-      margin-block-end: var(--tint-size-8)
-      line-height: var(--tint-line-height-prose-serif)
 
   // Sans variant
   .tint--type-sans
-    // Paragraphs
-    p
-      @include typography.type-class(body-sans)
-      margin-block-end: var(--tint-size-16)
-      line-height: var(--tint-line-height-prose-sans)
-      &:last-child
-        margin-block-end: 0
-
-    // Lists
-    ul, ol
-      @include typography.type-class(body-sans)
-      margin-block-end: var(--tint-size-16)
-      padding-inline-start: var(--tint-size-24)
-      line-height: var(--tint-line-height-prose-sans)
-      &:last-child
-        margin-block-end: 0
-
-    // Blockquote
-    blockquote
-      @include typography.type-class(body-sans)
-      color: var(--tint-text-secondary)
-      border-inline-start: var(--tint-size-4) solid var(--tint-card-border)
-      padding-inline-start: var(--tint-size-16)
-      margin-inline-start: 0
-      margin-block-end: var(--tint-size-16)
-      line-height: var(--tint-line-height-prose-sans)
-      &:last-child
-        margin-block-end: 0
-      p
-        margin-block-end: var(--tint-size-12)
-        &:last-child
-          margin-block-end: 0
-
-    dt
-      @include typography.type-class(body-sans-bold)
-      margin-block-start: var(--tint-size-12)
-      &:first-child
-        margin-block-start: 0
-    dd
-      @include typography.type-class(body-sans)
-      margin-inline-start: var(--tint-size-24)
-      margin-block-end: var(--tint-size-8)
-      line-height: var(--tint-line-height-prose-sans)
+    @include prose-variant(sans)
 
 // Define the tint base styles
 @mixin base()
