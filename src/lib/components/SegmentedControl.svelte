@@ -194,6 +194,9 @@
 
 <style lang="sass">
 .segmented-control
+  // Space between the wrapper edge and the buttons inside. Reused below so the
+  // wrapper radius stays concentric with the button radius.
+  --segment-padding: var(--tint-size-8)
   border: none
   padding: 0
   margin: 0
@@ -201,17 +204,20 @@
   width: 100%
   &.disabled
     opacity: 0.5
+  // Small buttons are pills, so their effective corner radius is half their
+  // height (--tint-size-32 / 2 = --tint-size-16). Stay concentric with that.
   &.small .segments
-    border-radius: 24px
+    border-radius: calc(var(--tint-size-16) + var(--segment-padding))
 
 .segments
   display: flex
   flex-wrap: wrap
   gap: 0
   align-items: stretch
-  padding: var(--tint-size-8)
+  padding: var(--segment-padding)
   background-color: var(--tint-input-bg)
-  border-radius: 20px
+  // Concentric with the inner buttons: their radius plus the surrounding padding.
+  border-radius: calc(var(--tint-radius-button) + var(--segment-padding))
 
 :global(.segment)
   flex: 1

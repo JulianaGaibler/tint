@@ -193,6 +193,7 @@
 </fieldset>
 
 <style>.segmented-control {
+  --segment-padding: var(--tint-size-8);
   border: none;
   padding: 0;
   margin: 0;
@@ -203,7 +204,7 @@
   opacity: 0.5;
 }
 .segmented-control.small .segments {
-  border-radius: 24px;
+  border-radius: calc(var(--tint-size-16) + var(--segment-padding));
 }
 
 .segments {
@@ -211,9 +212,9 @@
   flex-wrap: wrap;
   gap: 0;
   align-items: stretch;
-  padding: var(--tint-size-8);
+  padding: var(--segment-padding);
   background-color: var(--tint-input-bg);
-  border-radius: 20px;
+  border-radius: calc(var(--tint-radius-button) + var(--segment-padding));
 }
 
 :global(.segment) {
