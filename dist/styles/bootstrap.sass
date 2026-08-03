@@ -43,16 +43,19 @@
     // Families
     --tint-font-sans: #{typography.$hk-grotesk-font}
     --tint-font-serif: #{typography.$merriweather-font}
-    --tint-font-mono: monospace
+    --tint-font-mono: #{typography.$azeret-mono-font}
     // Weights — two per family, matched to tint's default visual weight
     --tint-font-weight-sans-regular: 500
     --tint-font-weight-sans-bold: 700
     --tint-font-weight-serif-regular: 400
     --tint-font-weight-serif-bold: 700
+    --tint-font-weight-mono-regular: 500
+    --tint-font-weight-mono-bold: 700
     // Line heights — general, plus the looser per-family prose values
     --tint-line-height: 1.3
     --tint-line-height-prose-serif: 1.7
     --tint-line-height-prose-sans: 1.4
+    --tint-line-height-prose-mono: 1.6
     --tint-line-height-prose-pre: 1.6
 
 // generate-font-faces. Pass $font-list to generate @font-face rules for your
@@ -129,7 +132,7 @@ $layer-names: tint-reset, tint-typography, tint-global
 
 // Prose styles for standardized content
 @mixin prose-styles()
-  .tint--type, .tint--type-sans
+  .tint--type, .tint--type-sans, .tint--type-mono
     // Headings
     h1
       @include typography.type-class(title-serif-1)
@@ -237,6 +240,10 @@ $layer-names: tint-reset, tint-typography, tint-global
   // Sans variant
   .tint--type-sans
     @include prose-variant(sans)
+
+  // Mono variant
+  .tint--type-mono
+    @include prose-variant(mono)
 
 // Define the tint base styles
 @mixin base()

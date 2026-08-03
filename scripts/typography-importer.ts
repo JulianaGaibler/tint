@@ -18,7 +18,7 @@ type TypeObject = {
 
 type TypeInfo = {
   level?: number
-  letterform?: 'Serif' | 'Sans'
+  letterform?: 'Serif' | 'Sans' | 'Mono'
   modifier?: 'Bold' | 'Italic'
   size?: 'Small' | 'Large'
 }
@@ -183,8 +183,9 @@ function identifyTypeInfo(name: string[]): TypeInfo {
     const number = Number(part)
     if (!isNaN(number)) {
       info.level = number
-    } else if (part === 'serif' || part === 'sans') {
-      info.letterform = part === 'serif' ? 'Serif' : 'Sans'
+    } else if (part === 'serif' || part === 'sans' || part === 'mono') {
+      info.letterform =
+        part === 'serif' ? 'Serif' : part === 'sans' ? 'Sans' : 'Mono'
     } else if (part === 'bold' || part === 'italic') {
       info.modifier = part === 'bold' ? 'Bold' : 'Italic'
     } else if (part === 'small' || part === 'large') {

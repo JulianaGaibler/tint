@@ -8,6 +8,9 @@ $hk-grotesk-font:
   Arial,
   sans-serif;
 $merriweather-font: 'Merriweather', Georgia, 'Times New Roman', Times, serif;
+$azeret-mono-font:
+  'Azeret Mono', ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas,
+  'Liberation Mono', monospace;
 
 // [!] Carefuly when changing:
 // This format is expected by storybook docs generator
@@ -22,6 +25,11 @@ $typography-styles: (
     font-size: 3.375rem,
     font-family: var(--tint-font-sans),
     font-weight: var(--tint-font-weight-sans-bold),
+  ),
+  display-mono-3: (
+    font-size: 3.375rem,
+    font-family: var(--tint-font-mono),
+    font-weight: var(--tint-font-weight-mono-bold),
   ),
   // Title
   title-serif-1: (
@@ -53,6 +61,21 @@ $typography-styles: (
     font-size: 1.312rem,
     font-family: var(--tint-font-sans),
     font-weight: var(--tint-font-weight-sans-bold),
+  ),
+  title-mono-1: (
+    font-size: 2.25rem,
+    font-family: var(--tint-font-mono),
+    font-weight: var(--tint-font-weight-mono-bold),
+  ),
+  title-mono-2: (
+    font-size: 1.688rem,
+    font-family: var(--tint-font-mono),
+    font-weight: var(--tint-font-weight-mono-bold),
+  ),
+  title-mono-3: (
+    font-size: 1.312rem,
+    font-family: var(--tint-font-mono),
+    font-weight: var(--tint-font-weight-mono-bold),
   ),
   // Action
   action: (
@@ -179,6 +202,43 @@ $typography-styles: (
     font-size: 0.906rem,
     font-family: var(--tint-font-sans),
     font-weight: var(--tint-font-weight-sans-regular),
+    font-style: italic,
+  ),
+  body-mono-large: (
+    font-size: 1.312rem,
+    font-family: var(--tint-font-mono),
+    font-weight: var(--tint-font-weight-mono-regular),
+  ),
+  body-mono: (
+    font-size: 1.125rem,
+    font-family: var(--tint-font-mono),
+    font-weight: var(--tint-font-weight-mono-regular),
+  ),
+  body-mono-small: (
+    font-size: 0.906rem,
+    font-family: var(--tint-font-mono),
+    font-weight: var(--tint-font-weight-mono-regular),
+  ),
+  body-mono-bold: (
+    font-size: 1.125rem,
+    font-family: var(--tint-font-mono),
+    font-weight: var(--tint-font-weight-mono-bold),
+  ),
+  body-mono-italic: (
+    font-size: 1.125rem,
+    font-family: var(--tint-font-mono),
+    font-weight: var(--tint-font-weight-mono-regular),
+    font-style: italic,
+  ),
+  body-mono-small-bold: (
+    font-size: 0.906rem,
+    font-family: var(--tint-font-mono),
+    font-weight: var(--tint-font-weight-mono-bold),
+  ),
+  body-mono-small-italic: (
+    font-size: 0.906rem,
+    font-family: var(--tint-font-mono),
+    font-weight: var(--tint-font-weight-mono-regular),
     font-style: italic,
   )
 );

@@ -4,6 +4,10 @@ import HKGroteskMediumItalic from './HKGrotesk-MediumItalic.woff2'
 import MerriweatherBold from './Merriweather-Bold.woff2'
 import MerriweatherItalic from './Merriweather-Italic.woff2'
 import MerriweatherRegular from './Merriweather-Regular.woff2'
+import AzeretMonoRegular from './AzeretMono-Regular.woff2'
+import AzeretMonoMedium from './AzeretMono-Medium.woff2'
+import AzeretMonoBold from './AzeretMono-Bold.woff2'
+import AzeretMonoMediumItalic from './AzeretMono-MediumItalic.woff2'
 
 export interface FontMetadata {
   url: string
@@ -55,6 +59,34 @@ export const fonts = {
     weight: 400,
     style: 'normal',
     filename: 'Merriweather-Regular',
+  },
+  azeretMonoRegular: {
+    url: AzeretMonoRegular,
+    family: 'Azeret Mono',
+    weight: 400,
+    style: 'normal',
+    filename: 'AzeretMono-Regular',
+  },
+  azeretMonoMedium: {
+    url: AzeretMonoMedium,
+    family: 'Azeret Mono',
+    weight: 500,
+    style: 'normal',
+    filename: 'AzeretMono-Medium',
+  },
+  azeretMonoBold: {
+    url: AzeretMonoBold,
+    family: 'Azeret Mono',
+    weight: 700,
+    style: 'normal',
+    filename: 'AzeretMono-Bold',
+  },
+  azeretMonoMediumItalic: {
+    url: AzeretMonoMediumItalic,
+    family: 'Azeret Mono',
+    weight: 500,
+    style: 'italic',
+    filename: 'AzeretMono-MediumItalic',
   },
 } as const satisfies Record<string, FontMetadata>
 

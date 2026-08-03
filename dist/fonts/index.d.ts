@@ -48,6 +48,34 @@ export declare const fonts: {
         readonly style: "normal";
         readonly filename: "Merriweather-Regular";
     };
+    readonly azeretMonoRegular: {
+        readonly url: string;
+        readonly family: "Azeret Mono";
+        readonly weight: 400;
+        readonly style: "normal";
+        readonly filename: "AzeretMono-Regular";
+    };
+    readonly azeretMonoMedium: {
+        readonly url: string;
+        readonly family: "Azeret Mono";
+        readonly weight: 500;
+        readonly style: "normal";
+        readonly filename: "AzeretMono-Medium";
+    };
+    readonly azeretMonoBold: {
+        readonly url: string;
+        readonly family: "Azeret Mono";
+        readonly weight: 700;
+        readonly style: "normal";
+        readonly filename: "AzeretMono-Bold";
+    };
+    readonly azeretMonoMediumItalic: {
+        readonly url: string;
+        readonly family: "Azeret Mono";
+        readonly weight: 500;
+        readonly style: "italic";
+        readonly filename: "AzeretMono-MediumItalic";
+    };
 };
 export type FontKey = keyof typeof fonts;
 export declare const fontUrls: string[];

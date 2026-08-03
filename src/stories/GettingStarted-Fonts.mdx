@@ -4,8 +4,9 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 # Fonts
 
-Tint includes HK Grotesk (sans-serif) and Merriweather (serif) fonts in WOFF2
-format. These fonts are bundled with the package and can be preloaded.
+Tint includes HK Grotesk (sans-serif), Merriweather (serif), and Azeret Mono
+(monospace) fonts in WOFF2 format. These fonts are bundled with the package and
+can be preloaded.
 
 The fonts are automatically included when you use the `full-bootstrap()` mixin
 in your [Styles](/?path=/docs/getting-started-styles--docs) setup.
@@ -28,7 +29,8 @@ Use `<svelte:head>` to preload fonts in your Svelte components:
   const preloads = getFontPreloads([
     'hkGroteskBold',
     'hkGroteskMedium',
-    'merriweatherRegular'
+    'merriweatherRegular',
+    'azeretMonoMedium'
   ])
 </script>
 
@@ -160,11 +162,18 @@ for blog posts, articles, or any content-heavy pages:
 The prose styles are included automatically when you use `full-bootstrap()` or
 `base()`.
 
+The default `.tint--type` sets body copy in the serif typeface. Use
+`.tint--type-sans` or `.tint--type-mono` for the same flow content in the
+sans-serif or monospace typeface instead.
+
 ## Using your own fonts
 
 Font families are exposed as CSS custom properties, so you can swap them at
-runtime by overriding `--tint-font-sans` and `--tint-font-serif` (and
-`--tint-font-mono` for code). There are two ways to load the replacement fonts.
+runtime by overriding `--tint-font-sans`, `--tint-font-serif`, and
+`--tint-font-mono`. Because different fonts carry different visual weight, each
+family also exposes its regular and bold weights (e.g.
+`--tint-font-weight-mono-regular`, `--tint-font-weight-mono-bold`) so you can
+retune them. There are two ways to load the replacement fonts.
 
 ### Load the fonts yourself
 
