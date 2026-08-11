@@ -3,6 +3,7 @@ interface Props {
     value: string;
     label?: string;
     disabled?: boolean;
+    filledBackdrop?: boolean;
     elementInput?: HTMLInputElement | undefined;
     elementButton?: HTMLButtonElement | undefined;
     onsearch?: (term: string) => void;

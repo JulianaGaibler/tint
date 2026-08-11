@@ -11,6 +11,8 @@
     label?: string
     // Disables the text field @type {boolean}
     disabled?: boolean
+    // Keeps the backdrop, the search button and the text padding even when the field is empty @type {boolean}
+    filledBackdrop?: boolean
     // HTML element of the text field @type {HTMLInputElement | undefined}
     elementInput?: HTMLInputElement | undefined
     // HTML element of the button @type {HTMLButtonElement | undefined}
@@ -26,6 +28,7 @@
     value = $bindable(),
     label = 'Search',
     disabled = false,
+    filledBackdrop = false,
     elementInput = $bindable(undefined),
     elementButton = $bindable(undefined),
     onsearch = undefined,
@@ -40,7 +43,7 @@
     aria-label={label}
     bind:this={elementInput}
     bind:value
-    class:filled={value?.length > 0}
+    class:filled={value?.length > 0 || filledBackdrop}
     class="input tint--type-input"
     onkeydown={(e) => {
       if (e.key === 'Enter') {

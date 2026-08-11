@@ -19,3 +19,12 @@
     <SearchField {...args} />
   {/snippet}
 </Story>
+
+<Story
+  name="Filled backdrop"
+  args={{ id: 'input-filled-backdrop', filledBackdrop: true }}
+>
+  {#snippet template(args: any)}
+    <SearchField {...args} />
+  {/snippet}
+</Story>

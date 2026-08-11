@@ -480,6 +480,12 @@
           <div class="row">
             <SearchField id="searchfield" label="Label" value="Value" />
             <SearchField id="searchfield" label="Label" value="" />
+            <SearchField
+              id="searchfield"
+              label="Label"
+              value=""
+              filledBackdrop
+            />
           </div>
         </div>
       </div>
