@@ -349,7 +349,7 @@
       if (!core) return
       if (!anchorRef && anchorRect) {
         core.updateAnchorRect(anchorRect)
-        core.handleAnchorMove(undefined, { x: anchorRect.x, y: anchorRect.y })
+        core.handleAnchorMove()
         return
       }
       core.handleAnchorMove(anchorRef, anchor)

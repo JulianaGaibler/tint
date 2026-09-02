@@ -617,6 +617,11 @@ export class MenuCore {
             rect.x = anchor.x
             rect.y = anchor.y
             meta.parentItemRect = rect
+          } else {
+            // A rect anchor keeps its height, which is what puts the menu below
+            // a text caret rather than on top of it. Routing one through the
+            // point branch above would flatten it to zero height.
+            meta.parentItemRect = this.config.anchorRect
           }
         }
 

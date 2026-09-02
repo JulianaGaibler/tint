@@ -389,6 +389,44 @@ describe('MenuCore', () => {
     })
   })
 
+  describe('handleAnchorMove', () => {
+    it('repositions from the config rect when given no ref and no point', () => {
+      const moved = new DOMRect(300, 400, 80, 30)
+
+      // What the position would be if the menu had opened at `moved` all along.
+      const fresh = createCore({ anchorRect: moved })
+      fresh.core.init()
+      fresh.core.onMenuMount(0, mockMenuElement())
+      const expected =
+        fresh.stateChanges[fresh.stateChanges.length - 1].activeMenus[0]
+          .position
+
+      const { core, stateChanges } = createCore()
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+      core.updateAnchorRect(moved)
+      core.handleAnchorMove()
+
+      const position =
+        stateChanges[stateChanges.length - 1].activeMenus[0].position
+      expect(position).toEqual(expected)
+    })
+
+    it('keeps the anchor height, so the menu clears a caret rather than covering it', () => {
+      // A caret sized rect, one pixel wide and a line tall.
+      const caret = new DOMRect(300, 400, 1, 21)
+      const { core, stateChanges } = createCore()
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+      core.updateAnchorRect(caret)
+      core.handleAnchorMove()
+
+      const position =
+        stateChanges[stateChanges.length - 1].activeMenus[0].position
+      expect(position.y).toBeGreaterThanOrEqual(caret.bottom)
+    })
+  })
+
   describe('updateItems', () => {
     it('recalculates positions after items change', () => {
       const { core, stateChanges } = createCore()
