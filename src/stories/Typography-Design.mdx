@@ -44,3 +44,20 @@ The typography tokens are separated into multiple categories.
 - **UI**: Used for user interfaces that are denser, like extensions or apps.
 - **Input**: Used for form input elements.
 - **Action**: Used for buttons and other interactive elements.
+
+## Prose
+
+A single class on a container styles the flow content inside it, so rendered
+markup such as a comment or an article needs no class per element. It covers
+`p`, `ul`, `ol`, `li`, `blockquote`, `dl`, `h1` to `h6`, `a`, `code`, `pre`,
+`kbd` and `hr`.
+
+- `tint--type`: serif body, with italic blockquotes.
+- `tint--type-sans`: sans body.
+- `tint--type-mono`: mono body.
+
+Each has a `-small` counterpart, `tint--type-small`, `tint--type-sans-small` and
+`tint--type-mono-small`, which drops the body tier to the small size while
+leaving headings, code and keyboard keys alone. Reach for it where prose sits
+inside a dense interface, such as a comment thread beside a list, rather than on
+a page whose main job is reading.

@@ -80,9 +80,13 @@ $layer-names: tint-reset, tint-typography, tint-global
 // Per-family prose flow content. Serif and sans variants differ only by their
 // body type class and prose line height, so both derive from $family (serif |
 // sans). The serif variant adds italic blockquotes on top of this.
-@mixin prose-variant($family)
-  $font: body-#{$family}
-  $font-bold: body-#{$family}-bold
+//
+// $size selects the body tier, either '' for the default or '-small' for dense
+// content such as a comment thread. Headings, code and keyboard keys are shared
+// across both tiers, because they already sit on their own scales.
+@mixin prose-variant($family, $size: '')
+  $font: body-#{$family}#{$size}
+  $font-bold: body-#{$family}#{$size}-bold
   $line-height: var(--tint-line-height-prose-#{$family})
 
   // Paragraphs
@@ -132,7 +136,8 @@ $layer-names: tint-reset, tint-typography, tint-global
 
 // Prose styles for standardized content
 @mixin prose-styles()
-  .tint--type, .tint--type-sans, .tint--type-mono
+  .tint--type, .tint--type-sans, .tint--type-mono,
+  .tint--type-small, .tint--type-sans-small, .tint--type-mono-small
     // Headings
     h1
       @include typography.type-class(title-serif-1)
@@ -237,13 +242,24 @@ $layer-names: tint-reset, tint-typography, tint-global
     blockquote
       font-style: italic
 
+  .tint--type-small
+    @include prose-variant(serif, '-small')
+    blockquote
+      font-style: italic
+
   // Sans variant
   .tint--type-sans
     @include prose-variant(sans)
 
+  .tint--type-sans-small
+    @include prose-variant(sans, '-small')
+
   // Mono variant
   .tint--type-mono
     @include prose-variant(mono)
+
+  .tint--type-mono-small
+    @include prose-variant(mono, '-small')
 
 // Define the tint base styles
 @mixin base()
