@@ -89,6 +89,10 @@ $layer-names: tint-reset, tint-typography, tint-global
   $font-bold: body-#{$family}#{$size}-bold
   $line-height: var(--tint-line-height-prose-#{$family})
 
+  // On the container, so an `em` inside it measures against the prose and not the page.
+  @include typography.type-class($font)
+  line-height: $line-height
+
   // Paragraphs
   p
     @include typography.type-class($font)
@@ -177,9 +181,11 @@ $layer-names: tint-reset, tint-typography, tint-global
       &:last-child
         margin-block-end: 0
 
-    // Code
+    // Code. `em` tracks the tier, and 0.9 offsets Azeret Mono's x-height running 11.6% taller.
     code
-      @include typography.type-class(body-sans-small)
+      font-family: var(--tint-font-mono)
+      font-weight: var(--tint-font-weight-mono-regular)
+      font-size: 0.9em
       background: var(--tint-input-bg)
       color: var(--tint-text-accent)
       padding-block: var(--tint-size-2)
@@ -187,7 +193,9 @@ $layer-names: tint-reset, tint-typography, tint-global
       border-radius: var(--tint-size-4)
       border: 1px solid var(--tint-card-border)
     pre
-      @include typography.type-class(body-sans-small)
+      font-family: var(--tint-font-mono)
+      font-weight: var(--tint-font-weight-mono-regular)
+      font-size: 0.9em
       background: var(--tint-input-bg)
       color: var(--tint-text)
       padding: var(--tint-size-16)
@@ -199,6 +207,8 @@ $layer-names: tint-reset, tint-typography, tint-global
       &:last-child
         margin-block-end: 0
       code
+        // The block already sized this, so it must not scale again.
+        font-size: inherit
         background: transparent
         color: inherit
         padding: 0
