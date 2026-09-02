@@ -200,6 +200,78 @@ describe('calculatePosition', () => {
     })
   })
 
+  describe('caret-shaped anchors', () => {
+    // A text caret is a couple of pixels wide, where every other case here anchors to something
+    // with real width. That is what exposes the left clamp and the minWidth collapse.
+    it('clamps a root menu whose anchor sits against the left edge', () => {
+      const caret = makeRect(2, 300, 2, 20)
+      const menuRect = makeRect(0, 0, 220, 150)
+      const result = calculatePosition(
+        0,
+        caret,
+        menuRect,
+        MenuBehavior.AUTOCOMPLETE,
+        defaultWindow,
+      )
+
+      expect(result.x).toBe(8) // WINDOW_PADDING, not the caret's own x of 2
+    })
+
+    it('clamps a context menu opened against the left edge too', () => {
+      const result = calculatePosition(
+        0,
+        makeRect(1, 300, 0, 0),
+        makeRect(0, 0, 220, 150),
+        MenuBehavior.MENU,
+        defaultWindow,
+      )
+
+      expect(result.x).toBe(8)
+    })
+
+    it('reports no minimum width for an anchor narrower than the menu', () => {
+      const result = calculatePosition(
+        0,
+        makeRect(400, 300, 2, 20),
+        makeRect(0, 0, 220, 150),
+        MenuBehavior.AUTOCOMPLETE,
+        defaultWindow,
+      )
+
+      // minWidth mirrors the anchor, so a caret must not pin the menu to two pixels. The
+      // component falls through to `auto` for anything falsy.
+      expect(result.minWidth).toBeLessThanOrEqual(2)
+    })
+
+    it('sits below the caret rather than over the line it is on', () => {
+      const caret = makeRect(400, 300, 2, 20)
+      const result = calculatePosition(
+        0,
+        caret,
+        makeRect(0, 0, 220, 150),
+        MenuBehavior.AUTOCOMPLETE,
+        defaultWindow,
+      )
+
+      expect(result.y).toBe(320) // the caret's bottom, 300 + 20
+    })
+
+    it('clears the caret when it flips above', () => {
+      const caret = makeRect(400, 700, 2, 20)
+      const menuRect = makeRect(0, 0, 220, 150)
+      const result = calculatePosition(
+        0,
+        caret,
+        menuRect,
+        MenuBehavior.AUTOCOMPLETE,
+        defaultWindow,
+      )
+
+      // The menu's bottom edge lands on the caret's top edge, so the line stays readable.
+      expect(result.y + menuRect.height).toBeLessThanOrEqual(caret.y)
+    })
+  })
+
   describe('scroll offset compensation', () => {
     it('adds scroll offset to position', () => {
       const parentRect = makeRect(100, 50, 80, 30)

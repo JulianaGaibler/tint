@@ -45,6 +45,35 @@ export declare class MenuCore {
     private calcPosition;
     private recalculateAllPositions;
     private handleItemActivation;
+    /**
+     * Clears a highlight that the current item list can no longer support.
+     *
+     * A list that narrows while it is open leaves `focus` pointing past its end,
+     * and both arrow keys then refuse to move: `ArrowDown` fails its `focus <
+     * menuLength - 1` test and `ArrowUp` is rejected by `changeCurrentMenuFocus`.
+     * The menu ends up with no visible highlight and dead arrows until it
+     * closes.
+     *
+     * Only an unusable highlight is dropped, so a list that grew or stayed the
+     * same keeps it. Nothing is highlighted in its place, which matches what a
+     * freshly opened menu does and keeps `Enter` doing the same thing before and
+     * after a keystroke. A caller that wants the first item highlighted instead
+     * should drive `highlightedIndex`.
+     */
+    /**
+     * Moves the highlight from outside, as an arrow key would.
+     *
+     * Returns the index actually settled on, which can differ from the one asked
+     * for: a separator or a disabled item is skipped, and an index outside the
+     * list is refused. A caller binding to this needs the resolved value so its
+     * own copy does not drift.
+     */
+    setFocus(index: number): number;
+    /** The highlighted index in the deepest open menu, or -1. */
+    get focusedIndex(): number;
+    /** Whether this menu is allowed to move DOM focus. */
+    private get takesFocus();
+    private dropInvalidFocus;
     private changeCurrentMenuFocus;
     private setSafeZoneMenu;
 }

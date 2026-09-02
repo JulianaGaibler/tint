@@ -96,6 +96,8 @@ export class MenuCore {
 
     if (this.activeMenus.length === 0) return
 
+    this.dropInvalidFocus()
+
     // First render pass: wait for DOM to update with new items
     this.adapter.scheduleAfterRender(() => {
       // Get initial dimensions after content update
@@ -157,7 +159,11 @@ export class MenuCore {
 
     if (this.config.behavior !== MenuBehavior.SELECT) {
       // Focus the first child element
-      if (element.childNodes[0] && element.childNodes[0].nodeType === 1) {
+      if (
+        this.takesFocus &&
+        element.childNodes[0] &&
+        element.childNodes[0].nodeType === 1
+      ) {
         this.adapter.focus(element.childNodes[0] as HTMLElement, {
           preventScroll: true,
         })
@@ -219,7 +225,7 @@ export class MenuCore {
     if (!element || activeMenuMeta.itemRefs[itemIndex] === element) return
 
     // For non-autocomplete menus, focus checked items automatically
-    if (this.config.behavior !== MenuBehavior.AUTOCOMPLETE) {
+    if (this.takesFocus && this.config.behavior !== MenuBehavior.AUTOCOMPLETE) {
       const menuItem = getMenuItems(
         this.config.items,
         this.activeMenus[menuIndex].menuPath,
@@ -813,6 +819,69 @@ export class MenuCore {
     }
   }
 
+  /**
+   * Clears a highlight that the current item list can no longer support.
+   *
+   * A list that narrows while it is open leaves `focus` pointing past its end,
+   * and both arrow keys then refuse to move: `ArrowDown` fails its `focus <
+   * menuLength - 1` test and `ArrowUp` is rejected by `changeCurrentMenuFocus`.
+   * The menu ends up with no visible highlight and dead arrows until it
+   * closes.
+   *
+   * Only an unusable highlight is dropped, so a list that grew or stayed the
+   * same keeps it. Nothing is highlighted in its place, which matches what a
+   * freshly opened menu does and keeps `Enter` doing the same thing before and
+   * after a keystroke. A caller that wants the first item highlighted instead
+   * should drive `highlightedIndex`.
+   */
+  /**
+   * Moves the highlight from outside, as an arrow key would.
+   *
+   * Returns the index actually settled on, which can differ from the one asked
+   * for: a separator or a disabled item is skipped, and an index outside the
+   * list is refused. A caller binding to this needs the resolved value so its
+   * own copy does not drift.
+   */
+  setFocus(index: number): number {
+    const currentMenu = this.activeMenus[this.activeMenus.length - 1]
+    if (!currentMenu) return -1
+
+    if (index === -1) {
+      currentMenu.focus = -1
+      this.emitState()
+      return -1
+    }
+
+    this.changeCurrentMenuFocus(index, true)
+    this.emitState()
+    return currentMenu.focus
+  }
+
+  /** The highlighted index in the deepest open menu, or -1. */
+  get focusedIndex(): number {
+    return this.activeMenus[this.activeMenus.length - 1]?.focus ?? -1
+  }
+
+  /** Whether this menu is allowed to move DOM focus. */
+  private get takesFocus(): boolean {
+    return this.config.takeFocus !== false
+  }
+
+  private dropInvalidFocus(): void {
+    this.activeMenus.forEach((activeMenu) => {
+      if (activeMenu.focus === -1) return
+
+      const items = getMenuItems(this.config.items, activeMenu.menuPath)
+      const item = items[activeMenu.focus]
+      const usable =
+        item !== undefined &&
+        item !== MENU_SEPARATOR &&
+        !(typeof item === 'object' && item.disabled)
+
+      if (!usable) activeMenu.focus = -1
+    })
+  }
+
   private changeCurrentMenuFocus(index: number, fromUserInput = false): void {
     const currentMenu = this.activeMenus[this.activeMenus.length - 1]
     const currentMenuItems = getMenuItems(
@@ -848,7 +917,7 @@ export class MenuCore {
 
     if (!fromUserInput && this.config.behavior === MenuBehavior.AUTOCOMPLETE)
       return
-    if (itemRef) {
+    if (itemRef && this.takesFocus) {
       this.adapter.focus(itemRef, { preventScroll: true })
     }
   }

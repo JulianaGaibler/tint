@@ -158,10 +158,6 @@ export function calculatePosition(
       coords.x = parentItemRect.x - menuRect.width
       coords.animationOrigin = 'top-right'
     }
-
-    if (coords.x < WINDOW_PADDING) {
-      coords.x = WINDOW_PADDING
-    }
   }
 
   // > VERTICAL OVERFLOW HANDLING
@@ -188,6 +184,14 @@ export function calculatePosition(
       coords.height =
         windowDimensions.innerHeight - coords.y - WINDOW_PADDING * 2
     }
+  }
+
+  // > LEFT OVERFLOW HANDLING
+  // Shared rather than per-branch, because a root menu can also be anchored close to the left
+  // edge. That only shows up with a narrow anchor, such as a text caret, since an anchor with
+  // width is pushed inwards by its own left edge.
+  if (coords.x < WINDOW_PADDING) {
+    coords.x = WINDOW_PADDING
   }
 
   // > SCROLL OFFSET COMPENSATION

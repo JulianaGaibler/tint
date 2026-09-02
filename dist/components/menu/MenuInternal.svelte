@@ -38,30 +38,77 @@
     id?: string
     anchorRef?: HTMLElement
     anchor?: Vec2 | undefined
+    /**
+     * A rectangle to anchor to, for a caller with no element to point at. A
+     * text caret is the motivating case: `coordsAtPos` gives a rect with the
+     * caret's height, so the menu opens below the line rather than over it.
+     * Takes precedence over `anchor`, and is outranked by `anchorRef`.
+     */
+    anchorRect?: DOMRect | undefined
     items: MenuItem[]
     behavior: MenuBehaviorType
     size?: 'tight' | 'large'
     animated?: boolean
     closeOnClick?: boolean
     hide: () => void
+    /**
+     * When false, the menu never moves DOM focus and never restores it on
+     * teardown. A host that owns the caret needs this, and has to render
+     * `aria-activedescendant` itself. Items also activate on mousedown rather
+     * than click, so the press cannot move focus before the activation runs.
+     */
+    takeFocus?: boolean
+    /**
+     * When false, the menu binds no key handler and the host drives it through
+     * `highlightedIndex`. When true, a keystroke already handled elsewhere is
+     * still ignored.
+     */
+    handleKeys?: boolean
+    /**
+     * When false, no click-catching overlay is rendered, so pointer events
+     * reach whatever is behind the menu. The host then owns dismissing it.
+     */
+    overlay?: boolean
     onItemFocus?: (item: MenuItem) => void
     recalculatePosition?: () => void
     lastActiveElement?: HTMLElement
+    /**
+     * Id of the highlighted item, for a host rendering `aria-activedescendant`.
+     * Read only.
+     */
+    activeItemId?: string | undefined
+    /**
+     * The highlighted index, two way. Write to move the highlight, read to know
+     * where it is.
+     *
+     * The component corrects a write that lands on a separator, a disabled item
+     * or an index outside the list, and writes the corrected value back. It
+     * also writes on hover, since hovering moves the highlight. So drive this
+     * from an event handler rather than from an effect that also reads it. -1
+     * means nothing is highlighted.
+     */
+    highlightedIndex?: number
   }
 
   let {
     id = undefined,
     anchorRef = undefined,
     anchor = undefined,
+    anchorRect = undefined,
     items,
     behavior,
     size = 'tight',
     animated = false,
     closeOnClick = true,
     hide,
+    takeFocus = true,
+    handleKeys = true,
+    overlay = true,
     onItemFocus = undefined,
     recalculatePosition = $bindable(undefined),
     lastActiveElement = $bindable(undefined),
+    activeItemId = $bindable(undefined),
+    highlightedIndex = $bindable(-1),
   }: Props = $props()
 
   // --------
@@ -72,7 +119,7 @@
     activeMenus: [],
     clickedItem: null,
   })
-  let overlayRef: HTMLElement | null = null
+  let overlayRef: HTMLElement | null = $state(null)
   let trap: focusTrap.FocusTrap | null = null
   let core: MenuCore | null = $state(null)
 
@@ -82,6 +129,71 @@
   let menuRole = $derived(
     behavior === MenuBehavior.AUTOCOMPLETE ? 'listbox' : 'menu',
   )
+
+  // A listbox holds options, not menu items, so the two have to agree. `aria-selected` is how an
+  // option carries the highlight, where a menu item uses `aria-checked` for something else
+  // entirely.
+  let itemRole = $derived(
+    behavior === MenuBehavior.AUTOCOMPLETE ? 'option' : undefined,
+  )
+
+  // Fixed for the life of the component, so ids stay stable while items change under them.
+  const fallbackId = `tint-menu-${Math.random().toString(36).slice(2, 8)}`
+  const baseId = $derived(id ?? fallbackId)
+
+  /** Stable id per item, so a host that owns focus can name the active one. */
+  function itemId(menuIndex: number, itemIndex: number): string {
+    return `${baseId}-item-${menuIndex}-${itemIndex}`
+  }
+
+  // Reconciles the highlight between the host and the core, in one place because they can both
+  // move it and the direction has to be worked out rather than assumed.
+  //
+  // Two separate effects cannot do this. A mirror-outward effect runs once on mount, sees the
+  // core at -1 before it has been told anything, and overwrites a value the host set in the same
+  // tick as it opened the menu. Tracking what was last seen from each side is what says who
+  // moved.
+  let lastFromCore = -1
+  let lastFromHost = -1
+
+  $effect(() => {
+    const menus = displayState.activeMenus
+    const coreIndex = menus[menus.length - 1]?.focus ?? -1
+    const hostIndex = highlightedIndex
+    if (!core) return
+
+    // The core moved it, from an arrow key it handled itself or from hover.
+    if (coreIndex !== lastFromCore) {
+      lastFromCore = coreIndex
+      lastFromHost = coreIndex
+      if (hostIndex !== coreIndex) highlightedIndex = coreIndex
+      return
+    }
+
+    // The host moved it.
+    if (hostIndex !== lastFromHost) {
+      lastFromHost = hostIndex
+      const settled = core.setFocus(hostIndex)
+      lastFromCore = settled
+      // Only when the request was corrected, so an accepted write is never reassigned.
+      if (settled !== hostIndex) {
+        lastFromHost = settled
+        highlightedIndex = settled
+      }
+    }
+  })
+
+  // Mirrors the highlighted item's id outward, which is what a host puts in
+  // `aria-activedescendant` when the menu is not taking focus. Undefined when nothing is
+  // highlighted, which is also what that attribute wants.
+  $effect(() => {
+    const menus = displayState.activeMenus
+    const depth = menus.length - 1
+    const current = menus[depth]
+    const next =
+      current && current.focus >= 0 ? itemId(depth, current.focus) : undefined
+    if (next !== activeItemId) activeItemId = next
+  })
 
   // --------
   // DOM Adapter
@@ -180,18 +292,20 @@
   })
 
   onMount(() => {
-    // Determine anchor position
-    let anchorRect: DOMRect | null = null
+    // Determine anchor position. An element wins, because its rect can be re-read as it moves.
+    let resolvedRect: DOMRect | null = null
     if (anchorRef) {
-      anchorRect = anchorRef.getBoundingClientRect()
+      resolvedRect = anchorRef.getBoundingClientRect()
+    } else if (anchorRect) {
+      resolvedRect = anchorRect
     } else if (anchor) {
       const rect = new DOMRect()
       rect.x = anchor.x
       rect.y = anchor.y
-      anchorRect = rect
+      resolvedRect = rect
     }
 
-    if (!anchorRect) return
+    if (!resolvedRect) return
 
     // Create core instance
     core = new MenuCore(
@@ -199,7 +313,8 @@
         behavior,
         closeOnClick,
         items,
-        anchorRect,
+        anchorRect: resolvedRect,
+        takeFocus,
         hide,
         onItemFocus,
         onStateChange: (state: MenuDisplayState) => {
@@ -231,14 +346,20 @@
 
     // Set up recalculatePosition callback for parent
     recalculatePosition = () => {
-      core?.handleAnchorMove(anchorRef, anchor)
+      if (!core) return
+      if (!anchorRef && anchorRect) {
+        core.updateAnchorRect(anchorRect)
+        core.handleAnchorMove(undefined, { x: anchorRect.x, y: anchorRect.y })
+        return
+      }
+      core.handleAnchorMove(anchorRef, anchor)
     }
 
     // Set up focus management after initial render
     tick().then(() => {
       lastActiveElement = document.activeElement as HTMLElement
 
-      if (behavior === MenuBehavior.AUTOCOMPLETE) {
+      if (behavior === MenuBehavior.AUTOCOMPLETE || !takeFocus) {
         return
       }
 
@@ -260,8 +381,9 @@
     core?.destroy()
     trap?.deactivate()
 
-    if (behavior === MenuBehavior.AUTOCOMPLETE) {
-      lastActiveElement?.focus()
+    // Focus never left, so putting it back would only scroll the page to wherever it already is.
+    if (behavior === MenuBehavior.AUTOCOMPLETE && takeFocus) {
+      lastActiveElement?.focus({ preventScroll: true })
     }
   })
 
@@ -270,7 +392,9 @@
   // --------
 
   const handleKeydown = (event: KeyboardEvent) => {
-    if (!core) return
+    if (!core || !handleKeys) return
+    // Someone upstream already acted on this keystroke, so acting again would apply it twice.
+    if (event.defaultPrevented) return
     const result = core.handleKeydown(event.key)
     if (result.preventDefault) event.preventDefault()
     if (result.stopPropagation) event.stopPropagation()
@@ -295,6 +419,36 @@
   const handleResize = () => {
     core?.handleResize()
   }
+
+  /**
+   * Follows an element anchor when anything between it and the viewport
+   * scrolls.
+   *
+   * Scroll does not bubble, so a listener on `window` misses a scrolling
+   * container between the anchor and the page. Capturing on the document
+   * catches all of them.
+   *
+   * Only an element anchor is followed. A point or a rect was measured once
+   * against the viewport, so re-reading it after a scroll and compensating
+   * again would move the menu by the scroll offset twice. A caller anchoring
+   * that way owns dismissing or repositioning it.
+   */
+  const handleScrollAnywhere = () => {
+    if (!core || !anchorRef) return
+    core.handleAnchorMove(anchorRef, undefined)
+  }
+
+  onMount(() => {
+    document.addEventListener('scroll', handleScrollAnywhere, {
+      capture: true,
+      passive: true,
+    })
+    return () => {
+      document.removeEventListener('scroll', handleScrollAnywhere, {
+        capture: true,
+      })
+    }
+  })
 </script>
 
 <svelte:window
@@ -304,16 +458,18 @@
   onmousemove={updateMousePosition}
 />
 
-<div
-  role="presentation"
-  onclick={() => hide()}
-  class="fullscreen_overlay"
-  bind:this={overlayRef}
-  oncontextmenu={(e) => {
-    e.preventDefault()
-    hide()
-  }}
-></div>
+{#if overlay}
+  <div
+    role="presentation"
+    onclick={() => hide()}
+    class="fullscreen_overlay"
+    bind:this={overlayRef}
+    oncontextmenu={(e) => {
+      e.preventDefault()
+      hide()
+    }}
+  ></div>
+{/if}
 <!-- eslint-disable-next-line svelte/require-each-key -->
 {#each displayActiveMenus as { menuPath, position, scrollPosition }, i}
   {@const gutters = core?.getGutterVisibility(menuPath) ?? {
@@ -365,16 +521,27 @@
             class:hide-left-gutter={!showLeftGutter}
             class:hide-right-gutter={!showRightGutter}
             class:hide-all-gutters={!showLeftGutter && !showRightGutter}
-            role={info.isChecked === undefined
-              ? 'menuitem'
-              : 'menuitemcheckbox'}
+            id={itemId(i, j)}
+            role={itemRole ??
+              (info.isChecked === undefined ? 'menuitem' : 'menuitemcheckbox')}
             aria-disabled={info.isDisabled}
             aria-haspopup={info.hasSubMenu || undefined}
             aria-expanded={info.hasSubMenu ? info.subMenuOpen : undefined}
-            aria-checked={info.isChecked}
+            aria-checked={itemRole ? undefined : info.isChecked}
+            aria-selected={itemRole ? info.selected : undefined}
             tabIndex={info.selected && !info.isDisabled ? 0 : -1}
             data-selected={info.selected}
-            onclick={() => core?.handleItemClick(i, j)}
+            onclick={takeFocus ? () => core?.handleItemClick(i, j) : undefined}
+            onmousedown={takeFocus
+              ? undefined
+              : (event) => {
+                  // Activating on mousedown, and stopping it, keeps focus where it is. Waiting
+                  // for click means the press has already moved focus, and a pointer that drifts
+                  // off the item before release cancels an activation the person believed they
+                  // had made.
+                  event.preventDefault()
+                  core?.handleItemClick(i, j)
+                }}
             bind:this={setItemRefProxy[`${i}-${j}`]}
             data-menu={i}
             data-item={j}

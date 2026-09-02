@@ -27,6 +27,22 @@ function createMockAdapter(): MenuDOMAdapter {
   }
 }
 
+function fourItems(): MenuItem[] {
+  return [
+    { label: 'One', onClick: vi.fn() },
+    { label: 'Two', onClick: vi.fn() },
+    { label: 'Three', onClick: vi.fn() },
+    { label: 'Four', onClick: vi.fn() },
+  ]
+}
+
+function twoItems(): MenuItem[] {
+  return [
+    { label: 'One', onClick: vi.fn() },
+    { label: 'Two', onClick: vi.fn() },
+  ]
+}
+
 function createTestItems(): MenuItem[] {
   return [
     { label: 'Cut', onClick: vi.fn() },
@@ -385,6 +401,162 @@ describe('MenuCore', () => {
       core.updateItems([{ label: 'New Item', onClick: vi.fn() }])
 
       expect(stateChanges.length).toBeGreaterThan(countBefore)
+    })
+
+    it('drops a highlight the narrowed list can no longer support', () => {
+      const { core } = createCore({ items: fourItems() })
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+
+      // Highlight the fourth item, then narrow the list past it.
+      for (let i = 0; i < 4; i++) core.handleKeydown('ArrowDown')
+      expect(core.displayState.activeMenus[0].focus).toBe(3)
+
+      core.updateItems(twoItems())
+
+      expect(core.displayState.activeMenus[0].focus).toBe(-1)
+    })
+
+    it('leaves the arrow keys working after the list narrows', () => {
+      const { core } = createCore({ items: fourItems() })
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+
+      for (let i = 0; i < 4; i++) core.handleKeydown('ArrowDown')
+      core.updateItems(twoItems())
+
+      // Without the reset both of these are refused, because the stale index fails
+      // `focus < menuLength - 1` and is out of range for `changeCurrentMenuFocus`.
+      core.handleKeydown('ArrowDown')
+      expect(core.displayState.activeMenus[0].focus).toBe(0)
+
+      core.handleKeydown('ArrowDown')
+      expect(core.displayState.activeMenus[0].focus).toBe(1)
+    })
+
+    it('keeps a highlight the new list still supports', () => {
+      const { core } = createCore({ items: fourItems() })
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+
+      core.handleKeydown('ArrowDown')
+      expect(core.displayState.activeMenus[0].focus).toBe(0)
+
+      core.updateItems(twoItems())
+
+      expect(core.displayState.activeMenus[0].focus).toBe(0)
+    })
+
+    it('drops a highlight that now lands on a disabled item', () => {
+      const { core } = createCore({ items: twoItems() })
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+
+      core.handleKeydown('ArrowDown')
+      core.handleKeydown('ArrowDown')
+      expect(core.displayState.activeMenus[0].focus).toBe(1)
+
+      core.updateItems([
+        { label: 'One', onClick: vi.fn() },
+        { label: 'Two', onClick: vi.fn(), disabled: true },
+      ])
+
+      expect(core.displayState.activeMenus[0].focus).toBe(-1)
+    })
+  })
+
+  describe('setFocus', () => {
+    it('moves the highlight and reports where it landed', () => {
+      const { core } = createCore({ items: fourItems() })
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+
+      expect(core.setFocus(2)).toBe(2)
+      expect(core.focusedIndex).toBe(2)
+    })
+
+    it('skips a separator and reports the corrected index', () => {
+      const { core } = createCore({
+        items: [
+          { label: 'One', onClick: vi.fn() },
+          MENU_SEPARATOR,
+          { label: 'Three', onClick: vi.fn() },
+        ],
+      })
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+
+      // Asking for the separator settles on the next usable item instead.
+      expect(core.setFocus(1)).toBe(2)
+      expect(core.focusedIndex).toBe(2)
+    })
+
+    it('skips a disabled item', () => {
+      const { core } = createCore({
+        items: [
+          { label: 'One', onClick: vi.fn() },
+          { label: 'Two', onClick: vi.fn(), disabled: true },
+          { label: 'Three', onClick: vi.fn() },
+        ],
+      })
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+
+      expect(core.setFocus(1)).toBe(2)
+    })
+
+    it('refuses an index outside the list and leaves the highlight alone', () => {
+      const { core } = createCore({ items: fourItems() })
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+
+      core.setFocus(1)
+      expect(core.setFocus(9)).toBe(1)
+      expect(core.focusedIndex).toBe(1)
+    })
+
+    it('clears the highlight for -1', () => {
+      const { core } = createCore({ items: fourItems() })
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+
+      core.setFocus(2)
+      expect(core.setFocus(-1)).toBe(-1)
+      expect(core.focusedIndex).toBe(-1)
+    })
+
+    it('scrolls the highlight into view', () => {
+      const { core, adapter } = createCore({ items: fourItems() })
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+      core.onItemMount(0, 2, mockMenuElement())
+
+      core.setFocus(2)
+      expect(adapter.scrollIntoView).toHaveBeenCalled()
+    })
+
+    it('does not move DOM focus when takeFocus is false', () => {
+      const { core, adapter } = createCore({
+        items: fourItems(),
+        takeFocus: false,
+      })
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+      core.onItemMount(0, 2, mockMenuElement())
+
+      core.setFocus(2)
+      expect(core.focusedIndex).toBe(2)
+      expect(adapter.focus).not.toHaveBeenCalled()
+    })
+
+    it('does move DOM focus by default', () => {
+      const { core, adapter } = createCore({ items: fourItems() })
+      core.init()
+      core.onMenuMount(0, mockMenuElement())
+      core.onItemMount(0, 2, mockMenuElement())
+
+      core.setFocus(2)
+      expect(adapter.focus).toHaveBeenCalled()
     })
   })
 

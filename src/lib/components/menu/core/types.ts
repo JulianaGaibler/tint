@@ -98,6 +98,13 @@ export interface MenuDOMAdapter {
 export interface MenuCoreConfig {
   behavior: MenuBehaviorType
   closeOnClick: boolean
+  /**
+   * When false, the menu never moves DOM focus. A host that owns the caret,
+   * such as a text editor, needs this so typing continues while the menu is
+   * open, and pairs it with `aria-activedescendant` so the highlight is still
+   * announced. Defaults to true.
+   */
+  takeFocus?: boolean
   items: MenuItem[]
   anchorRect: DOMRect
   hide: () => void
