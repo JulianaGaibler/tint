@@ -2,6 +2,7 @@ interface Props {
     open?: boolean;
     notClosable?: boolean;
     fullscreen?: boolean;
+    align?: 'center' | 'top';
     onclose?: () => void;
     children: import('svelte').Snippet;
     class?: string;

@@ -158,10 +158,11 @@ export class MenuCore {
     // Event handlers
     // --------
     handleKeydown(key) {
-        if (key === 'Escape') {
-            this.config.hide();
+        // Left for the dismissal stack, which knows whether this menu is the topmost thing open. A
+        // menu that closed itself here would also close the dialog it sits in, because the keystroke
+        // would reach that dialog's close request uncancelled.
+        if (key === 'Escape')
             return {};
-        }
         const currentMenu = this.activeMenus[this.activeMenus.length - 1];
         const menuLength = getMenuItems(this.config.items, currentMenu.menuPath).length;
         if (key === 'ArrowDown') {

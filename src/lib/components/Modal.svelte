@@ -1,6 +1,12 @@
 <script lang="ts">
   import { untrack } from 'svelte'
   import * as focusTrap from 'focus-trap'
+  import {
+    dismissTop,
+    registerDismissLayer,
+    type DismissLayer,
+  } from '../dismiss/stack.js'
+  import { lockBodyScroll } from '../dismiss/scroll-lock.js'
 
   interface Props {
     // If true, the modal will be open @type {boolean | undefined}
@@ -9,7 +15,10 @@
     notClosable?: boolean
     // If true, the dialog fills the viewport minus a small gap @type {boolean | undefined}
     fullscreen?: boolean
-    // Event handler for when the modal is closed @type {() => void | undefined}
+    // Where the dialog sits in the viewport. 'top' keeps a palette from walking down the screen as
+    // its list grows. Ignored when fullscreen @type {'center' | 'top' | undefined}
+    align?: 'center' | 'top'
+    // Event handler for when the modal is closed. Never called for a non-closable modal @type {() => void | undefined}
     onclose?: () => void
     // Content of the modal @type {Snippet | undefined}
     children: import('svelte').Snippet
@@ -21,93 +30,89 @@
     open = $bindable(false),
     notClosable = false,
     fullscreen = false,
+    align = 'center',
     onclose,
     children,
     class: className = '',
   }: Props = $props()
 
   let dialogElement: HTMLDialogElement | undefined = $state(undefined)
-  let isOpen = $state(false)
-  let trap: focusTrap.FocusTrap | undefined = $state(undefined)
+  // Plain rather than reactive: nothing reads it outside the effect that makes it, and writing
+  // reactive state from the effect that reads it is how `state_unsafe_mutation` happens.
+  let trap: focusTrap.FocusTrap | undefined = undefined
+
+  const layer: DismissLayer = {
+    dismiss: () => {
+      open = false
+    },
+    modal: true,
+    label: 'Modal',
+  }
 
   function onCancelEvent(e: Event) {
-    if (notClosable) {
-      e.preventDefault()
-      return
-    }
     e.preventDefault()
-    open = false
-    onclose?.()
+    if (notClosable) return
+    // Reached only when the dismissal stack's listener did not run, which means something between
+    // the focused element and the window stopped the key without cancelling it. A close request is
+    // aimed at whichever dialog is topmost, which need not be the layer that should go, so the
+    // decision is handed back to the stack rather than made here.
+    dismissTop()
   }
 
   function onCloseEvent() {
     if (notClosable) return
+    // `close()` clears the attribute at once and queues this event, so an event that arrives while
+    // the dialog is open again belongs to a close that a reopen has already superseded. Acting on
+    // it would leave the state saying closed while the dialog is on screen, and nothing could then
+    // reach it.
+    if (dialogElement?.open) return
     open = false
-    isOpen = false
     onclose?.()
   }
 
-  function onBackdropClick(e: MouseEvent) {
-    if (notClosable) return
-    if (e.target === dialogElement) {
-      open = false
-      onclose?.()
-    }
-  }
-
   $effect(() => {
-    if (open == isOpen) return
-    untrack(() => {
-      if (open && dialogElement) {
-        document.body.style.overflow = 'hidden'
+    // Read both before the untracked body, so a dialog that binds after the first run still opens.
+    const element = dialogElement
+    const wanted = open
+    if (!element) return
+
+    return untrack(() => {
+      if (wanted === element.open) return
+
+      if (wanted) {
+        const unlock = lockBodyScroll()
+
         if (notClosable) {
-          // Use show() for non-closable modals to maintain control
-          if (!dialogElement.open) {
-            dialogElement.show()
-            isOpen = true
-
-            // Create and activate focus trap for manual modals
-            if (!trap) {
-              trap = focusTrap.createFocusTrap(dialogElement, {
-                escapeDeactivates: false, // Don't allow escape to close
-                clickOutsideDeactivates: false, // Don't allow click outside to close
-                returnFocusOnDeactivate: true,
-                allowOutsideClick: true,
-              })
-            }
-            trap.activate()
+          // `show()` rather than `showModal()`, so the page stays live behind a dialog the user is
+          // not allowed to dismiss. That costs the top layer, hence the rendered backdrop and the
+          // focus trap.
+          element.show()
+          if (!trap) {
+            trap = focusTrap.createFocusTrap(element, {
+              escapeDeactivates: false,
+              clickOutsideDeactivates: false,
+              returnFocusOnDeactivate: true,
+              allowOutsideClick: true,
+            })
           }
-        } else {
-          // Use showModal() for closable modals (has built-in focus management)
-          if (!dialogElement.open) {
-            dialogElement.showModal()
-            isOpen = true
+          trap.activate()
+          return () => {
+            trap?.deactivate()
+            unlock()
           }
         }
-      } else if (!open && dialogElement && dialogElement.open) {
-        // Deactivate focus trap before closing
-        if (trap && notClosable) {
-          trap.deactivate()
-        }
 
-        document.body.style.overflow = ''
-        dialogElement.close()
-        isOpen = false
-        if (!notClosable) {
-          onclose?.()
+        element.showModal()
+        const release = registerDismissLayer(layer)
+        return () => {
+          release()
+          unlock()
         }
       }
+
+      element.close()
+      return undefined
     })
-  })
-
-  // Cleanup on component destroy
-  $effect(() => {
-    return () => {
-      if (trap) {
-        trap.deactivate()
-      }
-      document.body.style.overflow = ''
-    }
   })
 </script>
 
@@ -117,17 +122,15 @@
   onclose={onCloseEvent}
   class="tint--card tint--plain {className}"
   class:manual-modal={notClosable}
+  class:align-top={align === 'top' && !fullscreen}
   class:fullscreen
 >
   {@render children()}
 </dialog>
 {#if notClosable}
-  <div
-    role="presentation"
-    class="manual-backdrop"
-    onclick={onBackdropClick}
-    class:visible={open}
-  ></div>
+  <!-- ::backdrop belongs to showModal(), which a non-closable dialog does not use. Nothing is
+  bound to this: a click outside a dialog the user cannot dismiss has nothing to do. -->
+  <div aria-hidden="true" class="manual-backdrop" class:visible={open}></div>
 {/if}
 
 <style lang="sass">
@@ -143,6 +146,11 @@
     inset: 0
     margin: auto
 
+    // How far a top aligned dialog keeps from the top of the viewport. A custom property rather
+    // than a literal, because a command palette and a sheet want different values and the `class`
+    // prop lands on this element, which is the only handle a caller has on it.
+    --tint-modal-inset-block: var(--tint-size-80)
+
     opacity: 0.2
     transform: scale(0.5)
     animation: openDialog var(--ease-time) var(--ease-curve) forwards
@@ -152,6 +160,17 @@
       forced-color-adjust: none
       background-color: rgb(0 0 0 / 0%)
       animation: openBackdrop var(--ease-time) var(--ease-curve) forwards
+
+    &.align-top
+      // Anchored rather than given a margin, so there is no over-constrained resolution to reason
+      // about. The box sits at the gap and shrinks to its content.
+      inset-block: var(--tint-modal-inset-block) auto
+      margin-block: 0
+      // The browser caps a modal dialog at `calc(100% - 6px - 2em)`, a figure that assumes the box
+      // is centred. Measured from the top instead, that cap lets a tall dialog run off the bottom,
+      // so it is restated against the gap this one keeps, twice, so the space below matches the
+      // space above.
+      max-block-size: calc(100% - (var(--tint-modal-inset-block) * 2))
 
     &.fullscreen
       width: calc(100% - 16px)
@@ -180,7 +199,7 @@
       transform: scale(0.5)
     to
       opacity: 1
-      transform: scaleY(1)
+      transform: scale(1)
 
   @keyframes openDialog-noMotion
     from
@@ -188,7 +207,7 @@
       transform: scale(1)
     to
       opacity: 1
-      transform: scaleY(1)
+      transform: scale(1)
 
   @keyframes openBackdrop
     from

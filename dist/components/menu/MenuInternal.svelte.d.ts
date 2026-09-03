@@ -18,6 +18,13 @@ interface Props {
     closeOnClick?: boolean;
     hide: () => void;
     /**
+     * What the dismissal stack calls to close this menu, when the host wants
+     * something other than `hide`. A picker that keeps its typed text when the
+     * menu closes on its own, but discards it when the user asks for the menu
+     * to go away, says so here.
+     */
+    dismiss?: () => void;
+    /**
      * When false, the menu never moves DOM focus and never restores it on
      * teardown. A host that owns the caret needs this, and has to render
      * `aria-activedescendant` itself. Items also activate on mousedown rather

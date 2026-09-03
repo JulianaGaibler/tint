@@ -162,12 +162,16 @@ describe('MenuCore', () => {
       expect(lastState.activeMenus[0].focus).toBe(4) // Last item (More)
     })
 
-    it('Escape calls hide()', () => {
+    it('Escape is left for the dismissal stack', () => {
+      // Closing here as well would take the keystroke from whatever the menu sits inside, because
+      // the key would reach that layer's own dismissal uncancelled.
       const { core, config } = createCore()
       core.init()
 
-      core.handleKeydown('Escape')
-      expect(config.hide).toHaveBeenCalled()
+      const result = core.handleKeydown('Escape')
+      expect(config.hide).not.toHaveBeenCalled()
+      expect(result.preventDefault).toBeFalsy()
+      expect(result.stopPropagation).toBeFalsy()
     })
 
     it('ArrowRight opens submenu if focused item has children', () => {

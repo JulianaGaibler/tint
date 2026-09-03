@@ -264,12 +264,15 @@
     // Let the user continue typing if they want to search more
   }
 
-  function onKeyDown(e: KeyboardEvent) {
-    if (e.key === 'Escape') {
-      isUserTyping = false // User pressed escape, not typing anymore
-      fieldValue = ''
-      showMenu = false
-    }
+  /**
+   * Closing because the user asked, rather than because the menu ran out of
+   * reasons to be open. Asking for it to go away discards what was typed, where
+   * `closeMenu` keeps it so a search can carry on.
+   */
+  function dismissMenu() {
+    isUserTyping = false
+    fieldValue = ''
+    showMenu = false
   }
 
   function onFocusOut(e: FocusEvent) {
@@ -354,7 +357,6 @@
       {autocomplete}
       {placeholder}
       oninput={fieldOnInput}
-      onkeydown={onKeyDown}
       onblur={onBlur}
       bind:this={element}
       bind:value={fieldValue}
@@ -381,6 +383,7 @@
       closeOnClick={false}
       items={menuItems}
       hide={closeMenu}
+      dismiss={dismissMenu}
     />
   {/if}
 </div>

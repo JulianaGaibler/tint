@@ -294,25 +294,6 @@
     }
   }
 
-  function onKeyDown(e: KeyboardEvent) {
-    if (e.key === 'Escape') {
-      showMenu = false
-      isUserTyping = false // User pressed escape, not typing anymore
-
-      if (allowFreeText) {
-        // In free text mode, keep current field value
-        value = fieldValue as T
-      } else {
-        if (hasValue) {
-          // Restore the selected item's label on escape
-          fieldValue = selectedItem?.label || ''
-        } else {
-          fieldValue = ''
-        }
-      }
-    }
-  }
-
   function onBlur() {
     // Don't reset the field if the menu is open (user might be clicking on menu items)
     if (showMenu) {
@@ -429,7 +410,6 @@
       aria-controls={showMenu ? menuId : undefined}
       {autocomplete}
       oninput={fieldOnInput}
-      onkeydown={onKeyDown}
       onblur={onBlur}
       onfocus={onFocus}
       bind:this={element}

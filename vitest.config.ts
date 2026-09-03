@@ -8,7 +8,9 @@ import { storybookTest } from '@storybook/addon-vitest/vitest-plugin'
 import { playwright } from '@vitest/browser-playwright'
 
 const dirname =
-  typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url))
+  typeof __dirname !== 'undefined'
+    ? __dirname
+    : path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
   test: {
@@ -24,7 +26,9 @@ export default defineConfig({
             enabled: true,
             headless: true,
             provider: playwright({}),
-            instances: [{ browser: 'chromium' }],
+            // WebKit as well as Chromium, because the two route a dialog's Escape differently and
+            // consumers ship on both.
+            instances: [{ browser: 'chromium' }, { browser: 'webkit' }],
           },
           setupFiles: ['.storybook/vitest.setup.ts'],
         },

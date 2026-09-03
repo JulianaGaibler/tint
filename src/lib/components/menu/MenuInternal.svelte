@@ -31,8 +31,9 @@
   import ArrowUp from '@lib/icons/14-chevron-menu-up.svg?raw'
   import ArrowDown from '@lib/icons/14-chevron-menu-down.svg?raw'
   import CheckIcon from '@lib/icons/14-check.svg?raw'
-  import { onMount, onDestroy, tick } from 'svelte'
+  import { onMount, onDestroy, tick, untrack } from 'svelte'
   import * as focusTrap from 'focus-trap'
+  import { registerDismissLayer } from '@lib/dismiss/stack.js'
 
   interface Props {
     id?: string
@@ -51,6 +52,13 @@
     animated?: boolean
     closeOnClick?: boolean
     hide: () => void
+    /**
+     * What the dismissal stack calls to close this menu, when the host wants
+     * something other than `hide`. A picker that keeps its typed text when the
+     * menu closes on its own, but discards it when the user asks for the menu
+     * to go away, says so here.
+     */
+    dismiss?: () => void
     /**
      * When false, the menu never moves DOM focus and never restores it on
      * teardown. A host that owns the caret needs this, and has to render
@@ -101,6 +109,7 @@
     animated = false,
     closeOnClick = true,
     hide,
+    dismiss = undefined,
     takeFocus = true,
     handleKeys = true,
     overlay = true,
@@ -377,7 +386,26 @@
     })
   })
 
+  /**
+   * A menu is on the dismissal stack for as long as it is mounted, since it
+   * only exists while it is open.
+   *
+   * Skipped when the host took the keys, because a host that drives the menu
+   * through `highlightedIndex` also decides what Escape means. `SuggestionMenu`
+   * is the case: the key belongs to the document the caret is in.
+   */
+  // Read once, because whether the host owns the keys is decided when the menu is created and a
+  // menu that changed hands mid-life would have to re-register anyway.
+  const releaseLayer = untrack(() => handleKeys)
+    ? registerDismissLayer({
+        dismiss: () => (dismiss ?? hide)(),
+        modal: false,
+        label: 'Menu',
+      })
+    : () => {}
+
   onDestroy(() => {
+    releaseLayer()
     core?.destroy()
     trap?.deactivate()
 
