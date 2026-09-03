@@ -200,7 +200,14 @@
   let pressed = $state<'up' | 'down' | null>(null)
 
   function handleKeydown(e: KeyboardEvent) {
-    if (e.key === 'Escape' && preEditValue !== undefined) {
+    // Only when there is an edit to undo. `preEditValue` is taken on focus, so testing it alone
+    // would cancel Escape for any focused field, and a field that cancels the key without doing
+    // anything with it makes whatever it sits in impossible to dismiss.
+    if (
+      e.key === 'Escape' &&
+      preEditValue !== undefined &&
+      value !== preEditValue
+    ) {
       e.preventDefault()
       value = preEditValue
       onrevert?.(preEditValue)

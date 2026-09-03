@@ -191,6 +191,39 @@
 </Story>
 
 <Story
+  name="An untouched field does not take Escape"
+  play={async ({ canvas }: any) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Open modal' }))
+    await waitFor(() => expect(openDialog()).not.toBeNull())
+
+    const field = document.querySelector(
+      'dialog[open] input',
+    ) as HTMLInputElement
+    await userEvent.click(field)
+
+    // Focusing a field records a value to revert to, but with nothing typed there is nothing to
+    // undo, so the key belongs to whatever is open around it.
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(openDialog()).toBeNull())
+  }}
+>
+  {#snippet template()}
+    <div>
+      <Button onclick={() => (modalOpen = true)}>Open modal</Button>
+      <Modal bind:open={modalOpen}>
+        <div class="content">
+          <TextField
+            id="modal-untouched"
+            label="Field"
+            bind:value={fieldValue}
+          />
+        </div>
+      </Modal>
+    </div>
+  {/snippet}
+</Story>
+
+<Story
   name="Not closable ignores Escape"
   args={{ notClosable: true }}
   play={async ({ args, canvas }: any) => {
