@@ -283,6 +283,54 @@ describe('MenuCore', () => {
       expect(lastState.clickedItem).toEqual([0, 0])
       expect(config.onAnimationEnd).toHaveBeenCalled()
     })
+
+    // A menu of checkable items is picked from several times, so it stays where it is and the
+    // handler runs at once rather than after the closing animation.
+    it('leaves the menu open when closeOnClick is false', () => {
+      const { core, config, items } = createCore({ closeOnClick: false })
+      core.init()
+
+      const menuEl = mockMenuElement()
+      core.onMenuMount(0, menuEl)
+      for (let i = 0; i < 5; i++) {
+        core.onItemMount(0, i, mockItemElement())
+      }
+
+      const cut = items[0]
+      if (!(typeof cut === 'object') || !('onClick' in cut))
+        throw new Error('Expected an item')
+
+      core.handleItemClick(0, 0)
+
+      expect(cut.onClick).toHaveBeenCalledTimes(1)
+      expect(config.hide).not.toHaveBeenCalled()
+      expect(config.onAnimationEnd).not.toHaveBeenCalled()
+    })
+
+    // The item stays marked as clicked for the length of its own feedback, so a double click reads
+    // as one pick. The mark clears itself afterwards, or the item could never be picked again.
+    it('holds a second pick until the first has settled', () => {
+      const { core, items } = createCore({ closeOnClick: false })
+      core.init()
+
+      const menuEl = mockMenuElement()
+      core.onMenuMount(0, menuEl)
+      for (let i = 0; i < 5; i++) {
+        core.onItemMount(0, i, mockItemElement())
+      }
+
+      const copy = items[1]
+      if (!(typeof copy === 'object') || !('onClick' in copy))
+        throw new Error('Expected an item')
+
+      core.handleItemClick(0, 1)
+      core.handleItemClick(0, 1)
+      expect(copy.onClick).toHaveBeenCalledTimes(1)
+
+      vi.advanceTimersByTime(100)
+      core.handleItemClick(0, 1)
+      expect(copy.onClick).toHaveBeenCalledTimes(2)
+    })
   })
 
   describe('handleMouseMove', () => {

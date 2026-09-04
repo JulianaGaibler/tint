@@ -31,6 +31,14 @@ interface Props {
      */
     animated?: boolean;
     /**
+     * Whether picking an item closes the menu. Set false for a menu of
+     * checkable items, where the point is to pick several without the menu
+     * going away between them.
+     *
+     * @type {boolean}
+     */
+    closeOnClick?: boolean;
+    /**
      * The function to call when the menu should be opened. Ensure event has a
      * target element for the anchor.
      *
