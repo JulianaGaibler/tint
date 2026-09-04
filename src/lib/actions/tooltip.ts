@@ -1,4 +1,5 @@
 import { tick } from 'svelte'
+import { placeAnchored } from '../positioning/anchored.js'
 
 // Tooltip timing constants (not exported)
 const TOOLTIP_SHOW_DELAY = 750
@@ -60,68 +61,30 @@ function positionTooltip(
   anchor: HTMLElement,
   offset: number = TOOLTIP_DEFAULT_OFFSET,
 ) {
-  const anchorRect = anchor.getBoundingClientRect()
-  const tooltipRect = tooltip.getBoundingClientRect()
-  const viewportWidth = window.innerWidth
-  const viewportHeight = window.innerHeight
-  const scrollX = window.scrollX
-  const scrollY = window.scrollY
+  const placement = placeAnchored(
+    anchor.getBoundingClientRect(),
+    tooltip.getBoundingClientRect(),
+    { innerWidth: window.innerWidth, innerHeight: window.innerHeight },
+    { side: 'block-end', offset, arrowSize: TOOLTIP_BASE_OFFSET },
+  )
+
+  tooltip.classList.remove('tint-tooltip--top', 'tint-tooltip--bottom')
+  tooltip.classList.add(
+    placement.side === 'block-start'
+      ? 'tint-tooltip--top'
+      : 'tint-tooltip--bottom',
+  )
 
   const arrow = tooltip.querySelector('.tint-tooltip-arrow') as HTMLElement
-
-  // Auto placement logic
-  const spaceBelow = viewportHeight - anchorRect.bottom
-  const finalPlacement: 'top' | 'bottom' =
-    spaceBelow >= tooltipRect.height + offset ? 'bottom' : 'top'
-
-  // Update placement class for styling
-  tooltip.classList.remove('tint-tooltip--top', 'tint-tooltip--bottom')
-  tooltip.classList.add(`tint-tooltip--${finalPlacement}`)
-
-  // Calculate initial position
-  let top: number
-  let left =
-    anchorRect.left + scrollX + (anchorRect.width - tooltipRect.width) / 2
-
-  if (finalPlacement === 'bottom') {
-    top = anchorRect.bottom + scrollY + offset + TOOLTIP_BASE_OFFSET
-  } else {
-    top =
-      anchorRect.top +
-      scrollY -
-      tooltipRect.height -
-      offset -
-      TOOLTIP_BASE_OFFSET
-  }
-
-  // Handle horizontal overflow
-  const tooltipLeft = left
-  const tooltipRight = left + tooltipRect.width
-  const padding = 8
-
-  let arrowOffset = 0
-
-  if (tooltipLeft < padding) {
-    // Tooltip overflows left edge
-    const adjustment = padding - tooltipLeft
-    left += adjustment
-    arrowOffset = -adjustment
-  } else if (tooltipRight > viewportWidth - padding) {
-    // Tooltip overflows right edge
-    const adjustment = tooltipRight - (viewportWidth - padding)
-    left -= adjustment
-    arrowOffset = adjustment
-  }
-
-  // Position arrow horizontally
-  arrow.style.left = `calc(50% + ${arrowOffset}px)`
+  arrow.style.insetInlineStart = `calc(50% + ${placement.arrowOffset}px)`
   arrow.style.transform = 'translateX(-50%)'
 
-  // Apply final position using popover positioning
-  tooltip.style.left = `${left}px`
-  tooltip.style.top = `${top}px`
-
-  // Override popover's default positioning
+  // The wrapper is `position: absolute`, and an absolutely positioned element
+  // in the top layer resolves against the initial containing block, which sits
+  // at the document origin. `placeAnchored` answers in viewport coordinates,
+  // so the scroll offset is added back here.
+  tooltip.style.insetInlineStart = `${placement.x + window.scrollX}px`
+  tooltip.style.insetBlockStart = `${placement.y + window.scrollY}px`
   tooltip.style.position = 'absolute'
 }
 

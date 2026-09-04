@@ -1,4 +1,6 @@
 export { default as Button } from './Button.svelte'
+export { default as Callout } from './Callout.svelte'
+export type { AnchoredSide } from '../positioning/anchored.js'
 export { default as ColorPicker } from './ColorPicker/ColorPicker.svelte'
 export type {
   ColorFormat,

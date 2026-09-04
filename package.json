@@ -1,6 +1,6 @@
 {
   "name": "tint",
-  "version": "0.5.12",
+  "version": "0.5.13",
   "scripts": {
     "dev": "vite dev",
     "preview": "vite preview",
@@ -34,6 +34,10 @@
     "./dismiss": {
       "types": "./dist/dismiss/index.d.ts",
       "default": "./dist/dismiss/index.js"
+    },
+    "./positioning": {
+      "types": "./dist/positioning/index.d.ts",
+      "default": "./dist/positioning/index.js"
     },
     "./stores": {
       "types": "./dist/stores/index.d.ts",
