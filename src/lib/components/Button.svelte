@@ -96,6 +96,9 @@
     toggled === undefined ? variant : toggled ? 'primary' : variant,
   )
 
+  /** An icon button has no text, so its tooltip is the only name it has. */
+  let name = $derived(ariaLabel ?? (icon ? tooltipText : undefined))
+
   // For buttons, disable when loading. For links, loading has no effect
   let isDisabled = $derived(href ? disabled : disabled || loading)
   let loadingSize = $derived<16 | 24>(small ? 16 : 24)
@@ -105,7 +108,7 @@
   <span
     {title}
     aria-disabled="true"
-    aria-label={ariaLabel}
+    aria-label={name}
     bind:this={element}
     use:tooltip={tooltipText}
     class:icon
@@ -119,7 +122,7 @@
     {href}
     {tabindex}
     {title}
-    aria-label={ariaLabel}
+    aria-label={name}
     bind:this={element}
     use:tooltip={tooltipText}
     class:icon
@@ -136,7 +139,7 @@
     {tabindex}
     {title}
     {formmethod}
-    aria-label={ariaLabel}
+    aria-label={name}
     aria-pressed={ariaPressed}
     aria-checked={ariaChecked}
     bind:this={element}
