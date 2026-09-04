@@ -6,17 +6,20 @@ declare function $$render<T>(): {
         items: {
             value: T;
             label: string;
+            hint?: string;
         }[];
         dynamicItems?: (search: string) => {
             items: {
                 value: T;
                 label: string;
+                hint?: string;
             }[];
             allowAdd?: boolean;
         } | Promise<{
             items: {
                 value: T;
                 label: string;
+                hint?: string;
             }[];
             allowAdd?: boolean;
         }>;

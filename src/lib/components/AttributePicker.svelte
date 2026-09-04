@@ -31,6 +31,7 @@
   interface AttributePickerItem {
     value: T
     label: string
+    hint?: string
   }
   interface DynamicResult {
     items: AttributePickerItem[]
@@ -145,6 +146,7 @@
 
     const updatedMenuItems: MenuItem<T | undefined>[] = items.map((item) => ({
       label: item.label,
+      hint: item.hint,
       checked: value.includes(item.value),
       data: item.value,
       onClick: () => {

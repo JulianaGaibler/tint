@@ -72,6 +72,20 @@
 />
 
 <Story
+  name="With hints"
+  args={{
+    id: 'autocomplete-hints',
+    label: 'Assignee',
+    items: [
+      { value: 'jdoe', label: 'Jane Doe', hint: 'jane.doe@example.com' },
+      { value: 'jdoe2', label: 'Jane Doe', hint: 'j.doe@example.org' },
+      { value: 'jroe', label: 'Jane Roe', hint: 'jane.roe@example.com' },
+      { value: 'jdoe1998', label: 'jdoe1998' },
+    ],
+  }}
+/>
+
+<Story
   name="Disabled"
   args={{
     id: 'autocomplete-disabled',

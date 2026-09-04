@@ -14,6 +14,7 @@
   interface AutocompleteItem {
     value: T
     label: string
+    hint?: string
   }
   interface DynamicResult {
     items: AutocompleteItem[]
@@ -135,6 +136,7 @@
 
     const updatedMenuItems: MenuItem<T | undefined>[] = items.map((item) => ({
       label: item.label,
+      hint: item.hint,
       data: item.value,
       checked: hasValue && value === item.value,
       onClick: () => {
