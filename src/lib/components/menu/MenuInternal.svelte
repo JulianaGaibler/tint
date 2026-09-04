@@ -540,6 +540,7 @@
       <!-- eslint-disable-next-line svelte/require-each-key -->
       {#each core?.getMenuItemMeta(menuPath, i) ?? [] as info, j}
         {#if typeof info.item === 'object' && 'label' in info.item}
+          {@const hint = info.hasSubMenu ? undefined : info.item.hint}
           <li
             class={`item item_default ${
               clickedItem && clickedItem[0] === i && clickedItem[1] === j
@@ -549,6 +550,7 @@
             class:hide-left-gutter={!showLeftGutter}
             class:hide-right-gutter={!showRightGutter}
             class:hide-all-gutters={!showLeftGutter && !showRightGutter}
+            class:with-hint={!!hint}
             id={itemId(i, j)}
             role={itemRole ??
               (info.isChecked === undefined ? 'menuitem' : 'menuitemcheckbox')}
@@ -578,7 +580,11 @@
             {#if info.item.icon}<span class="item-icon" aria-hidden="true"
                 >{@html info.item.icon}</span
               >{/if}
-            <span>{info.item.label}</span>
+            <span
+              >{info.item.label}{#if hint}<span
+                  class="item-hint tint--type-ui-small">{hint}</span
+                >{/if}</span
+            >
             {#if info.hasSubMenu && showRightGutter}{@html ArrowIcon}{/if}
           </li>
         {:else}
@@ -728,6 +734,17 @@
 
 .item_default :global(> span:not(.item-icon))
   grid-column: 3 / 4
+  // The label and its hint share this cell, so the gutter variants below place one thing.
+  display: flex
+  align-items: center
+  gap: var(--tint-size-16)
+  min-inline-size: 0
+
+// Pushed to the end so hints line up with each other, not after labels of different lengths.
+.item_default :global(.item-hint)
+  margin-inline-start: auto
+  color: var(--tint-text-secondary)
+  white-space: nowrap
 
 .item_default :global(.item-icon)
   grid-column: 2 / 3
@@ -762,6 +779,12 @@
 
 .item_default.hide-all-gutters :global(.item-icon)
   grid-column: 1 / 2
+
+// Reaching the last line puts hints at the row end whichever gutters the menu draws, including the
+// arrow gutter that any one submenu reserves for the whole menu. Only the end line moves, so the
+// gutter variants above still set the start.
+.item_default.with-hint :global(> span:not(.item-icon))
+  grid-column-end: -1
 
 .context_menu.large .item
   padding-block: var(--tint-size-12)

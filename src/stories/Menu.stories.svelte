@@ -8,6 +8,7 @@
   import StarIcon from '@lib/icons/20-crown.svg?raw'
   import InfoIcon from '@lib/icons/20-info.svg?raw'
   import MenuDocs from './docs/Menu.docs.md?raw'
+  import { expect, userEvent } from 'storybook/test'
 
   const { Story } = defineMeta({
     title: 'Components/Menu',
@@ -22,10 +23,12 @@
   const items: MenuItem[] = [
     {
       label: 'Item 1',
+      hint: '⌘1',
       onClick: noop,
     },
     {
       label: 'Item 2',
+      hint: '⇧⌘2',
       checked: true,
       onClick: () => noop,
     },
@@ -119,6 +122,75 @@
       onClick: () => noop,
     },
   ]
+  /** A hint reaches the end of its row whichever gutters the menu draws. */
+  const hintsReachTheEnd = async ({ canvas }: any) => {
+    await userEvent.click(canvas.getByRole('button'))
+
+    const rows = Array.from(
+      document.querySelectorAll('li.item_default'),
+    ).filter((li) => li.querySelector('.item-hint'))
+    await expect(rows.length).toBeGreaterThan(0)
+
+    for (const li of rows) {
+      const hint = li.querySelector('.item-hint')!.getBoundingClientRect()
+      // The row's own padding is all that may follow it. Anything more and it stopped at a gutter.
+      const after = li.getBoundingClientRect().right - hint.right
+      await expect(after).toBeLessThanOrEqual(9)
+    }
+  }
+
+  /** A hint and a check, so both gutters are drawn. */
+  const bothGutters: MenuItem[] = [
+    { label: 'Cut', hint: '⌘X', checked: false, onClick: () => {} },
+    { label: 'Copy', hint: '⇧⌘C', onClick: () => {} },
+    { label: 'Share', items: [{ label: 'By link', onClick: () => {} }] },
+  ]
+
+  /** A hint and a submenu, and nothing checked. */
+  const rightGutterOnly: MenuItem[] = [
+    { label: 'Cut', hint: '⌘X', onClick: () => {} },
+    { label: 'Copy', hint: '⇧⌘C', onClick: () => {} },
+    { label: 'Share', items: [{ label: 'By link', onClick: () => {} }] },
+  ]
+
+  /** A hint and a check, and no submenu anywhere. */
+  const leftGutterOnly: MenuItem[] = [
+    { label: 'Cut', hint: '⌘X', checked: true, onClick: () => {} },
+    { label: 'Copy', hint: '⇧⌘C', onClick: () => {} },
+  ]
+
+  /** A hint on a submenu item is dropped, so the arrow keeps the end of the row. */
+  const submenuKeepsItsArrow = async ({ canvas }: any) => {
+    await userEvent.click(canvas.getByRole('button'))
+
+    const row = Array.from(document.querySelectorAll('li.item_default')).find(
+      (li) => li.textContent?.includes('Share'),
+    )!
+    await expect(row.querySelector('.item-hint')).toBeNull()
+    await expect(row.classList.contains('with-hint')).toBe(false)
+
+    // Placing the label cell to the last line would leave the arrow to be auto placed into the
+    // first free one, at the front of the row.
+    const arrow = row.querySelector('svg')!.getBoundingClientRect()
+    const after = row.getBoundingClientRect().right - arrow.right
+    await expect(after).toBeLessThanOrEqual(9)
+  }
+
+  /** What a consumer without types can still write. The type forbids it. */
+  const hintOnSubmenu = [
+    { label: 'Copy', hint: '⇧⌘C', onClick: () => {} },
+    {
+      label: 'Share',
+      hint: '⌘S',
+      items: [{ label: 'By link', onClick: () => {} }],
+    },
+  ] as unknown as MenuItem[]
+
+  /** Hints alone, so neither gutter is drawn. */
+  const noGutters: MenuItem[] = [
+    { label: 'Cut', hint: '⌘X', onClick: () => {} },
+    { label: 'Copy', hint: '⇧⌘C', onClick: () => {} },
+  ]
 </script>
 
 {#snippet child(args: any)}
@@ -155,6 +227,36 @@
     size: 'large',
     animated: true,
   }}
+/>
+
+<Story
+  name="Hints with both gutters"
+  args={{ variant: 'button', items: bothGutters }}
+  play={hintsReachTheEnd}
+/>
+
+<Story
+  name="Hints with the arrow gutter"
+  args={{ variant: 'button', items: rightGutterOnly }}
+  play={hintsReachTheEnd}
+/>
+
+<Story
+  name="Hints with the check gutter"
+  args={{ variant: 'button', items: leftGutterOnly }}
+  play={hintsReachTheEnd}
+/>
+
+<Story
+  name="Hints with no gutters"
+  args={{ variant: 'button', items: noGutters }}
+  play={hintsReachTheEnd}
+/>
+
+<Story
+  name="Hint on a submenu item"
+  args={{ variant: 'button', items: hintOnSubmenu }}
+  play={submenuKeepsItsArrow}
 />
 
 <style lang="sass">

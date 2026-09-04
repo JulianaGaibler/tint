@@ -6,7 +6,7 @@ A dropdown menu of actions. Set `variant` to `button` to anchor the menu to the 
   let open
   const items = [
     { label: 'Rename', onClick: rename },
-    { label: 'Duplicate', onClick: duplicate },
+    { label: 'Duplicate', hint: '⌘D', onClick: duplicate },
     MENU_SEPARATOR,
     { label: 'Delete', onClick: remove },
   ]
@@ -15,3 +15,6 @@ A dropdown menu of actions. Set `variant` to `button` to anchor the menu to the 
 <div oncontextmenu={open}>Right-click me</div>
 <ButtonMenu variant="context" {items} bind:contextClick={open} />
 ```
+
+`hint` is secondary text at the end of an item's row, for a keyboard shortcut. Hints line up with
+each other, and typeahead matches the label only.

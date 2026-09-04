@@ -12,6 +12,7 @@ export declare const MenuBehavior: {
 export type MenuBehaviorType = (typeof MenuBehavior)[keyof typeof MenuBehavior];
 export type MenuItem<T = unknown> = {
     label: string;
+    hint?: string;
     icon?: string;
     checked?: boolean | (() => boolean);
     onClick: () => void;
@@ -22,6 +23,7 @@ export type MenuItem<T = unknown> = {
     icon?: string;
     items: MenuItem<T>[];
     disabled?: boolean;
+    hint?: never;
 } | typeof MENU_SEPARATOR;
 export type Vec2 = {
     x: number;

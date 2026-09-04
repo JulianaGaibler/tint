@@ -220,8 +220,15 @@
   border-radius: calc(var(--tint-radius-button) + var(--segment-padding))
 
 :global(.segment)
-  flex: 1
-  min-width: 0
+  // Basis 0 + grow shares the row equally, so segments stay uniform whenever
+  // there is room. The max-content floor is what keeps a long label from being
+  // squeezed: a clamped segment freezes at its natural width and the flex
+  // algorithm redistributes what is left to the shorter ones, so the inline
+  // padding stays even across segments instead of collapsing on the longest
+  // one. Without the floor the label is crushed and eventually painted outside
+  // its own pill.
+  flex: 1 1 0
+  min-width: max-content
 
 .visually-hidden
   position: absolute

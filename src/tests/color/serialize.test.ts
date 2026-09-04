@@ -47,9 +47,9 @@ describe('toCss', () => {
 })
 
 describe('toHex', () => {
-  it('renders sRGB red as #ff0000', () => {
+  it('renders sRGB red as #FF0000', () => {
     const c = makeColor('srgb', [1, 0, 0])
-    expect(toHex(c)).toBe('#ff0000')
+    expect(toHex(c)).toBe('#FF0000')
   })
 
   it('renders sRGB grey at exact 128/255', () => {
@@ -59,13 +59,13 @@ describe('toHex', () => {
 
   it('renders alpha as 8-digit hex', () => {
     const c = makeColor('srgb', [1, 0, 0], 0.5)
-    expect(toHex(c)).toMatch(/^#ff0000[0-9a-f]{2}$/)
+    expect(toHex(c)).toMatch(/^#FF0000[0-9A-F]{2}$/)
   })
 
   it('clips out-of-sRGB OKLCH to in-gamut hex', () => {
     // very saturated OKLCH outside sRGB gamut
     const c = makeColor('oklch', [0.7, 0.4, 30])
     const hex = toHex(c)
-    expect(hex).toMatch(/^#[0-9a-f]{6}$/)
+    expect(hex).toMatch(/^#[0-9A-F]{6}$/)
   })
 })

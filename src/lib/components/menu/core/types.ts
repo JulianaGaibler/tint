@@ -24,6 +24,7 @@ export type MenuBehaviorType = (typeof MenuBehavior)[keyof typeof MenuBehavior]
 export type MenuItem<T = unknown> =
   | {
       label: string
+      hint?: string
       icon?: string
       checked?: boolean | (() => boolean)
       onClick: () => void
@@ -35,6 +36,8 @@ export type MenuItem<T = unknown> =
       icon?: string
       items: MenuItem<T>[]
       disabled?: boolean
+      // The arrow at the end of the row is where a hint would go.
+      hint?: never
     }
   | typeof MENU_SEPARATOR
 
