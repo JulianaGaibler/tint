@@ -18,6 +18,14 @@
     gap?: number
     /** Offset from viewport edge */
     offset?: string
+    /**
+     * How wide the stack is.
+     *
+     * A toast that carries an action has to fit a sentence and a button, and
+     * how much room that needs is the consumer's to know: `Undo` beside four
+     * words is not `Add person` beside twenty.
+     */
+    width?: string
     /** A space separated list of CSS classes */
     class?: string
   }
@@ -30,6 +38,7 @@
     visibleToasts = 3,
     gap = 14,
     offset = '24px',
+    width = '356px',
     class: className = '',
   }: Props = $props()
 
@@ -84,6 +93,7 @@
     role="region"
     aria-label="Notifications"
     style:--offset={offset}
+    style:--toaster-width={width}
     onmouseenter={() => (overrideExpanded = true)}
     onmousemove={() => (overrideExpanded = true)}
     onmouseleave={() => {
@@ -124,7 +134,7 @@
     list-style: none
     margin: 0
     padding: 0
-    width: 356px
+    width: var(--toaster-width, 356px)
     box-sizing: border-box
 
     // Position variants

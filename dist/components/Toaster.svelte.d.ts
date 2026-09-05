@@ -14,6 +14,14 @@ interface Props {
     gap?: number;
     /** Offset from viewport edge */
     offset?: string;
+    /**
+     * How wide the stack is.
+     *
+     * A toast that carries an action has to fit a sentence and a button, and
+     * how much room that needs is the consumer's to know: `Undo` beside four
+     * words is not `Add person` beside twenty.
+     */
+    width?: string;
     /** A space separated list of CSS classes */
     class?: string;
 }

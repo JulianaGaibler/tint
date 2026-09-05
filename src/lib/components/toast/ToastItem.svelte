@@ -295,34 +295,41 @@
     </div>
   {/if}
 
-  <div class="content">
-    <div class="title tint--type-ui">{toastData.title}</div>
-    {#if toastData.description}
-      <div class="description tint--type-ui-small">{toastData.description}</div>
-    {/if}
-  </div>
-
-  {#if toastData.action || toastData.cancel}
-    <div class="actions">
-      {#if toastData.action}
-        <Button variant="primary" small onclick={toastData.action.onClick}>
-          {toastData.action.label}
-        </Button>
-      {/if}
-      {#if toastData.cancel}
-        <Button
-          variant="secondary"
-          small
-          onclick={() => {
-            toastData.cancel?.onClick()
-            handleDismiss()
-          }}
-        >
-          {toastData.cancel.label}
-        </Button>
+  <!-- The message and its actions wrap against each other, so a wide action drops below the message
+  instead of squeezing it. The icon and the close button stay outside this, on the row itself, so
+  neither is ever the thing that moves. -->
+  <div class="main">
+    <div class="content">
+      <div class="title tint--type-ui">{toastData.title}</div>
+      {#if toastData.description}
+        <div class="description tint--type-ui-small">
+          {toastData.description}
+        </div>
       {/if}
     </div>
-  {/if}
+
+    {#if toastData.action || toastData.cancel}
+      <div class="actions">
+        {#if toastData.action}
+          <Button variant="primary" small onclick={toastData.action.onClick}>
+            {toastData.action.label}
+          </Button>
+        {/if}
+        {#if toastData.cancel}
+          <Button
+            variant="secondary"
+            small
+            onclick={() => {
+              toastData.cancel?.onClick()
+              handleDismiss()
+            }}
+          >
+            {toastData.cancel.label}
+          </Button>
+        {/if}
+      </div>
+    {/if}
+  </div>
 
   {#if showCloseButton}
     <Button
@@ -464,9 +471,31 @@
       width: 20px
       height: 20px
 
-  .content
+  // The message and the actions, which share a row until they cannot.
+  //
+  // A toast is a fixed width and an action label is somebody else's words. `Undo` sits beside a
+  // sentence comfortably; `Write them down` is three words and uppercased by `tint--type-action`,
+  // and with the actions refusing to shrink the message was the only thing left to give, so it
+  // took five lines in a column narrower than its own words while the button kept its full width.
+  //
+  // Wrapping puts the decision the other way round: the message keeps a floor, and it is the
+  // actions that move when they will not fit beside it.
+  .main
     flex: 1
     min-width: 0
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: var(--tint-size-8) var(--tint-size-12)
+
+  .content
+    flex: 1 1 auto
+    // The floor, as a share rather than a length, because what is left over is what the actions have
+    // to fit into and both are measured against the same width. Set so that only a genuinely short
+    // action sits alongside: `Undo` fits in what is left, `Add person` does not and takes a row of
+    // its own. A toast asking for a decision is better read as a sentence with a button under it
+    // than as a column of two words with a button beside it.
+    min-inline-size: 65%
 
   .description
     opacity: 0.8
@@ -476,4 +505,7 @@
     display: flex
     gap: var(--tint-size-8)
     flex-shrink: 0
+    // Ends the row it is on. Beside the message that changes nothing, since it is already last;
+    // wrapped below it, this is what keeps it from sitting under the first word.
+    margin-inline-start: auto
 </style>

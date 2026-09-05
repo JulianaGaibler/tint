@@ -295,34 +295,41 @@
     </div>
   {/if}
 
-  <div class="content">
-    <div class="title tint--type-ui">{toastData.title}</div>
-    {#if toastData.description}
-      <div class="description tint--type-ui-small">{toastData.description}</div>
-    {/if}
-  </div>
-
-  {#if toastData.action || toastData.cancel}
-    <div class="actions">
-      {#if toastData.action}
-        <Button variant="primary" small onclick={toastData.action.onClick}>
-          {toastData.action.label}
-        </Button>
-      {/if}
-      {#if toastData.cancel}
-        <Button
-          variant="secondary"
-          small
-          onclick={() => {
-            toastData.cancel?.onClick()
-            handleDismiss()
-          }}
-        >
-          {toastData.cancel.label}
-        </Button>
+  <!-- The message and its actions wrap against each other, so a wide action drops below the message
+  instead of squeezing it. The icon and the close button stay outside this, on the row itself, so
+  neither is ever the thing that moves. -->
+  <div class="main">
+    <div class="content">
+      <div class="title tint--type-ui">{toastData.title}</div>
+      {#if toastData.description}
+        <div class="description tint--type-ui-small">
+          {toastData.description}
+        </div>
       {/if}
     </div>
-  {/if}
+
+    {#if toastData.action || toastData.cancel}
+      <div class="actions">
+        {#if toastData.action}
+          <Button variant="primary" small onclick={toastData.action.onClick}>
+            {toastData.action.label}
+          </Button>
+        {/if}
+        {#if toastData.cancel}
+          <Button
+            variant="secondary"
+            small
+            onclick={() => {
+              toastData.cancel?.onClick()
+              handleDismiss()
+            }}
+          >
+            {toastData.cancel.label}
+          </Button>
+        {/if}
+      </div>
+    {/if}
+  </div>
 
   {#if showCloseButton}
     <Button
@@ -458,9 +465,18 @@
   height: 20px;
 }
 
-.content {
+.main {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--tint-size-8) var(--tint-size-12);
+}
+
+.content {
+  flex: 1 1 auto;
+  min-inline-size: 65%;
 }
 
 .description {
@@ -472,4 +488,5 @@
   display: flex;
   gap: var(--tint-size-8);
   flex-shrink: 0;
+  margin-inline-start: auto;
 }</style>
