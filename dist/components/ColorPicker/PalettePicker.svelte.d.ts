@@ -3,6 +3,11 @@ interface Props {
     palette: PaletteColor[];
     /** Current picker value as a CSS color string (already serialized). */
     currentCss: string;
+    /**
+     * Resolve `currentCss` to a token on its RGB channels alone, so a token
+     * shown at a reduced opacity still reads as selected.
+     */
+    ignoreAlpha?: boolean;
     /** Fires when the user commits a row (click or Enter). */
     onpick: (value: string) => void;
 }

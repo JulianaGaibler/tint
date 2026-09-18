@@ -22,17 +22,24 @@
     palette: PaletteColor[]
     /** Current picker value as a CSS color string (already serialized). */
     currentCss: string
+    /**
+     * Resolve `currentCss` to a token on its RGB channels alone, so a token
+     * shown at a reduced opacity still reads as selected.
+     */
+    ignoreAlpha?: boolean
     /** Fires when the user commits a row (click or Enter). */
     onpick: (value: string) => void
   }
 
-  let { palette, currentCss, onpick }: Props = $props()
+  let { palette, currentCss, ignoreAlpha = false, onpick }: Props = $props()
 
   const uid = `p${++nextPaletteUid}`
 
   const groups = $derived(groupPalette(palette))
-  const normalized = $derived(normalizePalette(palette))
-  const match = $derived(findPaletteMatch(palette, normalized, currentCss))
+  const normalized = $derived(normalizePalette(palette, { ignoreAlpha }))
+  const match = $derived(
+    findPaletteMatch(palette, normalized, currentCss, { ignoreAlpha }),
+  )
 
   let query = $state('')
   const filtered = $derived(filterPalette(groups, query))

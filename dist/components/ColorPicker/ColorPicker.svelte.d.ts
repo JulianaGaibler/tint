@@ -57,6 +57,14 @@ declare function $$render<F extends ColorFormat = 'hex'>(): {
          * "color/red" alongside other "color/red/*" entries.
          */
         palette?: PaletteColor[];
+        /**
+         * Let a palette token carry an opacity. The Palette pane gains an alpha
+         * slider, picking a token keeps the current alpha instead of resetting it,
+         * and token matching ignores alpha so the name survives. Requires `alpha`,
+         * which is what decides whether the value may carry alpha at all. Default
+         * false.
+         */
+        paletteAlpha?: boolean;
     };
     exports: {};
     bindings: "element" | "value";

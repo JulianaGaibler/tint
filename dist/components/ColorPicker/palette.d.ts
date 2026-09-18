@@ -1,3 +1,12 @@
+export interface PaletteMatchOptions {
+    /**
+     * Key on the RGB channels only, so a token dialed down to a lower opacity
+     * still resolves to the token it came from. `normalizePalette` and
+     * `findPaletteMatch` must be given the same value or their keys will not line
+     * up.
+     */
+    ignoreAlpha?: boolean;
+}
 export interface PaletteColor {
     /**
      * Slash-separated name. The final segment is the leaf shown in the row;
@@ -37,19 +46,22 @@ export declare function groupPalette(items: PaletteColor[]): PaletteGroup[];
  * Returns null when the input is unparseable so the caller can skip it instead
  * of throwing. `toHex` already drops a fully-opaque alpha, which is the
  * canonical form we want.
+ *
+ * With `ignoreAlpha`, alpha is forced to 1 before serializing, so every opacity
+ * of one color collapses onto a single key.
  */
-export declare function canonicalize(css: string): string | null;
+export declare function canonicalize(css: string, opts?: PaletteMatchOptions): string | null;
 /**
  * Build a `canonical → palette index` map once per palette change. Multiple
  * tokens with the same canonical form (e.g. two aliases) collapse to the first
  * occurrence — designers see the row that comes first in the array.
  */
-export declare function normalizePalette(items: PaletteColor[]): Map<string, number>;
+export declare function normalizePalette(items: PaletteColor[], opts?: PaletteMatchOptions): Map<string, number>;
 /**
  * Look up the palette entry matching a CSS color string. Returns null when no
  * entry matches or when the input can't be parsed.
  */
-export declare function findPaletteMatch(items: PaletteColor[], normalized: Map<string, number>, currentCss: string): {
+export declare function findPaletteMatch(items: PaletteColor[], normalized: Map<string, number>, currentCss: string, opts?: PaletteMatchOptions): {
     index: number;
     item: PaletteColor;
 } | null;

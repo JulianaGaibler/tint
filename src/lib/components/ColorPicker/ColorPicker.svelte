@@ -8,7 +8,11 @@
   } from './format'
   import type { Color } from '@lib/color'
   import IconWarning from '@lib/icons/20-warning.svg?raw'
-  import { shellToCss, canonicalCss } from './shell-serialize'
+  import {
+    shellToCss,
+    canonicalCss,
+    splitCanonicalAlpha,
+  } from './shell-serialize'
   import type { PaletteColor } from './palette'
 
   interface Props {
@@ -62,6 +66,14 @@
      * "color/red" alongside other "color/red/*" entries.
      */
     palette?: PaletteColor[]
+    /**
+     * Let a palette token carry an opacity. The Palette pane gains an alpha
+     * slider, picking a token keeps the current alpha instead of resetting it,
+     * and token matching ignores alpha so the name survives. Requires `alpha`,
+     * which is what decides whether the value may carry alpha at all. Default
+     * false.
+     */
+    paletteAlpha?: boolean
   }
 
   let {
@@ -84,6 +96,7 @@
     class: className = '',
     swatchOverlay = undefined,
     palette = undefined,
+    paletteAlpha = false,
   }: Props = $props()
 
   $effect.pre(() => {
@@ -96,6 +109,10 @@
   // shell stays independent of `@lib/color`.
   const displayCss = $derived(shellToCss(format, value))
 
+  // `alpha` governs whether the value may carry alpha at all, so the palette
+  // opacity feature rides on it rather than overriding it.
+  const paletteAlphaOn = $derived(alpha && paletteAlpha)
+
   // Normalize the palette once for shell-side matching. The shell deliberately
   // avoids importing the full color engine, so we match via DOM-based
   // canonicalization in shell-serialize. The result is a Map<canonical, name>.
@@ -106,32 +123,50 @@
     // eslint-disable-next-line svelte/prefer-svelte-reactivity
     const m = new Map<string, string>()
     for (const p of palette) {
-      const k = canonicalCss(p.value)
+      const k = paletteAlphaOn
+        ? splitCanonicalAlpha(p.value).base
+        : canonicalCss(p.value)
       if (k && !m.has(k)) m.set(k, p.name)
     }
     return m
   })
 
   // When the current value matches a palette entry, prefer its name over the
-  // raw hex/CSS string in the closed-state display.
-  const paletteName = $derived.by(() => {
-    if (!palettelookup) return null
-    return palettelookup.get(canonicalCss(displayCss)) ?? null
-  })
-
-  // Split the palette name at its final "/" so the leaf segment can be kept
-  // visible even when the prefix overflows.
-  const paletteNameParts = $derived.by<{ prefix: string; leaf: string } | null>(
+  // raw hex/CSS string in the closed-state display. With palette opacity on,
+  // the alpha is carried alongside so the display can append it.
+  const paletteMatch = $derived.by<{ name: string; alpha: number } | null>(
     () => {
-      if (!paletteName) return null
-      const idx = paletteName.lastIndexOf('/')
-      if (idx < 0) return { prefix: '', leaf: paletteName }
-      return {
-        prefix: paletteName.slice(0, idx + 1),
-        leaf: paletteName.slice(idx + 1),
+      if (!palettelookup) return null
+      if (!paletteAlphaOn) {
+        const name = palettelookup.get(canonicalCss(displayCss))
+        return name ? { name, alpha: 1 } : null
       }
+      const { base, alpha: a } = splitCanonicalAlpha(displayCss)
+      const name = palettelookup.get(base)
+      return name ? { name, alpha: a } : null
     },
   )
+
+  // Split the palette name at its final "/" so the leaf segment can be kept
+  // visible even when the prefix overflows. A below-full opacity trails the
+  // name as a percentage.
+  const paletteNameParts = $derived.by<{
+    prefix: string
+    leaf: string
+    opacity: string
+  } | null>(() => {
+    if (!paletteMatch) return null
+    const { name } = paletteMatch
+    const pct = Math.round(paletteMatch.alpha * 100)
+    const opacity = pct < 100 ? ` (${pct}%)` : ''
+    const idx = name.lastIndexOf('/')
+    if (idx < 0) return { prefix: '', leaf: name, opacity }
+    return {
+      prefix: name.slice(0, idx + 1),
+      leaf: name.slice(idx + 1),
+      opacity,
+    }
+  })
 
   // Popover module is loaded on first open and cached.
   type PopoverModule = typeof import('./Popover.svelte')
@@ -176,7 +211,9 @@
         <span class="display-value display-value--palette">
           <span class="prefix">{paletteNameParts.prefix}</span><span
             class="leaf">{paletteNameParts.leaf}</span
-          >
+          >{#if paletteNameParts.opacity}<span class="opacity"
+              >{paletteNameParts.opacity}</span
+            >{/if}
         </span>
       {:else}
         <span class="display-value">{displayCss}</span>
@@ -217,6 +254,7 @@
       {gamutWarning}
       {wideGamut}
       {palette}
+      {paletteAlpha}
       anchorEl={element}
       onclose={closePicker}
       onpick={handleChange}
@@ -293,6 +331,11 @@
   > .leaf
     flex-shrink: 0
     white-space: nowrap
+  > .opacity
+    flex-shrink: 0
+    white-space: nowrap
+    font-variant-numeric: tabular-nums
+    color: var(--tint-text-secondary)
 
 .helper-message
   line-height: normal

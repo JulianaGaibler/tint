@@ -17,6 +17,7 @@
   import IconDone from '@lib/icons/20-done.svg?raw'
   import IconLock from '@lib/icons/20-lock.svg?raw'
   import IconLockUnlocked from '@lib/icons/20-lock-unlocked.svg?raw'
+  import IconRevert from '@lib/icons/20-revert.svg?raw'
   import Canvas from './Canvas.svelte'
   import Track from './Track.svelte'
   import Channels from './Channels.svelte'
@@ -34,6 +35,7 @@
     valueToColor,
     colorToValue,
     placePopover,
+    tryParseColor,
     type EditorSpace,
     type PopoverPlacement,
   } from './core'
@@ -61,6 +63,7 @@
     onclose: () => void
     onpick?: (e: { value: unknown; color: Color }) => void
     palette?: PaletteColor[]
+    paletteAlpha?: boolean
   }
 
   let {
@@ -74,7 +77,12 @@
     onclose,
     onpick,
     palette,
+    paletteAlpha = false,
   }: Props = $props()
+
+  // `alpha` governs whether the value may carry alpha at all, so the palette
+  // opacity feature rides on it rather than overriding it.
+  const paletteAlphaOn = $derived(alpha && paletteAlpha)
 
   // ---------- Internal authoritative state ----------
 
@@ -664,13 +672,13 @@
   const hasPalette = $derived(!!palette && palette.length > 0)
 
   let tab = $state<'custom' | 'palette'>(
-    untrack(() =>
-      palette &&
-      palette.length > 0 &&
-      findPaletteMatch(palette, normalizePalette(palette), toHex(color))
-        ? 'palette'
-        : 'custom',
-    ),
+    untrack(() => {
+      if (!palette || palette.length === 0) return 'custom'
+      const opts = { ignoreAlpha: alpha && paletteAlpha }
+      const normalized = normalizePalette(palette, opts)
+      const found = findPaletteMatch(palette, normalized, toHex(color), opts)
+      return found ? 'palette' : 'custom'
+    }),
   )
 
   const tabItems = [
@@ -684,11 +692,23 @@
   const paletteCurrentCss = $derived(toHex(color))
 
   function pickFromPalette(cssValue: string) {
-    // Reuse the existing hex-commit path so any CSS form the palette emits
-    // (named, hex, rgb(), oklch()) gets parsed, validated, and propagated
-    // out through the standard `emit` flow.
-    commitHex(cssValue)
+    if (!paletteAlphaOn) {
+      // Reuse the existing hex-commit path so any CSS form the palette emits
+      // (named, hex, rgb(), oklch()) gets parsed, validated, and propagated
+      // out through the standard `emit` flow.
+      commitHex(cssValue)
+      return
+    }
+    const c = tryParseColor(cssValue)
+    if (!c) return
+    // The opacity slider outranks whatever alpha the token itself carries, so
+    // switching tokens never moves the slider out from under the user.
+    emit(makeColor(c.space, c.components, color.alpha, { legacy: c.legacy }), {
+      refreshHue: true,
+    })
   }
+
+  const alphaPct = $derived(Math.round(color.alpha * 100))
 </script>
 
 <div
@@ -849,8 +869,35 @@
     <PalettePicker
       {palette}
       currentCss={paletteCurrentCss}
+      ignoreAlpha={paletteAlphaOn}
       onpick={pickFromPalette}
     />
+    {#if paletteAlphaOn}
+      <div class="palette-alpha-row">
+        <Track
+          value={color.alpha}
+          min={0}
+          max={1}
+          step={0.01}
+          background={alphaTrackBg}
+          checker
+          aria-label="Alpha"
+          onChange={changeAlpha}
+        />
+        <span class="palette-alpha-value tint--type-ui-small">{alphaPct}%</span>
+        <Button
+          small
+          icon
+          variant="ghost"
+          disabled={color.alpha >= 1}
+          aria-label="Reset opacity to 100%"
+          tooltip="Reset opacity"
+          onclick={() => changeAlpha(1)}
+        >
+          {@html IconRevert}
+        </Button>
+      </div>
+    {/if}
   {/if}
 </div>
 
@@ -916,6 +963,20 @@
   grid-template-columns: 1fr auto
   align-items: center
   gap: var(--tint-size-8)
+
+.palette-alpha-row
+  display: grid
+  grid-template-columns: 1fr auto auto
+  align-items: center
+  gap: var(--tint-size-8)
+
+.palette-alpha-value
+  color: var(--tint-text-secondary)
+  font-variant-numeric: tabular-nums
+  // Fixed width so the track and the reset button hold still while the
+  // percentage counts through one, two, and three digits.
+  min-width: 4ch
+  text-align: end
 
 .footer-row
   display: flex

@@ -15,6 +15,7 @@ interface Props {
         color: Color;
     }) => void;
     palette?: PaletteColor[];
+    paletteAlpha?: boolean;
 }
 declare const Popover: import("svelte").Component<Props, {}, "value">;
 type Popover = ReturnType<typeof Popover>;

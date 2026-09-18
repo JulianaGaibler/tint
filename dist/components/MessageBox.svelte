@@ -60,6 +60,7 @@
 <style>.box {
   display: flex;
   align-items: stretch;
+  flex-shrink: 0;
   border: 1px solid var(--tint-card-border);
   border-radius: var(--tint-radius-card);
   background: var(--tint-bg-secondary);

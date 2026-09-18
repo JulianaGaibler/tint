@@ -2,7 +2,7 @@
 // optional palette pane in ColorPicker. Kept pure (no Svelte, no DOM) so the
 // logic can be unit-tested and so the popover bundle only pulls in what it
 // renders.
-import { parseColor, ColorParseError } from '../../color';
+import { parseColor, ColorParseError, makeColor } from '../../color';
 import { toHex } from '../../color/serialize';
 /**
  * Split a palette into groups by the prefix-before-the-final-slash. Groups are
@@ -34,10 +34,17 @@ export function groupPalette(items) {
  * Returns null when the input is unparseable so the caller can skip it instead
  * of throwing. `toHex` already drops a fully-opaque alpha, which is the
  * canonical form we want.
+ *
+ * With `ignoreAlpha`, alpha is forced to 1 before serializing, so every opacity
+ * of one color collapses onto a single key.
  */
-export function canonicalize(css) {
+export function canonicalize(css, opts) {
     try {
-        return toHex(parseColor(css)).toLowerCase();
+        const c = parseColor(css);
+        const keyed = (opts === null || opts === void 0 ? void 0 : opts.ignoreAlpha)
+            ? makeColor(c.space, c.components, 1, { legacy: c.legacy })
+            : c;
+        return toHex(keyed).toLowerCase();
     }
     catch (e) {
         if (e instanceof ColorParseError)
@@ -50,10 +57,10 @@ export function canonicalize(css) {
  * tokens with the same canonical form (e.g. two aliases) collapse to the first
  * occurrence — designers see the row that comes first in the array.
  */
-export function normalizePalette(items) {
+export function normalizePalette(items, opts) {
     const map = new Map();
     for (let i = 0; i < items.length; i++) {
-        const k = canonicalize(items[i].value);
+        const k = canonicalize(items[i].value, opts);
         if (k && !map.has(k))
             map.set(k, i);
     }
@@ -63,8 +70,8 @@ export function normalizePalette(items) {
  * Look up the palette entry matching a CSS color string. Returns null when no
  * entry matches or when the input can't be parsed.
  */
-export function findPaletteMatch(items, normalized, currentCss) {
-    const key = canonicalize(currentCss);
+export function findPaletteMatch(items, normalized, currentCss, opts) {
+    const key = canonicalize(currentCss, opts);
     if (!key)
         return null;
     const idx = normalized.get(key);

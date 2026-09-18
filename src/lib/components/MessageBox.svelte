@@ -63,6 +63,12 @@
 .box
   display: flex
   align-items: stretch
+  // `overflow: clip` below gives a flex item an automatic minimum size of 0 (the
+  // flexbox spec only takes content size into account when overflow is visible),
+  // so inside a shrinking flex column this box loses the fight for space to every
+  // sibling that doesn't clip and gets crushed to a sliver instead of the column
+  // scrolling. Pin it to its content size so it is never the one that gives.
+  flex-shrink: 0
   border: 1px solid var(--tint-card-border)
   border-radius: var(--tint-radius-card)
   background: var(--tint-bg-secondary)

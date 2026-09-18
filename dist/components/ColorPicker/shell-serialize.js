@@ -92,6 +92,31 @@ export function canonicalCss(value) {
     return hex;
 }
 /**
+ * Split a CSS color into its fully-opaque `#RRGGBB` base and an alpha in [0,
+ * 1]. Shorthand hex is expanded so the base compares equal to a palette token
+ * written in full form. Values with no hex representation (`transparent`,
+ * `currentColor`, anything the browser rejects) come back as given with alpha
+ * 1, so callers fall back to exact matching.
+ *
+ * Alpha round-trips through a byte, so a slider at 0.2 reports back as 0.2 only
+ * to within 1/255.
+ */
+export function splitCanonicalAlpha(value) {
+    const canonical = canonicalCss(value);
+    const long = /^#([0-9A-F]{6})([0-9A-F]{2})$/.exec(canonical);
+    if (long)
+        return { base: `#${long[1]}`, alpha: parseInt(long[2], 16) / 255 };
+    const short = /^#([0-9A-F])([0-9A-F])([0-9A-F])([0-9A-F])?$/.exec(canonical);
+    if (short) {
+        const [, r, g, b, a] = short;
+        return {
+            base: `#${r}${r}${g}${g}${b}${b}`,
+            alpha: a ? parseInt(a + a, 16) / 255 : 1,
+        };
+    }
+    return { base: canonical, alpha: 1 };
+}
+/**
  * Normalize an arbitrary CSS color string to hex for display in the picker
  * shell. Values already in hex pass through unchanged. Keyword colors with no
  * hex representation (`transparent`, `currentColor`) are preserved so the label

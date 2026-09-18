@@ -1,7 +1,7 @@
 <script module lang="ts">
   import { defineMeta } from '@storybook/addon-svelte-csf'
   import ColorPicker from '@lib/components/ColorPicker/ColorPicker.svelte'
-  import { fn } from 'storybook/test'
+  import { expect, fn, userEvent, waitFor } from 'storybook/test'
   import ColorPickerDocs from './docs/ColorPicker.docs.md?raw'
 
   const { Story } = defineMeta({
@@ -12,6 +12,48 @@
     },
     parameters: { docs: { description: { component: ColorPickerDocs } } },
   })
+
+  const keepsTokenNameAtLowOpacity = async ({ canvas }: any) => {
+    const trigger = canvas.getByRole('button', { name: 'Design token' })
+    await expect(trigger).toHaveTextContent('color/red/55 (20%)')
+
+    // Reopening lands on the Palette pane with the token still resolved,
+    // which is what the alpha-insensitive matching buys.
+    await userEvent.click(trigger)
+    // The popover module is imported on first open, so the wait covers a
+    // chunk fetch rather than a render tick.
+    const popover = await waitFor(
+      () => {
+        const el = document.querySelector('[role="dialog"]')
+        if (!el) throw new Error('picker did not open')
+        return el
+      },
+      { timeout: 5000 },
+    )
+    await expect(
+      popover.querySelector('[role="option"][aria-selected="true"]'),
+    ).toHaveTextContent('55')
+    await expect(
+      popover.querySelector('[role="slider"][aria-label="Alpha"]'),
+    ).toHaveAttribute('aria-valuenow', '0.2')
+
+    // Switching tokens carries the opacity over instead of snapping to opaque.
+    await userEvent.type(popover.querySelector('[role="combobox"]')!, 'blue 35')
+    const blue35 = await waitFor(() => {
+      const rows = popover.querySelectorAll('[role="option"]')
+      if (rows.length !== 1) throw new Error('search has not settled')
+      return rows[0]
+    })
+    await userEvent.click(blue35)
+    await expect(trigger).toHaveTextContent('color/blue/35 (20%)')
+
+    const reset = popover.querySelector<HTMLButtonElement>(
+      'button[aria-label="Reset opacity to 100%"]',
+    )!
+    await userEvent.click(reset)
+    await expect(trigger).toHaveTextContent(/^color\/blue\/35$/)
+    await expect(reset).toBeDisabled()
+  }
 </script>
 
 <script lang="ts">
@@ -62,6 +104,7 @@
 
   let paletteHex = $state('hsl(0 70% 55%)') // matches color/red/55
   let paletteHexNoMatch = $state('#abcdef')
+  let paletteHexAlpha = $state('hsl(0 70% 55% / 0.2)') // color/red/55 at 20%
 </script>
 
 <Story
@@ -319,6 +362,26 @@
     <ColorPicker {...args} bind:value={paletteHexNoMatch} />
     <p style="margin-block-start:1em;">
       Bound value: <code>{paletteHexNoMatch}</code>
+    </p>
+  {/snippet}
+</Story>
+
+<Story
+  name="With palette (opacity)"
+  args={{
+    id: 'cp-palette-alpha',
+    label: 'Design token',
+    value: 'hsl(0 70% 55% / 0.2)',
+    alpha: true,
+    paletteAlpha: true,
+    palette: designSystemPalette,
+  }}
+  play={keepsTokenNameAtLowOpacity}
+>
+  {#snippet template(args: any)}
+    <ColorPicker {...args} bind:value={paletteHexAlpha} />
+    <p style="margin-block-start:1em;">
+      Bound value: <code>{paletteHexAlpha}</code>
     </p>
   {/snippet}
 </Story>

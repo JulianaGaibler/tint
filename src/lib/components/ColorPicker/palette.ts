@@ -3,8 +3,18 @@
 // logic can be unit-tested and so the popover bundle only pulls in what it
 // renders.
 
-import { parseColor, ColorParseError } from '@lib/color'
+import { parseColor, ColorParseError, makeColor } from '@lib/color'
 import { toHex } from '@lib/color/serialize'
+
+export interface PaletteMatchOptions {
+  /**
+   * Key on the RGB channels only, so a token dialed down to a lower opacity
+   * still resolves to the token it came from. `normalizePalette` and
+   * `findPaletteMatch` must be given the same value or their keys will not line
+   * up.
+   */
+  ignoreAlpha?: boolean
+}
 
 export interface PaletteColor {
   /**
@@ -64,10 +74,20 @@ export function groupPalette(items: PaletteColor[]): PaletteGroup[] {
  * Returns null when the input is unparseable so the caller can skip it instead
  * of throwing. `toHex` already drops a fully-opaque alpha, which is the
  * canonical form we want.
+ *
+ * With `ignoreAlpha`, alpha is forced to 1 before serializing, so every opacity
+ * of one color collapses onto a single key.
  */
-export function canonicalize(css: string): string | null {
+export function canonicalize(
+  css: string,
+  opts?: PaletteMatchOptions,
+): string | null {
   try {
-    return toHex(parseColor(css)).toLowerCase()
+    const c = parseColor(css)
+    const keyed = opts?.ignoreAlpha
+      ? makeColor(c.space, c.components, 1, { legacy: c.legacy })
+      : c
+    return toHex(keyed).toLowerCase()
   } catch (e) {
     if (e instanceof ColorParseError) return null
     throw e
@@ -79,10 +99,13 @@ export function canonicalize(css: string): string | null {
  * tokens with the same canonical form (e.g. two aliases) collapse to the first
  * occurrence — designers see the row that comes first in the array.
  */
-export function normalizePalette(items: PaletteColor[]): Map<string, number> {
+export function normalizePalette(
+  items: PaletteColor[],
+  opts?: PaletteMatchOptions,
+): Map<string, number> {
   const map = new Map<string, number>()
   for (let i = 0; i < items.length; i++) {
-    const k = canonicalize(items[i].value)
+    const k = canonicalize(items[i].value, opts)
     if (k && !map.has(k)) map.set(k, i)
   }
   return map
@@ -96,8 +119,9 @@ export function findPaletteMatch(
   items: PaletteColor[],
   normalized: Map<string, number>,
   currentCss: string,
+  opts?: PaletteMatchOptions,
 ): { index: number; item: PaletteColor } | null {
-  const key = canonicalize(currentCss)
+  const key = canonicalize(currentCss, opts)
   if (!key) return null
   const idx = normalized.get(key)
   if (idx === undefined) return null

@@ -35,8 +35,6 @@
 >
   <svg
     aria-hidden="true"
-    width="64"
-    height="64"
     viewBox="0 0 64 64"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -71,6 +69,8 @@
     height: var(--size, 32px)
     will-change: transform
     svg
+      width: 100%
+      height: 100%
       fill: currentColor
       animation: rotate 750ms cubic-bezier(0.7, 0, 0.3, 1) infinite
       @media (prefers-reduced-motion: reduce)
