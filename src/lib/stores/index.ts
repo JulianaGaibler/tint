@@ -14,3 +14,5 @@ export type {
   ExternalToastOptions,
   ToastPromiseOptions,
 } from './toast.js'
+
+export { dateFormat, DATE_FORMAT_STORAGE_KEY } from './dateFormat.svelte.js'

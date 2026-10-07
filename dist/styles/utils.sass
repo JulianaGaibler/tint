@@ -10,6 +10,22 @@
   &:focus-visible
     @include effect-focus-base
 
+// A thin, token-colored scrollbar for a panel that scrolls its own content
+// (a popover, a listbox), rather than the browser's full width default.
+@mixin scrollbar-thin
+  scrollbar-width: thin
+  scrollbar-color: var(--tint-text-secondary) transparent
+  &::-webkit-scrollbar
+    width: var(--tint-size-8)
+    height: var(--tint-size-8)
+  &::-webkit-scrollbar-track
+    background: transparent
+  &::-webkit-scrollbar-thumb
+    background-color: var(--tint-text-secondary)
+    border-radius: var(--tint-size-8)
+  &::-webkit-scrollbar-thumb:hover
+    background-color: var(--tint-text)
+
 // Spacing scale. Emitted as CSS custom properties (--tint-size-*) by generate-tokens()
 $sizes: (2: 2px, 4: 4px, 8: 8px, 12: 12px, 16: 16px, 24: 24px, 32: 32px, 40: 40px, 48: 48px, 64: 64px, 80: 80px)
 

@@ -28,8 +28,7 @@ export default ts.config(
   },
   {
     languageOptions: {
-      parserOptions: {
-      },
+      parserOptions: {},
     },
   },
   // svelte
@@ -49,6 +48,19 @@ export default ts.config(
     },
   },
   {
+    // A `.svelte.ts` file holds runes outside a component, and the Svelte
+    // flat/recommended config above matches it with svelte-eslint-parser but no
+    // embedded script parser, which cannot read TypeScript syntax such as
+    // `import type`. Pointing it at the TS parser, as the `.svelte` block above
+    // already does, fixes that.
+    files: ['**/*.svelte.ts'],
+    languageOptions: {
+      parserOptions: {
+        parser: ts.parser,
+      },
+    },
+  },
+  {
     rules: {
       'svelte/no-at-html-tags': 'off',
     },
@@ -59,7 +71,7 @@ export default ts.config(
       globals: {
         ...globals.nodeBuiltin,
         ...globals.browser,
-        '$$Generic': 'readonly',
+        $$Generic: 'readonly',
       },
     },
     ignores: ['**/*.config.js'],

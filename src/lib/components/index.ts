@@ -13,6 +13,17 @@ export type {
   ValueFor,
   WideGamutMode,
 } from './ColorPicker/format'
+export { default as DatePicker } from './DatePicker/DatePicker.svelte'
+export { default as DateRangePicker } from './DatePicker/DateRangePicker.svelte'
+export type {
+  DateMode,
+  DateParts,
+  DateRangeValue,
+  DateValueFor,
+  DateValueFormat,
+} from './DatePicker/format'
+export type { DateOrder } from './DatePicker/prefs'
+export type { SegmentLabels } from './DatePicker/SegmentInput.svelte'
 export { default as Select, SELECT_SEPARATOR } from './Select.svelte'
 export { default as SegmentedControl } from './SegmentedControl.svelte'
 export { default as TextField } from './TextField.svelte'

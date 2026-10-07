@@ -1,6 +1,8 @@
 export { default as Button } from './Button.svelte';
 export { default as Callout } from './Callout.svelte';
 export { default as ColorPicker } from './ColorPicker/ColorPicker.svelte';
+export { default as DatePicker } from './DatePicker/DatePicker.svelte';
+export { default as DateRangePicker } from './DatePicker/DateRangePicker.svelte';
 export { default as Select, SELECT_SEPARATOR } from './Select.svelte';
 export { default as SegmentedControl } from './SegmentedControl.svelte';
 export { default as TextField } from './TextField.svelte';

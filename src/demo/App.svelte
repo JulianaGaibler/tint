@@ -1,6 +1,8 @@
 <script lang="ts">
   import Button from '@lib/components/Button.svelte'
   import ColorPicker from '@lib/components/ColorPicker/ColorPicker.svelte'
+  import DatePicker from '@lib/components/DatePicker/DatePicker.svelte'
+  import DateRangePicker from '@lib/components/DatePicker/DateRangePicker.svelte'
   import Toggleable from '@src/lib/components/Toggleable.svelte'
   import TextField from '@src/lib/components/TextField.svelte'
   import Select from '@src/lib/components/Select.svelte'
@@ -30,6 +32,13 @@
   let demoOklch = $state({ l: 0.7, c: 0.18, h: 22, alpha: 1 })
   let demoAlpha = $state('#3366cc99')
   let demoContrast = $state('#1e1d25')
+  let demoDate = $state<string | null>('2026-10-07')
+  let demoDatetime = $state<string | null>('2026-10-07T14:30')
+  let demoTime = $state<string | null>('14:30')
+  let demoRange = $state<{ start: string | null; end: string | null }>({
+    start: '2026-10-07',
+    end: '2026-10-14',
+  })
 
   let contextClickHandlers: ((e: Event) => void)[] = $state([])
 
@@ -351,6 +360,34 @@
               label="Body text"
               bind:value={demoContrast}
               contrast={{ against: '#ffffff', role: 'foreground' }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="category tint--card">
+        <h2>Date Picker</h2>
+        <div class="rows">
+          <div class="row">
+            <DatePicker id="dp-demo-date" label="Date" bind:value={demoDate} />
+            <DatePicker
+              id="dp-demo-datetime"
+              label="Date and time"
+              mode="datetime"
+              bind:value={demoDatetime}
+            />
+            <DatePicker
+              id="dp-demo-time"
+              label="Time"
+              mode="time"
+              bind:value={demoTime}
+            />
+          </div>
+          <div class="row">
+            <DateRangePicker
+              id="dp-demo-range"
+              label="Trip dates"
+              bind:value={demoRange}
             />
           </div>
         </div>
