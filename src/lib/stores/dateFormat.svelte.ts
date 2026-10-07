@@ -35,23 +35,23 @@ class DateFormatStore {
    * chose, not the full resolved object, so a locale change later still reaches
    * whichever fields were never touched.
    */
-  #overrides = $state<Partial<DateFormatPreferences>>({})
+  private overrides = $state<Partial<DateFormatPreferences>>({})
   #initialized = false
 
   /** Test seam. Not exported from the package. */
   _resetForTests(): void {
     this.prefs = localeDefaults()
-    this.#overrides = {}
+    this.overrides = {}
     this.#initialized = false
   }
 
   get isOverridden(): boolean {
-    return Object.keys(this.#overrides).length > 0
+    return Object.keys(this.overrides).length > 0
   }
 
   /** Whether a single field is a stored override rather than the locale default. */
   isFieldOverridden(field: Field): boolean {
-    return field in this.#overrides
+    return field in this.overrides
   }
 
   /**
@@ -70,26 +70,26 @@ class DateFormatStore {
   }
 
   #load(): void {
-    this.#overrides = parsePreferences(
+    this.overrides = parsePreferences(
       localStorage.getItem(DATE_FORMAT_STORAGE_KEY),
     )
-    this.prefs = { ...localeDefaults(), ...this.#overrides }
+    this.prefs = { ...localeDefaults(), ...this.overrides }
   }
 
   #persist(): void {
     if (typeof localStorage === 'undefined') return
-    if (Object.keys(this.#overrides).length === 0) {
+    if (Object.keys(this.overrides).length === 0) {
       localStorage.removeItem(DATE_FORMAT_STORAGE_KEY)
     } else {
       localStorage.setItem(
         DATE_FORMAT_STORAGE_KEY,
-        JSON.stringify(this.#overrides),
+        JSON.stringify(this.overrides),
       )
     }
   }
 
   set(partial: Partial<DateFormatPreferences>): void {
-    this.#overrides = { ...this.#overrides, ...partial }
+    this.overrides = { ...this.overrides, ...partial }
     this.prefs = { ...this.prefs, ...partial }
     this.#persist()
   }
@@ -99,10 +99,10 @@ class DateFormatStore {
    * alone.
    */
   resetField(field: Field): void {
-    if (!(field in this.#overrides)) return
-    const overrides = { ...this.#overrides }
+    if (!(field in this.overrides)) return
+    const overrides = { ...this.overrides }
     delete overrides[field]
-    this.#overrides = overrides
+    this.overrides = overrides
     this.prefs = { ...localeDefaults(), ...overrides }
     this.#persist()
   }
@@ -112,7 +112,7 @@ class DateFormatStore {
    * throughout.
    */
   reset(): void {
-    this.#overrides = {}
+    this.overrides = {}
     this.prefs = localeDefaults()
     this.#persist()
   }

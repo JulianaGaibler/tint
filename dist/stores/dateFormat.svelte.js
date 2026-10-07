@@ -18,7 +18,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _DateFormatStore_instances, _DateFormatStore_overrides, _DateFormatStore_initialized, _DateFormatStore_load, _DateFormatStore_persist;
+var _DateFormatStore_instances, _DateFormatStore_initialized, _DateFormatStore_load, _DateFormatStore_persist;
 import { localeDefaults, parsePreferences, } from '../components/DatePicker/prefs.js';
 export const DATE_FORMAT_STORAGE_KEY = 'tint:date-format';
 class DateFormatStore {
@@ -39,7 +39,7 @@ class DateFormatStore {
          * chose, not the full resolved object, so a locale change later still reaches
          * whichever fields were never touched.
          */
-        _DateFormatStore_overrides.set(this, $state({}));
+        this.overrides = $state({});
         _DateFormatStore_initialized.set(this, false
         /** Test seam. Not exported from the package. */
         );
@@ -47,15 +47,15 @@ class DateFormatStore {
     /** Test seam. Not exported from the package. */
     _resetForTests() {
         this.prefs = localeDefaults();
-        __classPrivateFieldSet(this, _DateFormatStore_overrides, {}, "f");
+        this.overrides = {};
         __classPrivateFieldSet(this, _DateFormatStore_initialized, false, "f");
     }
     get isOverridden() {
-        return Object.keys(__classPrivateFieldGet(this, _DateFormatStore_overrides, "f")).length > 0;
+        return Object.keys(this.overrides).length > 0;
     }
     /** Whether a single field is a stored override rather than the locale default. */
     isFieldOverridden(field) {
-        return field in __classPrivateFieldGet(this, _DateFormatStore_overrides, "f");
+        return field in this.overrides;
     }
     /**
      * Reads the stored override and starts listening for changes made in other
@@ -73,7 +73,7 @@ class DateFormatStore {
         });
     }
     set(partial) {
-        __classPrivateFieldSet(this, _DateFormatStore_overrides, Object.assign(Object.assign({}, __classPrivateFieldGet(this, _DateFormatStore_overrides, "f")), partial), "f");
+        this.overrides = Object.assign(Object.assign({}, this.overrides), partial);
         this.prefs = Object.assign(Object.assign({}, this.prefs), partial);
         __classPrivateFieldGet(this, _DateFormatStore_instances, "m", _DateFormatStore_persist).call(this);
     }
@@ -82,11 +82,11 @@ class DateFormatStore {
      * alone.
      */
     resetField(field) {
-        if (!(field in __classPrivateFieldGet(this, _DateFormatStore_overrides, "f")))
+        if (!(field in this.overrides))
             return;
-        const overrides = Object.assign({}, __classPrivateFieldGet(this, _DateFormatStore_overrides, "f"));
+        const overrides = Object.assign({}, this.overrides);
         delete overrides[field];
-        __classPrivateFieldSet(this, _DateFormatStore_overrides, overrides, "f");
+        this.overrides = overrides;
         this.prefs = Object.assign(Object.assign({}, localeDefaults()), overrides);
         __classPrivateFieldGet(this, _DateFormatStore_instances, "m", _DateFormatStore_persist).call(this);
     }
@@ -95,22 +95,22 @@ class DateFormatStore {
      * throughout.
      */
     reset() {
-        __classPrivateFieldSet(this, _DateFormatStore_overrides, {}, "f");
+        this.overrides = {};
         this.prefs = localeDefaults();
         __classPrivateFieldGet(this, _DateFormatStore_instances, "m", _DateFormatStore_persist).call(this);
     }
 }
-_DateFormatStore_overrides = new WeakMap(), _DateFormatStore_initialized = new WeakMap(), _DateFormatStore_instances = new WeakSet(), _DateFormatStore_load = function _DateFormatStore_load() {
-    __classPrivateFieldSet(this, _DateFormatStore_overrides, parsePreferences(localStorage.getItem(DATE_FORMAT_STORAGE_KEY)), "f");
-    this.prefs = Object.assign(Object.assign({}, localeDefaults()), __classPrivateFieldGet(this, _DateFormatStore_overrides, "f"));
+_DateFormatStore_initialized = new WeakMap(), _DateFormatStore_instances = new WeakSet(), _DateFormatStore_load = function _DateFormatStore_load() {
+    this.overrides = parsePreferences(localStorage.getItem(DATE_FORMAT_STORAGE_KEY));
+    this.prefs = Object.assign(Object.assign({}, localeDefaults()), this.overrides);
 }, _DateFormatStore_persist = function _DateFormatStore_persist() {
     if (typeof localStorage === 'undefined')
         return;
-    if (Object.keys(__classPrivateFieldGet(this, _DateFormatStore_overrides, "f")).length === 0) {
+    if (Object.keys(this.overrides).length === 0) {
         localStorage.removeItem(DATE_FORMAT_STORAGE_KEY);
     }
     else {
-        localStorage.setItem(DATE_FORMAT_STORAGE_KEY, JSON.stringify(__classPrivateFieldGet(this, _DateFormatStore_overrides, "f")));
+        localStorage.setItem(DATE_FORMAT_STORAGE_KEY, JSON.stringify(this.overrides));
     }
 };
 export const dateFormat = new DateFormatStore();

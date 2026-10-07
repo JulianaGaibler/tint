@@ -10,6 +10,15 @@ declare class DateFormatStore {
      * hydration, so that layering is an ordinary update rather than a mismatch.
      */
     prefs: DateFormatPreferences;
+    /**
+     * Which fields of `prefs` are a stored override rather than the locale's own
+     * default, kept separately from `prefs` itself so a single field can be
+     * forgotten without recomputing the other two from scratch. This is also
+     * exactly what gets written to storage: only the fields a person actually
+     * chose, not the full resolved object, so a locale change later still reaches
+     * whichever fields were never touched.
+     */
+    private overrides;
     /** Test seam. Not exported from the package. */
     _resetForTests(): void;
     get isOverridden(): boolean;
