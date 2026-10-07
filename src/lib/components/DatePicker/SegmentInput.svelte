@@ -1,12 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte'
-  import {
-    setDayPeriod,
-    step,
-    typeDigit,
-    type Segment,
-    type SegmentType,
-  } from './segments.js'
+  import { setDayPeriod, step, typeDigit, type Segment } from './segments.js'
 
   export interface SegmentLabels {
     day?: string
@@ -90,19 +84,20 @@
     new Intl.DateTimeFormat(locale, { month: 'long' }),
   )
 
-  const PLACEHOLDER: Partial<Record<SegmentType, string>> = {
-    day: 'dd',
-    month: 'mm',
-    year: 'yyyy',
-    hour: 'hh',
-    minute: 'mm',
-    second: 'ss',
-    dayPeriod: '—',
-  }
+  // Nothing typed into any segment yet. The resting, empty state has to
+  // render as the empty string, separators included, since that state is
+  // the same place Field.svelte's unfloated label sits, and any text there
+  // (a placeholder or a bare separator) is the overlap a filled value
+  // floats the label to avoid in the first place.
+  const isEmpty = $derived(
+    segments.every(
+      (segment) => segment.type === 'literal' || segment.value === null,
+    ),
+  )
 
   function displayText(segment: Segment): string {
-    if (segment.type === 'literal') return segment.text ?? ''
-    if (segment.value === null) return PLACEHOLDER[segment.type] ?? ''
+    if (segment.type === 'literal') return isEmpty ? '' : (segment.text ?? '')
+    if (segment.value === null) return ''
     if (segment.type === 'dayPeriod') {
       return segment.value === 1 ? resolvedLabels.pm : resolvedLabels.am
     }
