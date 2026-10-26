@@ -10,7 +10,7 @@ npm install @julianagaibler/tint
 
 ## Documentation
 
-For complete documentation, configuration guides, and component examples, see the [Storybook documentation](https://julianagaibler.github.io/tint/).
+For complete documentation, configuration guides, and component examples, see the Storybook documentation. Run `npm run storybook` in the repository to browse it.
 
 ## What's Included
 
@@ -44,12 +44,12 @@ Started / Styles" and "Fonts" pages in Storybook for the full token list.
 ## Import Paths
 
 ```javascript
-import { Button } from '@julianagaibler/tint'                      // Components
-import { getFontPreloads } from '@julianagaibler/tint/fonts'       // Fonts
-import { tooltip } from '@julianagaibler/tint/actions'             // Actions
-import { createRadioGroup } from '@julianagaibler/tint/stores'     // Stores
-import icon from '@julianagaibler/tint/icons/20-add.svg'           // Icons
-import '@julianagaibler/tint/styles/bootstrap.sass'                // Styles
+import { Button } from '@julianagaibler/tint' // Components
+import { getFontPreloads } from '@julianagaibler/tint/fonts' // Fonts
+import { tooltip } from '@julianagaibler/tint/actions' // Actions
+import { createRadioGroup } from '@julianagaibler/tint/stores' // Stores
+import icon from '@julianagaibler/tint/icons/20-add.svg' // Icons
+import '@julianagaibler/tint/styles/bootstrap.sass' // Styles
 ```
 
 ## License
