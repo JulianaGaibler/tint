@@ -50,7 +50,7 @@
      * Locale used for month names, weekday order, and the date separator.
      * Defaults to the runtime's own locale. Does not affect the stored date
      * order or clock preference, which is shared site wide by design, see
-     * `tint/stores`' `dateFormat`.
+     * `@julianagaibler/tint/stores`' `dateFormat`.
      */
     locale?: string
     /** First day of the week, 0 for Sunday. Defaults to `locale`'s own. */

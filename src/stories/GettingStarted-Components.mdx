@@ -16,9 +16,9 @@ Import each component directly from its file:
 
 ```tsx
 <script>
-  import Button from 'tint/components/Button.svelte'
-  import TextField from 'tint/components/TextField.svelte'
-  import Select from 'tint/components/Select.svelte'
+  import Button from '@julianagaibler/tint/components/Button.svelte'
+  import TextField from '@julianagaibler/tint/components/TextField.svelte'
+  import Select from '@julianagaibler/tint/components/Select.svelte'
 </script>
 
 <Button>Click me</Button>
@@ -27,38 +27,41 @@ Import each component directly from its file:
 ```
 
 The package barrel also re-exports everything, so
-`import { Button } from 'tint'` works too. Direct file imports are preferred,
-since they let the bundler skip components you don't use.
+`import { Button } from '@julianagaibler/tint'` works too. Direct file imports
+are preferred, since they let the bundler skip components you don't use.
 
 ## Import paths
 
 ```javascript
 // Components (import each from its file)
-import Button from 'tint/components/Button.svelte'
-import TextField from 'tint/components/TextField.svelte'
+import Button from '@julianagaibler/tint/components/Button.svelte'
+import TextField from '@julianagaibler/tint/components/TextField.svelte'
 
 // Or from the package barrel
-import { Button, TextField } from 'tint'
+import { Button, TextField } from '@julianagaibler/tint'
 
 // Actions (Svelte actions)
-import { tooltip, reorderable } from 'tint/actions'
+import { tooltip, reorderable } from '@julianagaibler/tint/actions'
 
 // Stores (Svelte stores)
-import { createRadioGroup, createCheckboxGroup } from 'tint/stores'
+import {
+  createRadioGroup,
+  createCheckboxGroup,
+} from '@julianagaibler/tint/stores'
 
 // Fonts
-import { getFontPreloads, fonts } from 'tint/fonts'
+import { getFontPreloads, fonts } from '@julianagaibler/tint/fonts'
 
 // Icons (raw SVG string for a component's icon prop, or a URL for <img>)
-import closeIcon from 'tint/icons/20-close.svg?raw'
-import addIcon from 'tint/icons/20-add.svg'
+import closeIcon from '@julianagaibler/tint/icons/20-close.svg?raw'
+import addIcon from '@julianagaibler/tint/icons/20-add.svg'
 ```
 
 ## Example: form with multiple components
 
 ```tsx
 <script>
-  import { Button, TextField, Select, Toggleable } from 'tint'
+  import { Button, TextField, Select, Toggleable } from '@julianagaibler/tint'
 
   let name = $state('')
   let email = $state('')
@@ -107,7 +110,7 @@ Tint provides Svelte actions for common behaviors:
 
 ```tsx
 <script>
-  import { tooltip, reorderable } from 'tint/actions'
+  import { tooltip, reorderable } from '@julianagaibler/tint/actions'
 
   let items = $state(['Item 1', 'Item 2', 'Item 3'])
 
@@ -135,7 +138,7 @@ Tint provides stores for managing grouped form controls:
 
 ```tsx
 <script>
-  import { createRadioGroup, createCheckboxGroup } from 'tint/stores'
+  import { createRadioGroup, createCheckboxGroup } from '@julianagaibler/tint/stores'
 
   const radioGroup = createRadioGroup('option1')
   const checkboxGroup = createCheckboxGroup(['option1'])
@@ -170,9 +173,9 @@ suffix to get the SVG source as a string:
 ```tsx
 <script>
   // As a URL, for an <img> tag
-  import addIcon from 'tint/icons/20-add.svg'
+  import addIcon from '@julianagaibler/tint/icons/20-add.svg'
   // As a raw string, to inline or pass to a component's icon prop
-  import closeIcon from 'tint/icons/20-close.svg?raw'
+  import closeIcon from '@julianagaibler/tint/icons/20-close.svg?raw'
 </script>
 
 <img src={addIcon} alt="Add" />
@@ -194,7 +197,7 @@ All components include full TypeScript definitions. Your IDE will provide
 autocomplete for props and type checking:
 
 ```typescript
-import { Button } from 'tint'
+import { Button } from '@julianagaibler/tint'
 import type { ComponentProps } from 'svelte'
 
 type ButtonProps = ComponentProps<Button>

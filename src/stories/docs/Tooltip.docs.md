@@ -2,7 +2,7 @@ A Svelte action that shows a tooltip on hover or focus. Pass the text directly, 
 
 ```svelte
 <script>
-  import { tooltip } from 'tint/actions'
+  import { tooltip } from '@julianagaibler/tint/actions'
 </script>
 
 <button use:tooltip={'Copy to clipboard'}>Copy</button>

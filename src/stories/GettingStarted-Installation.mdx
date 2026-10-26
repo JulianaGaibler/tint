@@ -44,7 +44,7 @@ Add path mappings to help TypeScript resolve Tint imports:
     "baseUrl": ".",
     "paths": {
       "@src/*": ["src/*"],
-      "tint/*": ["node_modules/tint/dist/*"]
+      "@julianagaibler/tint/*": ["node_modules/@julianagaibler/tint/dist/*"]
     }
   }
 }
@@ -62,13 +62,13 @@ import { createRequire } from 'node:module'
 
 const require = createRequire(import.meta.url)
 // Resolve Tint's location so ~tint works with pnpm, hoisting, and monorepos
-const tintDist = path.dirname(require.resolve('tint'))
+const tintDist = path.dirname(require.resolve('@julianagaibler/tint'))
 
 export default defineConfig({
   vite: {
     ssr: {
       // Important: If not set, this can lead to style import errors in Astro
-      noExternal: ['tint*'],
+      noExternal: ['@julianagaibler/tint*'],
     },
     resolve: {
       alias: {
@@ -84,8 +84,8 @@ export default defineConfig({
 
 What each part does:
 
-- `noExternal: ['tint*']` bundles Tint during SSR, preventing module resolution
-  errors
+- `noExternal: ['@julianagaibler/tint*']` bundles Tint during SSR, preventing
+  module resolution errors
 - The `'~tint'` alias resolves `~tint/fonts` in SASS `@font-face` declarations
   to Tint's `dist` folder. Using `require.resolve` instead of a hardcoded
   `node_modules/tint/dist` path keeps it working under pnpm and in monorepos

@@ -4,7 +4,7 @@ The field has no way to know a browser's preferred date order or clock, only its
 
 ```svelte
 <script>
-  import { DatePicker } from 'tint'
+  import { DatePicker } from '@julianagaibler/tint'
   let value = $state('2026-10-07')
 </script>
 
@@ -17,7 +17,7 @@ The field has no way to know a browser's preferred date order or clock, only its
 
 ```svelte
 <script>
-  import { DateRangePicker } from 'tint'
+  import { DateRangePicker } from '@julianagaibler/tint'
   let value = $state({ start: null, end: null })
 </script>
 

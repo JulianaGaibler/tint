@@ -2,7 +2,7 @@ A Svelte action that makes a list reorderable by drag and drop, with keyboard su
 
 ```svelte
 <script>
-  import { reorderable } from 'tint/actions'
+  import { reorderable } from '@julianagaibler/tint/actions'
   let items = ['One', 'Two', 'Three']
 </script>
 

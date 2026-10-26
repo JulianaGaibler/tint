@@ -13,7 +13,7 @@ project.
 Import and include the full bootstrap in your global stylesheet:
 
 ```scss
-@use 'tint/styles/bootstrap' as bootstrap;
+@use '@julianagaibler/tint/styles/bootstrap' as bootstrap;
 @use './colors';
 
 // Generate color CSS variables
@@ -42,7 +42,7 @@ The `full-bootstrap()` mixin sets up:
 You can add dark mode support using media queries:
 
 ```scss
-@use 'tint/styles/bootstrap' as bootstrap;
+@use '@julianagaibler/tint/styles/bootstrap' as bootstrap;
 @use './colors';
 
 // Light mode colors
@@ -100,8 +100,8 @@ $colors-dark: (
 ### 2. Create `src/styles/utils.sass`
 
 ```sass
-@forward "tint/styles/utils"
-@use 'tint/styles/utils' as tint
+@forward "@julianagaibler/tint/styles/utils"
+@use '@julianagaibler/tint/styles/utils' as tint
 
 // Add your custom variables
 $const-max-width: 680px
@@ -113,7 +113,7 @@ variables.
 ### 3. Create `src/styles/global.sass`
 
 ```sass
-@use 'tint/styles/bootstrap' as bootstrap
+@use '@julianagaibler/tint/styles/bootstrap' as bootstrap
 @use './colors'
 
 // Generate color variables
@@ -242,15 +242,15 @@ Switch between plain and tinted color palettes using CSS classes:
 
 ```scss
 // Main bootstrap with all mixins
-@use 'tint/styles/bootstrap' as bootstrap;
+@use '@julianagaibler/tint/styles/bootstrap' as bootstrap;
 
 // Utility mixins and variables
-@use 'tint/styles/utils' as utils;
+@use '@julianagaibler/tint/styles/utils' as utils;
 ```
 
 ## Available mixins
 
-### From `tint/styles/bootstrap`:
+### From `@julianagaibler/tint/styles/bootstrap`:
 
 - `layers()` - Define CSS cascade layers
 - `base()` - Base reset and global styles
@@ -262,7 +262,7 @@ Switch between plain and tinted color palettes using CSS classes:
   `--tint-radius-*`, `--tint-border-width`), already called by
   `full-bootstrap()`
 
-### From `tint/styles/utils`:
+### From `@julianagaibler/tint/styles/utils`:
 
 - `effect-focus()` - Add focus outline styles
 - `effect-focus-base()` - Base focus styles without pseudo-selector

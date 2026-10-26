@@ -23,7 +23,7 @@ Use `<svelte:head>` to preload fonts in your Svelte components:
 
 ```tsx
 <script>
-  import { getFontPreloads } from 'tint/fonts'
+  import { getFontPreloads } from '@julianagaibler/tint/fonts'
 
   // Preload only the fonts you need
   const preloads = getFontPreloads([
@@ -47,7 +47,7 @@ Use the frontmatter section to preload fonts in Astro components:
 
 ```astro
 ---
-import { getFontPreloads } from 'tint/fonts'
+import { getFontPreloads } from '@julianagaibler/tint/fonts'
 
 // Preload specific fonts
 const preloads = getFontPreloads(['hkGroteskBold', 'merriweatherRegular'])
@@ -64,7 +64,7 @@ If you want to preload all fonts (not recommended unless you're using all of
 them):
 
 ```javascript
-import { getFontPreloads } from 'tint/fonts'
+import { getFontPreloads } from '@julianagaibler/tint/fonts'
 
 // Omit the array to get all fonts
 const preloads = getFontPreloads()
@@ -75,7 +75,7 @@ const preloads = getFontPreloads()
 Each font object includes metadata that you can use programmatically:
 
 ```javascript
-import { fonts } from 'tint/fonts'
+import { fonts } from '@julianagaibler/tint/fonts'
 
 // Access individual font metadata
 const headingFont = fonts.merriweatherBold
@@ -105,10 +105,10 @@ the `full-bootstrap()` mixin:
 
 ```scss
 // Typography utilities and variables
-@use 'tint/styles/typography' as typography;
+@use '@julianagaibler/tint/styles/typography' as typography;
 
 // Font metadata for SASS
-@use 'tint/styles/font-face-info' as fonts;
+@use '@julianagaibler/tint/styles/font-face-info' as fonts;
 ```
 
 ### Typography classes
@@ -117,7 +117,7 @@ When you include `full-bootstrap()`, typography utility classes are
 automatically generated. You can also generate them separately:
 
 ```scss
-@use 'tint/styles/bootstrap' as bootstrap;
+@use '@julianagaibler/tint/styles/bootstrap' as bootstrap;
 
 // Generate only typography classes
 @include bootstrap.type-classes();
@@ -128,7 +128,7 @@ automatically generated. You can also generate them separately:
 Use the `type-class()` mixin to apply typography styles directly in your SASS:
 
 ```scss
-@use 'tint/styles/typography' as typography;
+@use '@julianagaibler/tint/styles/typography' as typography;
 
 .my-heading {
   @include typography.type-class('title-serif-1');
@@ -183,7 +183,7 @@ Set the family variables and skip tint's bundled `@font-face` with
 tint from npm:
 
 ```sass
-@use 'tint/styles/bootstrap' as bootstrap
+@use '@julianagaibler/tint/styles/bootstrap' as bootstrap
 
 // Point tint's typography at your fonts
 :root
@@ -206,7 +206,7 @@ If you have your own woff2 files, pass a font map to `generate-font-faces()` in
 the same shape as tint's (`family`, `weight`, `style`, `filename`):
 
 ```sass
-@use 'tint/styles/bootstrap' as bootstrap
+@use '@julianagaibler/tint/styles/bootstrap' as bootstrap
 
 $my-fonts: (
   (family: 'Inter', weight: 400, style: normal, filename: 'Inter-Regular'),
@@ -226,7 +226,7 @@ By default, `full-bootstrap()` uses `~tint/fonts` for font paths (your bundler
 will resolve this). If you're hosting fonts statically:
 
 ```scss
-@use 'tint/styles/bootstrap' as bootstrap;
+@use '@julianagaibler/tint/styles/bootstrap' as bootstrap;
 
 // Custom font path for static hosting
 @include bootstrap.full-bootstrap($path: '/fonts');
@@ -240,7 +240,7 @@ don't need to call it separately unless you want a different path.
 If you need more control, you can generate font-face declarations independently:
 
 ```scss
-@use 'tint/styles/bootstrap' as bootstrap;
+@use '@julianagaibler/tint/styles/bootstrap' as bootstrap;
 
 // Generate only font-face declarations with custom path
 @include bootstrap.generate-font-faces('/static/fonts');
@@ -248,7 +248,7 @@ If you need more control, you can generate font-face declarations independently:
 
 ## Typography imports reference
 
-### From `tint/styles/bootstrap`:
+### From `@julianagaibler/tint/styles/bootstrap`:
 
 - `type-classes()` - Generate typography utility classes
 - `generate-fonts()` - Generate the font family CSS custom properties
@@ -260,7 +260,7 @@ If you need more control, you can generate font-face declarations independently:
   (recommended). Set `$include-font-faces: false` to skip tint's bundled
   @font-face rules when using your own fonts
 
-### From `tint/styles/typography`:
+### From `@julianagaibler/tint/styles/typography`:
 
 - `type-class($key)` - Apply a specific typography style in SASS (e.g.,
   `title-serif-1`, `body-sans-3`)

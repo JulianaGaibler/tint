@@ -5,7 +5,7 @@ Tint is a design foundation for Svelte and Astro projects, providing components,
 ## Installation
 
 ```bash
-npm install tint
+npm install @julianagaibler/tint
 ```
 
 ## Documentation
@@ -15,7 +15,7 @@ For complete documentation, configuration guides, and component examples, see th
 ## What's Included
 
 - **Components**: Button, TextField, Select, Slider, Modal, and more (Svelte 5)
-- **Fonts**: HK Grotesk (sans-serif) and Merriweather (serif) in WOFF2 format
+- **Fonts**: HK Grotesk (sans-serif), Merriweather (serif) and Azeret Mono (monospace) in WOFF2 format
 - **Icons**: 90+ SVG icons in 14px and 20px sizes
 - **Styles**: SASS mixins for typography, colors, and utilities
 - **Theming**: Colors and dimensions (roundness, spacing, border width) are
@@ -44,10 +44,14 @@ Started / Styles" and "Fonts" pages in Storybook for the full token list.
 ## Import Paths
 
 ```javascript
-import { Button } from 'tint'                      // Components
-import { getFontPreloads } from 'tint/fonts'       // Fonts
-import { tooltip } from 'tint/actions'             // Actions
-import { createRadioGroup } from 'tint/stores'     // Stores
-import icon from 'tint/icons/20-add.svg'           // Icons
-import 'tint/styles/bootstrap.sass'                // Styles
+import { Button } from '@julianagaibler/tint'                      // Components
+import { getFontPreloads } from '@julianagaibler/tint/fonts'       // Fonts
+import { tooltip } from '@julianagaibler/tint/actions'             // Actions
+import { createRadioGroup } from '@julianagaibler/tint/stores'     // Stores
+import icon from '@julianagaibler/tint/icons/20-add.svg'           // Icons
+import '@julianagaibler/tint/styles/bootstrap.sass'                // Styles
 ```
+
+## License
+
+Tint is released under the MIT license. The bundled fonts are licensed under the SIL Open Font License, and each license file ships next to its font in `fonts/`.

@@ -2,7 +2,7 @@ Plays a filmstrip sprite-sheet SVG as a stepped CSS animation. Set the pace with
 
 ```svelte
 <script>
-  import { Filmstrip } from 'tint'
+  import { Filmstrip } from '@julianagaibler/tint'
   let player
 </script>
 

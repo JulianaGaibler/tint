@@ -2,7 +2,9 @@ A dropdown menu of actions. Set `variant` to `button` to anchor the menu to the 
 
 ```svelte
 <script>
-  import ButtonMenu, { MENU_SEPARATOR } from 'tint/components/Menu.svelte'
+  import ButtonMenu, {
+    MENU_SEPARATOR,
+  } from '@julianagaibler/tint/components/Menu.svelte'
   let open
   const items = [
     { label: 'Rename', onClick: rename },

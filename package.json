@@ -1,6 +1,31 @@
 {
-  "name": "tint",
+  "name": "@julianagaibler/tint",
   "version": "0.5.15",
+  "description": "A design foundation for Svelte and Astro projects: components, fonts, icons and styles.",
+  "license": "MIT",
+  "author": "Juliana Gaibler",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JulianaGaibler/tint.git"
+  },
+  "homepage": "https://github.com/JulianaGaibler/tint#readme",
+  "bugs": {
+    "url": "https://github.com/JulianaGaibler/tint/issues"
+  },
+  "keywords": [
+    "svelte",
+    "svelte5",
+    "astro",
+    "design-system",
+    "components",
+    "ui",
+    "icons",
+    "sass"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "scripts": {
     "dev": "vite dev",
     "preview": "vite preview",

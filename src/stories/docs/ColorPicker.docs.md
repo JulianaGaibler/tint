@@ -2,7 +2,7 @@ A color picker with a popover for fine adjustment. Bind `value` and choose the o
 
 ```svelte
 <script>
-  import { ColorPicker } from 'tint'
+  import { ColorPicker } from '@julianagaibler/tint'
   let value = '#3366ffff'
 </script>
 

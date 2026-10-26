@@ -2,7 +2,7 @@ Users pick one value from a dropdown list. Import `SELECT_SEPARATOR` and place i
 
 ```svelte
 <script>
-  import Select, { SELECT_SEPARATOR } from 'tint'
+  import Select, { SELECT_SEPARATOR } from '@julianagaibler/tint'
   let value
   const items = [
     { value: 'a', label: 'Apple' },

@@ -2,8 +2,8 @@ Mount one `Toaster` near the root of your app, then call `toast()` from anywhere
 
 ```svelte
 <script>
-  import { Toaster } from 'tint'
-  import { toast } from 'tint/stores'
+  import { Toaster } from '@julianagaibler/tint'
+  import { toast } from '@julianagaibler/tint/stores'
 </script>
 
 <Toaster />
