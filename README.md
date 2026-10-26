@@ -10,7 +10,7 @@ npm install @julianagaibler/tint
 
 ## Documentation
 
-For complete documentation, configuration guides, and component examples, see the Storybook documentation.
+For complete documentation, configuration guides, and component examples, see the [Storybook documentation](https://julianagaibler.github.io/tint/).
 
 ## What's Included
 

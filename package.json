@@ -8,7 +8,7 @@
     "type": "git",
     "url": "git+https://github.com/JulianaGaibler/tint.git"
   },
-  "homepage": "https://github.com/JulianaGaibler/tint#readme",
+  "homepage": "https://julianagaibler.github.io/tint/",
   "bugs": {
     "url": "https://github.com/JulianaGaibler/tint/issues"
   },
@@ -30,6 +30,7 @@
     "dev": "vite dev",
     "preview": "vite preview",
     "package": "svelte-package && publint",
+    "prepublishOnly": "npm run package",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "eslint src/",
